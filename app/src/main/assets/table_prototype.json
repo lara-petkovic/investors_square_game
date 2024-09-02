@@ -15,22 +15,34 @@
       "type": "GO"
     },
     {
-      "name": "Property1",
+      "name": "Mediterranean Avenue",
       "type": "PROPERTY",
       "price": "60",
       "house-price": "50",
       "mortgage-price": "30",
       "sell-price": "30",
       "rent": [ "2", "10", "30", "90", "160", "250" ],
-      "set": "#121212"
+      "set": "#2e1a0b"
     },
     {
-      "name": "Water works",
-      "type": "UTILITY",
-      "rent": [ "4", "10" ],
-      "price": "150",
-      "mortgage-price": "75",
-      "sell-price": "75"
+      "name": "Community chest",
+      "type": "COMMUNITY_CHEST"
+    },
+    {
+      "name": "Baltic Avenue",
+      "type": "PROPERTY",
+      "price": "60",
+      "house-price": "50",
+      "mortgage-price": "30",
+      "sell-price": "30",
+      "rent": [ "4", "20", "60", "180", "320", "450" ],
+      "set": "#2e1a0b"
+    },
+    {
+      "name": "Income tax",
+      "type": "TAX",
+      "tax": "200",
+      "tax-percentage": "10"
     },
     {
       "name": "Reading Railroad",
@@ -41,14 +53,282 @@
       "sell-price": "100"
     },
     {
+      "name": "Oriental Avenue",
+      "type": "PROPERTY",
+      "price": "100",
+      "house-price": "50",
+      "mortgage-price": "50",
+      "sell-price": "50",
+      "rent": [ "6", "30", "90", "270", "400", "550" ],
+      "set": "#45c8f7"
+    },
+    {
+      "name": "Chance",
+      "type": "CHANCE"
+    },
+    {
+      "name": "Vermont Avenue",
+      "type": "PROPERTY",
+      "price": "100",
+      "house-price": "50",
+      "mortgage-price": "50",
+      "sell-price": "50",
+      "rent": [ "6", "30", "90", "270", "400", "550" ],
+      "set": "#45c8f7"
+    },
+    {
+      "name": "Connecticut Avenue",
+      "type": "PROPERTY",
+      "price": "120",
+      "house-price": "50",
+      "mortgage-price": "60",
+      "sell-price": "60",
+      "rent": [ "8", "40", "100", "300", "450", "600" ],
+      "set": "#45c8f7"
+    },
+    {
+      "name": "Jail",
+      "type": "JAIL"
+    },
+    {
+      "name": "St. Charles Place",
+      "type": "PROPERTY",
+      "price": "140",
+      "house-price": "100",
+      "mortgage-price": "70",
+      "sell-price": "70",
+      "rent": [ "10", "50", "150", "450", "625", "750" ],
+      "set": "#f71eda"
+    },
+    {
+      "name": "Electric Company",
+      "type": "UTILITY",
+      "rent": [ "4", "10" ],
+      "price": "150",
+      "mortgage-price": "75",
+      "sell-price": "75"
+    },
+    {
+      "name": "States Avenue",
+      "type": "PROPERTY",
+      "price": "140",
+      "house-price": "100",
+      "mortgage-price": "70",
+      "sell-price": "70",
+      "rent": [ "10", "50", "150", "450", "625", "750" ],
+      "set": "#f71eda"
+    },
+    {
+      "name": "Virginia Avenue",
+      "type": "PROPERTY",
+      "price": "160",
+      "house-price": "100",
+      "mortgage-price": "80",
+      "sell-price": "80",
+      "rent": [ "12", "60", "180", "500", "700", "900" ],
+      "set": "#f71eda"
+    },
+    {
+      "name": "Pennsylvania Railroad",
+      "type": "STATION",
+      "rent": [ "25", "50", "100", "200" ],
+      "price": "200",
+      "mortgage-price": "100",
+      "sell-price": "100"
+    },
+    {
+      "name": "St. James Place",
+      "type": "PROPERTY",
+      "price": "180",
+      "house-price": "100",
+      "mortgage-price": "90",
+      "sell-price": "90",
+      "rent": [ "14", "70", "200", "550", "750", "950" ],
+      "set": "#f77f16"
+    },
+    {
+      "name": "Community Chest",
+      "type": "COMMUNITY_CHEST"
+    },
+    {
+      "name": "Tennessee Avenue",
+      "type": "PROPERTY",
+      "price": "180",
+      "house-price": "100",
+      "mortgage-price": "90",
+      "sell-price": "90",
+      "rent": [ "14", "70", "200", "550", "750", "950" ],
+      "set": "#f77f16"
+    },
+    {
+      "name": "New York Avenue",
+      "type": "PROPERTY",
+      "price": "200",
+      "house-price": "100",
+      "mortgage-price": "100",
+      "sell-price": "100",
+      "rent": [ "16", "80", "220", "600", "800", "1000" ],
+      "set": "#f77f16"
+    },
+    {
+      "name": "Free parking",
+      "type": "PARKING"
+    },
+    {
+      "name": "Kentucky Avenue",
+      "type": "PROPERTY",
+      "price": "220",
+      "house-price": "150",
+      "mortgage-price": "110",
+      "sell-price": "110",
+      "rent": [ "18", "90", "250", "700", "875", "1050" ],
+      "set": "#c70202"
+    },
+    {
+      "name": "Chance",
+      "type": "CHANCE"
+    },
+    {
+      "name": "Indiana Avenue",
+      "type": "PROPERTY",
+      "price": "220",
+      "house-price": "150",
+      "mortgage-price": "110",
+      "sell-price": "110",
+      "rent": [ "18", "90", "250", "700", "875", "1050" ],
+      "set": "#c70202"
+    },
+    {
+      "name": "Illinois",
+      "type": "PROPERTY",
+      "price": "240",
+      "house-price": "150",
+      "mortgage-price": "120",
+      "sell-price": "120",
+      "rent": [ "20", "100", "300", "750", "925", "1100" ],
+      "set": "#c70202"
+    },
+    {
+      "name": "B&O Railroad",
+      "type": "STATION",
+      "rent": [ "25", "50", "100", "200" ],
+      "price": "200",
+      "mortgage-price": "100",
+      "sell-price": "100"
+    },
+    {
+      "name": "Atlantic Avenue",
+      "type": "PROPERTY",
+      "price": "260",
+      "house-price": "150",
+      "mortgage-price": "130",
+      "sell-price": "130",
+      "rent": [ "22", "110", "330", "800", "975", "1150" ],
+      "set": "#faea0c"
+    },
+    {
+      "name": "Ventnor Avenue",
+      "type": "PROPERTY",
+      "price": "260",
+      "house-price": "150",
+      "mortgage-price": "130",
+      "sell-price": "130",
+      "rent": [ "22", "110", "330", "800", "975", "1150" ],
+      "set": "#faea0c"
+    },
+    {
+      "name": "Water works",
+      "type": "UTILITY",
+      "rent": [ "4", "10" ],
+      "price": "150",
+      "mortgage-price": "75",
+      "sell-price": "75"
+    },
+    {
+      "name": "Marvin Gardens",
+      "type": "PROPERTY",
+      "price": "280",
+      "house-price": "150",
+      "mortgage-price": "140",
+      "sell-price": "140",
+      "rent": [ "24", "120", "360", "850", "1025", "1200" ],
+      "set": "#faea0c"
+    },
+    {
+      "name": "Go to jail",
+      "type": "GO_TO_JAIL"
+    },
+    {
+      "name": "Pacific Avenue",
+      "type": "PROPERTY",
+      "price": "300",
+      "house-price": "200",
+      "mortgage-price": "150",
+      "sell-price": "150",
+      "rent": [ "26", "130", "390", "900", "1100", "1275" ],
+      "set": "#0d9603"
+    },
+    {
+      "name": "North Carolina Avenue",
+      "type": "PROPERTY",
+      "price": "300",
+      "house-price": "200",
+      "mortgage-price": "150",
+      "sell-price": "150",
+      "rent": [ "26", "130", "390", "900", "1100", "1275" ],
+      "set": "#0d9603"
+    },
+    {
       "name": "Community chest",
       "type": "COMMUNITY_CHEST"
     },
     {
-      "name": "Income tax",
+      "name": "Pennsylvania Avenue",
+      "type": "PROPERTY",
+      "price": "320",
+      "house-price": "200",
+      "mortgage-price": "160",
+      "sell-price": "160",
+      "rent": [ "28", "150", "450", "1000", "1200", "1400" ],
+      "set": "#0d9603"
+    },
+    {
+      "name": "Short Line",
+      "type": "STATION",
+      "rent": [ "25", "50", "100", "200" ],
+      "price": "200",
+      "mortgage-price": "100",
+      "sell-price": "100"
+    },
+    {
+      "name": "Chance",
+      "type": "CHANCE"
+    },
+    {
+      "name": "Park Place",
+      "type": "PROPERTY",
+      "price": "350",
+      "house-price": "200",
+      "mortgage-price": "175",
+      "sell-price": "175",
+      "rent": [ "35", "175", "500", "1100", "1300", "1500" ],
+      "set": "#11014d"
+    },
+    {
+      "name": "Luxury tax",
       "type": "TAX",
-      "tax": "200",
-      "tax-percentage": "10"
+      "tax": "75",
+      "tax-percentage": "-1"
+    },
+    {
+      "name": "Boardwalk",
+      "type": "PROPERTY",
+      "price": "400",
+      "house-price": "200",
+      "mortgage-price": "200",
+      "sell-price": "200",
+      "rent": [ "50", "200", "600", "1400", "1700", "2000" ],
+      "set": "#11014d"
     }
   ]
 }
