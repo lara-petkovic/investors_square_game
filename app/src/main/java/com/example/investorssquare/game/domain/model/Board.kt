@@ -1,7 +1,7 @@
 package com.example.investorssquare.game.domain.model
 
-data class Table(
+class Board(
     val name: String,
-    val attribute2: Int,
-    // ...
+    val imageUrl: String,
+    val fields: List<Field>
 )

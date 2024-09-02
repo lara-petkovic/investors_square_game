@@ -67,4 +67,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Json
+    implementation(libs.jetbrains.kotlinx.serialization.json)
+    implementation(libs.gson)
 }

@@ -1,0 +1,54 @@
+{
+  "name": "Board1",
+  "image-url": "@drawable/board1",
+  "default-rules": {},
+  "community-chest-cards": [
+    {
+      "text": "Go to JAIL. Do not collect 200.",
+      "action": "10"
+    }
+  ],
+  "chance-cards": [],
+  "fields": [
+    {
+      "name": "GO",
+      "type": "GO"
+    },
+    {
+      "name": "Property1",
+      "type": "PROPERTY",
+      "price": "60",
+      "house-price": "50",
+      "mortgage-price": "30",
+      "sell-price": "30",
+      "rent": [ "2", "10", "30", "90", "160", "250" ],
+      "set": "#121212"
+    },
+    {
+      "name": "Water works",
+      "type": "UTILITY",
+      "rent": [ "4", "10" ],
+      "price": "150",
+      "mortgage-price": "75",
+      "sell-price": "75"
+    },
+    {
+      "name": "Reading Railroad",
+      "type": "STATION",
+      "rent": [ "25", "50", "100", "200" ],
+      "price": "200",
+      "mortgage-price": "100",
+      "sell-price": "100"
+    },
+    {
+      "name": "Community chest",
+      "type": "COMMUNITY_CHEST"
+    },
+    {
+      "name": "Income tax",
+      "type": "TAX",
+      "tax": "200",
+      "tax-percentage": "10"
+    }
+  ]
+}

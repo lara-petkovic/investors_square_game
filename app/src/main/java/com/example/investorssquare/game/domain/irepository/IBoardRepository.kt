@@ -1,5 +1,5 @@
 package com.example.investorssquare.game.domain.irepository
 
-interface ITableRepository {
+interface IBoardRepository {
     suspend fun getFields() // : List<Something>
 }
