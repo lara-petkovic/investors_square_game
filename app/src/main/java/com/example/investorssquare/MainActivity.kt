@@ -22,12 +22,12 @@ class MainActivity : ComponentActivity() {
                     val jsonParser = JsonParser(context = LocalContext.current)
                     val board: Board = jsonParser.loadBoard("table_prototype.json")
                     val players: List<Player> = listOf(
-                        Player("Pl 1", 1500, emptyList()),
-                        Player("Player 2", 1300, emptyList()),
-                        Player("Player 3", 1200, emptyList()),
-                        Player("Player 4", 1100, emptyList()),
-                        Player("Player 5", 1400, emptyList()),
-                        Player("Player 6", 1250, emptyList())
+                        Player("Lara", 1500, emptyList()),
+                        Player("Dusan", 1300, emptyList()),
+                        Player("Kornelije", 1200, emptyList()),
+                        Player("Jelly", 1100, emptyList()),
+                        Player("Luka002", 1400, emptyList()),
+                        Player("Urosh", 1250, emptyList())
                     )
 
                     Navigation(players)

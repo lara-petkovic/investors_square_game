@@ -65,7 +65,7 @@ fun PlayerCard(player: Player, width: Dp) {
                     ) {
                         Text(
                             text = player.money.toString(),
-                            fontSize = 14.sp,
+                            fontSize = 15.sp,
                             color = Color.Black
                         )
                         Box(modifier = Modifier.size((width.value * 0.13).dp)) {
