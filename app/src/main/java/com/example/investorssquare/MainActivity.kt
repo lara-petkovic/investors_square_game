@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
                     val jsonParser = JsonParser(context = LocalContext.current)
                     val board: Board = jsonParser.loadBoard("table_prototype.json")
 
-                    Navigation()
+                    Navigation(board)
                 }
             }
         }
