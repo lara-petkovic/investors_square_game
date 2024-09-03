@@ -63,7 +63,7 @@
       "price": "200",
       "mortgage-price": "100",
       "sell-price": "100",
-      "image-url": "@drawable/station1"
+      "image-url": "nba_lal_court"
     },
     {
       "name": "New York Knicks",
@@ -155,7 +155,7 @@
       "price": "200",
       "mortgage-price": "100",
       "sell-price": "100",
-      "image-url": "@drawable/station2"
+      "image-url": "nba_bos_court"
     },
     {
       "name": "Orlando Magic",
@@ -242,7 +242,7 @@
       "price": "200",
       "mortgage-price": "100",
       "sell-price": "100",
-      "image-url": "@drawable/station3"
+      "image-url": "nba_bos_court"
     },
     {
       "name": "Detroit Pistons",
@@ -334,7 +334,7 @@
       "price": "200",
       "mortgage-price": "100",
       "sell-price": "100",
-      "image-url": "@drawable/station4"
+      "image-url": "nba_bos_court"
     },
     {
       "name": "Chance",
