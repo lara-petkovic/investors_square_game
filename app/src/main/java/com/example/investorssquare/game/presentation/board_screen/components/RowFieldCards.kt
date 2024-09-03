@@ -38,7 +38,7 @@ fun RowFieldCards(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         for (i in 1..9) {
-            var index = 10 - i + startIndex
+            val index = 10 - i + startIndex
             val field: Field = board.fields[index]
             FieldCard(
                 fieldWidth,
