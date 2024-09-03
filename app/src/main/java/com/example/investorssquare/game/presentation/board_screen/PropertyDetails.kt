@@ -21,7 +21,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -32,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.example.investorssquare.R
+import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.Property
 
@@ -41,10 +45,12 @@ fun PropertyDetails(
     onDismissRequest: () -> Unit,
     offset : IntOffset,
     popupWidth: Dp,
-    popupHeight: Dp
+    popupHeight: Dp,
+    board: Board
 ) {
     val property = field as? Property
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
     Popup(
         onDismissRequest = { onDismissRequest() },
         properties = PopupProperties(focusable = true),
@@ -61,6 +67,17 @@ fun PropertyDetails(
                     shape = RoundedCornerShape(8.dp)
                 )
         ) {
+            if (!property?.imageUrl.isNullOrEmpty()) {
+                Image(
+                    painter = painterResource(context.resources.getIdentifier(property?.imageUrl?:"", "drawable", context.packageName)),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(8.dp))
+                        .graphicsLayer(alpha = 0.2f),
+                    contentScale = ContentScale.Crop
+                )
+            }
             Column(
                 modifier = Modifier.fillMaxWidth().fillMaxHeight(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -124,7 +141,7 @@ fun PropertyDetails(
                                     )
                                     Box(modifier = Modifier.size(16.dp)) {
                                         Image(
-                                            painter = painterResource(R.drawable.house),
+                                            painter = painterResource(context.resources.getIdentifier(board.houseImageUrl, "drawable", context.packageName)),
                                             contentDescription = null,
                                             modifier = Modifier.fillMaxSize()
                                         )
@@ -171,7 +188,7 @@ fun PropertyDetails(
                         ) {
                             Box(modifier = Modifier.size(16.dp)) {
                                 Image(
-                                    painter = painterResource(R.drawable.hotel),
+                                    painter = painterResource(context.resources.getIdentifier(board.hotelImageUrl, "drawable", context.packageName)),
                                     contentDescription = null,
                                     modifier = Modifier.fillMaxSize()
                                 )

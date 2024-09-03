@@ -1,9 +1,9 @@
 {
   "name": "Board1",
-  "image-url": "@drawable/board1",
+  "image-url": "board1",
   "dice-color": "#ffffff",
-  "house-image-url": "@drawable/house",
-  "hotel-image-url": "@drawable/hotel",
+  "house-image-url": "house",
+  "hotel-image-url": "hotel",
   "property-common-name": "property",
   "property-common-name-plural": "properties",
   "station-common-name": "station",
