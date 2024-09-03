@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
                         Player("Urosh", 1250, emptyList())
                     )
 
-                    Navigation(players)
+                    Navigation(players, board)
                 }
             }
         }

@@ -7,30 +7,36 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.example.investorssquare.game.domain.model.Board
+import com.example.investorssquare.game.domain.model.Field
+import com.example.investorssquare.game.presentation.board_screen.PropertyDetailsPopup
 
 @Composable
 fun CornerFieldCard(
     fieldSize: Dp,
     modifier: Modifier = Modifier,
-    index: Int
+    index: Int,
+    board: Board,
+    onFieldClick: (Field) -> Unit
 ) {
-    val context = LocalContext.current
     Card(
         modifier = modifier
-            .size(fieldSize)
-            .clickable {
-                Toast.makeText(context, "$index square clicked!", Toast.LENGTH_SHORT).show()
-            },
+            .size(fieldSize),
         shape = RectangleShape,
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         border = BorderStroke(width = 1.dp, color = Color.Black)
     ) {
-
+        val field : Field = board.fields[index]
     }
 }
