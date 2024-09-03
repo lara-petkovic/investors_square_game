@@ -23,7 +23,9 @@ class JsonParser(private val context: Context) {
         val fields = jsonObject["fields"]?.jsonArray ?: throw Exception("Fields array is null")
         val fieldList = fields.mapIndexed { index, element -> parseField(element.jsonObject, index) }
 
-        return Board(boardName, imageUrl, fieldList)
+        val playerColors = parsePlayerColors(jsonObject)
+
+        return Board(boardName, imageUrl, fieldList, playerColors)
     }
 
     private fun loadJsonFromFile(fileName: String): String {
@@ -88,5 +90,10 @@ class JsonParser(private val context: Context) {
     private fun parseRent(fieldObject: JsonObject): List<Int> {
         return fieldObject["rent"]?.jsonArray?.map { it.jsonPrimitive.int }
             ?: throw Exception("Rent is null")
+    }
+
+    private fun parsePlayerColors(jsonObject: JsonObject): List<Color> {
+        val colorsArray = jsonObject["player-colors"]?.jsonArray ?: throw Exception("Player colors array is null")
+        return colorsArray.map { Color(android.graphics.Color.parseColor(it.jsonPrimitive.content)) }
     }
 }

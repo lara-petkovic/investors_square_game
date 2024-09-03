@@ -15,7 +15,7 @@ import com.example.investorssquare.util.Constants
 @Composable
 fun PlayerCardColumns(players: List<Player>, screenWidthDp: Int) {
     val columnsCount = 2
-    val playersPerColumn = (players.size + columnsCount - 1) / columnsCount // Ceiling division
+    val playersPerColumn = (players.size + columnsCount - 1) / columnsCount
     val columns = (0 until columnsCount).map { columnIndex ->
         players.drop(columnIndex * playersPerColumn).take(playersPerColumn)
     }

@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -31,9 +32,9 @@ import com.example.investorssquare.game.domain.model.Player
 fun PlayerCard(player: Player, width: Dp) {
     Card(
         modifier = Modifier.width(width),
-        border = BorderStroke(width = 2.dp, color = Color.Black),
+        border = BorderStroke(width = 2.5.dp, color = lerp(player.color, Color.Black, 0.2f)),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.LightGray),
+        colors = CardDefaults.cardColors(containerColor = player.color.copy(alpha = 0.6f)),
     ) {
         Box(
             modifier = Modifier
