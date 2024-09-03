@@ -78,12 +78,6 @@ fun PropertyDetails(
                 )
                 Spacer(modifier = Modifier.height(3.dp))
                 Column {
-                    var dots1 by remember { mutableStateOf(".") }
-                    var dots2 by remember { mutableStateOf(".") }
-                    var dots3 by remember { mutableStateOf(".") }
-                    var dots4 by remember { mutableStateOf(".") }
-                    var dotsh by remember { mutableStateOf(".") }
-                    val density = LocalDensity.current
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -92,19 +86,6 @@ fun PropertyDetails(
                             text = "\uD83C\uDFE0",
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Green
-                        )
-                        Text(
-                            text = dots1,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Black,
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center,
-                            onTextLayout = { textLayoutResult ->
-                                val spaceWidth = with(density) { textLayoutResult.size.width.toDp() }
-                                val dotWidth = with(density) { textLayoutResult.getBoundingBox(0).width.toDp() }
-                                val dotCount = (spaceWidth / dotWidth).toInt().coerceAtLeast(0)
-                                dots1 = ".".repeat(dotCount)
-                            }
                         )
                         Text(
                             text = "${property?.rent?.get(1) ?: 0}\uD83E\uDE99",
@@ -122,19 +103,6 @@ fun PropertyDetails(
                             color = Color.Green
                         )
                         Text(
-                            text = dots2,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Black,
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center,
-                            onTextLayout = { textLayoutResult ->
-                                val spaceWidth = with(density) { textLayoutResult.size.width.toDp() }
-                                val dotWidth = with(density) { textLayoutResult.getBoundingBox(0).width.toDp() }
-                                val dotCount = (spaceWidth / dotWidth).toInt().coerceAtLeast(0)
-                                dots2 = ".".repeat(dotCount)
-                            }
-                        )
-                        Text(
                             text = "${property?.rent?.get(2) ?: 0}\uD83E\uDE99",
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Black
@@ -148,19 +116,6 @@ fun PropertyDetails(
                             text = "\uD83C\uDFE0 \uD83C\uDFE0 \uD83C\uDFE0",
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Green
-                        )
-                        Text(
-                            text = dots3,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Black,
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center,
-                            onTextLayout = { textLayoutResult ->
-                                val spaceWidth = with(density) { textLayoutResult.size.width.toDp() }
-                                val dotWidth = with(density) { textLayoutResult.getBoundingBox(0).width.toDp() }
-                                val dotCount = (spaceWidth / dotWidth).toInt().coerceAtLeast(0)
-                                dots3 = ".".repeat(dotCount)
-                            }
                         )
                         Text(
                             text = "${property?.rent?.get(3) ?: 0}\uD83E\uDE99",
@@ -178,19 +133,6 @@ fun PropertyDetails(
                             color = Color.Green
                         )
                         Text(
-                            text = dots4,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Black,
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center,
-                            onTextLayout = { textLayoutResult ->
-                                val spaceWidth = with(density) { textLayoutResult.size.width.toDp() }
-                                val dotWidth = with(density) { textLayoutResult.getBoundingBox(0).width.toDp() }
-                                val dotCount = (spaceWidth / dotWidth).toInt().coerceAtLeast(0)
-                                dots4 = ".".repeat(dotCount)
-                            }
-                        )
-                        Text(
                             text = "${property?.rent?.get(4) ?: 0}\uD83E\uDE99",
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Black
@@ -204,19 +146,6 @@ fun PropertyDetails(
                             text = "\uD83C\uDFE8",
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Green
-                        )
-                        Text(
-                            text = dotsh,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Black,
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center,
-                            onTextLayout = { textLayoutResult ->
-                                val spaceWidth = with(density) { textLayoutResult.size.width.toDp() }
-                                val dotWidth = with(density) { textLayoutResult.getBoundingBox(0).width.toDp() }
-                                val dotCount = (spaceWidth / dotWidth).toInt().coerceAtLeast(0)
-                                dotsh = ".".repeat(dotCount)
-                            }
                         )
                         Text(
                             text = "${property?.rent?.get(5) ?: 0}\uD83E\uDE99",

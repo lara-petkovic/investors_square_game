@@ -1,6 +1,15 @@
 {
   "name": "Board1",
   "image-url": "@drawable/board1",
+  "dice-color": "#ffffff",
+  "house-image-url": "@drawable/house",
+  "hotel-image-url": "@drawable/hotel",
+  "property-common-name": "property",
+  "property-common-name-plural": "properties",
+  "station-common-name": "station",
+  "station-common-name-plural": "stations",
+  "utility-common-name": "utility",
+  "utility-common-name-plural": "utilities",
   "default-rules": {},
   "community-chest-cards": [
     {
@@ -51,7 +60,8 @@
       "rent": [ "25", "50", "100", "200" ],
       "price": "200",
       "mortgage-price": "100",
-      "sell-price": "100"
+      "sell-price": "100",
+      "image-url": "@drawable/station1"
     },
     {
       "name": "Oriental Avenue",
@@ -107,7 +117,8 @@
       "rent": [ "4", "10" ],
       "price": "150",
       "mortgage-price": "75",
-      "sell-price": "75"
+      "sell-price": "75",
+      "image-url": "@drawable/utility1"
     },
     {
       "name": "States Avenue",
@@ -135,7 +146,8 @@
       "rent": [ "25", "50", "100", "200" ],
       "price": "200",
       "mortgage-price": "100",
-      "sell-price": "100"
+      "sell-price": "100",
+      "image-url": "@drawable/station2"
     },
     {
       "name": "St. James Place",
@@ -215,7 +227,8 @@
       "rent": [ "25", "50", "100", "200" ],
       "price": "200",
       "mortgage-price": "100",
-      "sell-price": "100"
+      "sell-price": "100",
+      "image-url": "@drawable/station3"
     },
     {
       "name": "Atlantic Avenue",
@@ -243,7 +256,8 @@
       "rent": [ "4", "10" ],
       "price": "150",
       "mortgage-price": "75",
-      "sell-price": "75"
+      "sell-price": "75",
+      "image-url": "@drawable/utility2"
     },
     {
       "name": "Marvin Gardens",
@@ -299,7 +313,8 @@
       "rent": [ "25", "50", "100", "200" ],
       "price": "200",
       "mortgage-price": "100",
-      "sell-price": "100"
+      "sell-price": "100",
+      "image-url": "@drawable/station4"
     },
     {
       "name": "Chance",

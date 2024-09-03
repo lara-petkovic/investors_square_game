@@ -6,5 +6,8 @@ class Utility(
     override val rent: List<Int>,
     override val price: Int,
     override val mortgagePrice: Int,
-    override val sellPrice: Int
-) : Estate(name, FieldType.UTILITY, index, rent, price, mortgagePrice, sellPrice)
+    override val sellPrice: Int,
+    override val imageUrl: String,
+    override val commonName: String,
+    override val commonNamePlural: String
+) : Estate(name, FieldType.UTILITY, index, rent, price, mortgagePrice, sellPrice, imageUrl, commonName, commonNamePlural)

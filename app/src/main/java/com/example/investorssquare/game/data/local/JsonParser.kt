@@ -19,13 +19,22 @@ class JsonParser(private val context: Context) {
 
         val boardName = jsonObject["name"]?.jsonPrimitive?.content ?: throw Exception("Board name is null")
         val imageUrl = jsonObject["image-url"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
+        val houseImageUrl = jsonObject["house-image-url"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
+        val hotelImageUrl = jsonObject["hotel-image-url"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
+        val propertyCommonName = jsonObject["property-common-name"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
+        val propertyCommonNamePlural = jsonObject["property-common-name-plural"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
+        val stationCommonName = jsonObject["station-common-name"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
+        val stationCommonNamePlural = jsonObject["station-common-name-plural"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
+        val utilityCommonName = jsonObject["utility-common-name"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
+        val utilityCommonNamePlural = jsonObject["utility-common-name-plural"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
+        val diceColor = Color(android.graphics.Color.parseColor(jsonObject["dice-color"]?.jsonPrimitive?.content ?: throw Exception("Set color is null")))
 
         val fields = jsonObject["fields"]?.jsonArray ?: throw Exception("Fields array is null")
-        val fieldList = fields.mapIndexed { index, element -> parseField(element.jsonObject, index) }
+        val fieldList = fields.mapIndexed { index, element -> parseField(element.jsonObject, index, propertyCommonName, propertyCommonNamePlural, stationCommonName, stationCommonNamePlural, utilityCommonName, utilityCommonNamePlural) }
 
         val playerColors = parsePlayerColors(jsonObject)
 
-        return Board(boardName, imageUrl, fieldList, playerColors)
+        return Board(boardName, imageUrl, houseImageUrl, hotelImageUrl, propertyCommonName, propertyCommonNamePlural, stationCommonName, stationCommonNamePlural, utilityCommonName, utilityCommonNamePlural, diceColor, fieldList, playerColors)
     }
 
     private fun loadJsonFromFile(fileName: String): String {
@@ -36,7 +45,7 @@ class JsonParser(private val context: Context) {
         }
     }
 
-    private fun parseField(fieldObject: JsonObject, index: Int): Field {
+    private fun parseField(fieldObject: JsonObject, index: Int, pcn:String, pcnp:String, scn:String, scnp:String, ucn:String, ucnp:String): Field {
         val name = fieldObject["name"]?.jsonPrimitive?.content ?: throw Exception("Field name is null")
         val type = fieldObject["type"]?.jsonPrimitive?.content ?: throw Exception("Field type is null")
 
@@ -50,7 +59,10 @@ class JsonParser(private val context: Context) {
                     mortgagePrice = fieldObject["mortgage-price"]?.jsonPrimitive?.int ?: throw Exception("Mortgage price is null"),
                     sellPrice = fieldObject["sell-price"]?.jsonPrimitive?.int ?: throw Exception("Sell price is null"),
                     setColor = Color(android.graphics.Color.parseColor(fieldObject["set"]?.jsonPrimitive?.content ?: throw Exception("Set color is null"))),
-                    housePrice = fieldObject["house-price"]?.jsonPrimitive?.int ?: throw Exception("House price is null")
+                    housePrice = fieldObject["house-price"]?.jsonPrimitive?.int ?: throw Exception("House price is null"),
+                    imageUrl = fieldObject["image-url"]?.jsonPrimitive?.content ?: "",
+                    commonName = pcn,
+                    commonNamePlural = pcnp
                 )
             }
             FieldType.STATION -> {
@@ -60,7 +72,10 @@ class JsonParser(private val context: Context) {
                     rent = parseRent(fieldObject),
                     price = fieldObject["price"]?.jsonPrimitive?.int ?: throw Exception("Price is null"),
                     mortgagePrice = fieldObject["mortgage-price"]?.jsonPrimitive?.int ?: throw Exception("Mortgage price is null"),
-                    sellPrice = fieldObject["sell-price"]?.jsonPrimitive?.int ?: throw Exception("Sell price is null")
+                    sellPrice = fieldObject["sell-price"]?.jsonPrimitive?.int ?: throw Exception("Sell price is null"),
+                    imageUrl = fieldObject["image-url"]?.jsonPrimitive?.content ?: "",
+                    commonName = scn,
+                    commonNamePlural = scnp
                 )
             }
             FieldType.UTILITY -> {
@@ -70,7 +85,10 @@ class JsonParser(private val context: Context) {
                     rent = parseRent(fieldObject),
                     price = fieldObject["price"]?.jsonPrimitive?.int ?: throw Exception("Price is null"),
                     mortgagePrice = fieldObject["mortgage-price"]?.jsonPrimitive?.int ?: throw Exception("Mortgage price is null"),
-                    sellPrice = fieldObject["sell-price"]?.jsonPrimitive?.int ?: throw Exception("Sell price is null")
+                    sellPrice = fieldObject["sell-price"]?.jsonPrimitive?.int ?: throw Exception("Sell price is null"),
+                    imageUrl = fieldObject["image-url"]?.jsonPrimitive?.content ?: "",
+                    commonName = ucn,
+                    commonNamePlural = ucnp
                 )
             }
             FieldType.TAX -> {

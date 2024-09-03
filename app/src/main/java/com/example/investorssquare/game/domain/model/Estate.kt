@@ -7,5 +7,8 @@ abstract class Estate(
     open val rent: List<Int>,
     open val price: Int,
     open val mortgagePrice: Int,
-    open val sellPrice: Int
+    open val sellPrice: Int,
+    open val imageUrl: String,
+    open val commonName: String,
+    open val commonNamePlural: String
 ) : Field(name, type, index)
