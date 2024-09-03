@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
 
         // Load data using JsonParser
         val jsonParser = JsonParser(this)
-        val board: Board = jsonParser.loadBoard("table_prototype.json")
+        val board: Board = jsonParser.loadBoard("nba_board.json")
 
         setContent {
             InvestorsSquareTheme {
