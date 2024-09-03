@@ -5,6 +5,6 @@ import androidx.compose.ui.graphics.Color
 data class Player(
     val name: String,
     val money: Int,
-    val properties: List<Property>,
-    val color: Color
+    val color: Color,
+    val properties: List<Property> = emptyList()
 )
