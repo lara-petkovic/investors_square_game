@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier // Correct import for Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
@@ -22,7 +23,9 @@ import com.example.investorssquare.game.domain.model.Property
 fun PropertyDetailsPopup(
     field: Field,
     onDismissRequest: () -> Unit,
-    offset : IntOffset
+    offset : IntOffset,
+    popupWidth: Dp,
+    popupHeight: Dp
 ) {
     Popup(
         onDismissRequest = { onDismissRequest() },
@@ -33,7 +36,7 @@ fun PropertyDetailsPopup(
     ) {
         Box(
             modifier = Modifier
-                .size(160.dp, 250.dp)
+                .size(popupWidth, popupHeight)
                 .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
                 .padding(16.dp)
         ) {

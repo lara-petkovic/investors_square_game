@@ -176,11 +176,14 @@ fun Board(
         popupField?.let { field ->
             if (showPopup) {
                 PropertyDetailsPopup(
+
                     field = field,
                     onDismissRequest = {
                         showPopup = false
                     },
-                    offset = IntOffset(300,190)
+                    offset = IntOffset((with(LocalDensity.current) { fieldHeight.toPx() }+1.75*with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),(with(LocalDensity.current) { fieldHeight.toPx() }+(0.02f*9*with(LocalDensity.current) { fieldWidth.toPx() })).toInt()),
+                    popupWidth = (5.5 * fieldWidth.value).dp,
+                    popupHeight = (0.96 * 9 * fieldWidth.value).dp
                 )
             }
         }
