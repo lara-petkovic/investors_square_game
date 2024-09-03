@@ -12,7 +12,7 @@ import com.example.investorssquare.game.presentation.board_screen.BoardScreen
 import com.example.investorssquare.game.presentation.board_screen.PlayerViewModel
 
 @Composable
-fun Navigation(players: List<Player>, board: Board) {
+fun Navigation(board: Board) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Screen.BoardScreen.route) {
@@ -20,7 +20,14 @@ fun Navigation(players: List<Player>, board: Board) {
 
             val playerViewModel: PlayerViewModel = hiltViewModel()
 
-            playerViewModel.setPlayers(players)
+            playerViewModel.setPlayers(listOf(
+                Player("Lara", 1500,board.playerColors[0]),
+                Player("Dusan", 1300, board.playerColors[1]),
+                Player("Kornelije", 1200, board.playerColors[2]),
+                Player("Jelly", 1100, board.playerColors[3]),
+                Player("Luka", 1400, board.playerColors[4]),
+                Player("Uros", 1250, board.playerColors[5])
+            ))
 
             Box {
                 BoardScreen(playerViewModel = playerViewModel, board = board)
