@@ -27,7 +27,10 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Field
-import com.example.investorssquare.game.presentation.board_screen.PropertyDetailsPopup
+import com.example.investorssquare.game.domain.model.FieldType
+import com.example.investorssquare.game.presentation.board_screen.PropertyDetails
+import com.example.investorssquare.game.presentation.board_screen.StationDetails
+import com.example.investorssquare.game.presentation.board_screen.UtilityDetails
 import com.example.investorssquare.util.Constants
 import kotlin.math.roundToInt
 
@@ -175,16 +178,33 @@ fun Board(
         }
         popupField?.let { field ->
             if (showPopup) {
-                PropertyDetailsPopup(
-
-                    field = field,
-                    onDismissRequest = {
-                        showPopup = false
-                    },
-                    offset = IntOffset((with(LocalDensity.current) { fieldHeight.toPx() }+1.75*with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),(with(LocalDensity.current) { fieldHeight.toPx() }+(0.02f*9*with(LocalDensity.current) { fieldWidth.toPx() })).toInt()),
-                    popupWidth = (5.5 * fieldWidth.value).dp,
-                    popupHeight = (0.96 * 9 * fieldWidth.value).dp
-                )
+                if(field.type==FieldType.PROPERTY){
+                    PropertyDetails(
+                        field = field,
+                        onDismissRequest = { showPopup = false },
+                        offset = IntOffset((with(LocalDensity.current) { fieldHeight.toPx() }+1.75*with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),(with(LocalDensity.current) { fieldHeight.toPx() }+(0.02f*9*with(LocalDensity.current) { fieldWidth.toPx() })).toInt()),
+                        popupWidth = (5.5 * fieldWidth.value).dp,
+                        popupHeight = (0.96 * 9 * fieldWidth.value).dp
+                    )
+                }
+                if(field.type==FieldType.STATION){
+                    StationDetails(
+                        field = field,
+                        onDismissRequest = { showPopup = false },
+                        offset = IntOffset((with(LocalDensity.current) { fieldHeight.toPx() }+1.75*with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),(with(LocalDensity.current) { fieldHeight.toPx() }+(0.02f*9*with(LocalDensity.current) { fieldWidth.toPx() })).toInt()),
+                        popupWidth = (5.5 * fieldWidth.value).dp,
+                        popupHeight = (0.96 * 9 * fieldWidth.value).dp
+                    )
+                }
+                if(field.type==FieldType.UTILITY){
+                    UtilityDetails(
+                        field = field,
+                        onDismissRequest = { showPopup = false },
+                        offset = IntOffset((with(LocalDensity.current) { fieldHeight.toPx() }+1.75*with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),(with(LocalDensity.current) { fieldHeight.toPx() }+(0.02f*9*with(LocalDensity.current) { fieldWidth.toPx() })).toInt()),
+                        popupWidth = (5.5 * fieldWidth.value).dp,
+                        popupHeight = (0.96 * 9 * fieldWidth.value).dp
+                    )
+                }
             }
         }
     }

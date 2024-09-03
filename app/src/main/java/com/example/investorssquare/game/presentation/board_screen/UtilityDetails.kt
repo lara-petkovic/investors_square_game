@@ -3,7 +3,6 @@ package com.example.investorssquare.game.presentation.board_screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.* // This import covers all layout functions like size, height, and align
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -17,10 +16,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.example.investorssquare.game.domain.model.Field
-import com.example.investorssquare.game.domain.model.Property
 
 @Composable
-fun PropertyDetails(
+fun UtilityDetails(
     field: Field,
     onDismissRequest: () -> Unit,
     offset : IntOffset,
@@ -42,7 +40,7 @@ fun PropertyDetails(
         ) {
             Column {
                 Text(
-                    text = "Field Details",
+                    text = "Utility Details",
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.Black
                 )
