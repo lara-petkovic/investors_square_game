@@ -1,7 +1,7 @@
 package com.example.investorssquare.game.presentation.board_screen.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.res.painterResource
@@ -29,52 +30,63 @@ import com.example.investorssquare.R
 import com.example.investorssquare.game.domain.model.Player
 
 @Composable
-fun PlayerCard(player: Player, width: Dp) {
-    Card(
-        modifier = Modifier.width(width),
-        border = BorderStroke(width = 2.5.dp, color = lerp(player.color, Color.Black, 0.2f)),
-        shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = player.color.copy(alpha = 0.6f)),
+fun PlayerCard(player: Player, width: Dp, isActive: Boolean) {
+    Box(
+        modifier = Modifier
+            .width(width)
+            .height(60.dp)
+            .border(
+                width = 2.5.dp,
+                color = if (isActive) Color.Red else lerp(player.color, Color.Black, 0.2f),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clip(RoundedCornerShape(8.dp))
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp),
-            contentAlignment = Alignment.Center
+        Card(
+            modifier = Modifier.fillMaxSize(),
+            shape = RoundedCornerShape(8.dp),
+            colors = CardDefaults.cardColors(containerColor = player.color.copy(alpha = 0.6f))
         ) {
-            Row(
+            Box(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxWidth()
+                    .height(60.dp),
+                contentAlignment = Alignment.Center
             ) {
-                // Left-aligned content
-                Box(modifier = Modifier.weight(1f)) { // Take up remaining space
-                    Text(
-                        text = player.name,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                }
-
-                // Right-aligned content
-                Box {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Left-aligned content
+                    Box(modifier = Modifier.weight(1f)) { // Take up remaining space
                         Text(
-                            text = player.money.toString(),
-                            fontSize = 15.sp,
+                            text = player.name,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
                             color = Color.Black
                         )
-                        Box(modifier = Modifier.size((width.value * 0.13).dp)) {
-                            Image(
-                                painter = painterResource(R.drawable.coin),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize()
+                    }
+
+                    // Right-aligned content
+                    Box {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = player.money.toString(),
+                                fontSize = 15.sp,
+                                color = Color.Black
                             )
+                            Box(modifier = Modifier.size((width.value * 0.13).dp)) {
+                                Image(
+                                    painter = painterResource(R.drawable.coin),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
                         }
                     }
                 }

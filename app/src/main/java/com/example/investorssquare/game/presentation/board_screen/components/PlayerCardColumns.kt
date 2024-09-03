@@ -13,7 +13,7 @@ import com.example.investorssquare.game.domain.model.Player
 import com.example.investorssquare.util.Constants
 
 @Composable
-fun PlayerCardColumns(players: List<Player>, screenWidthDp: Int) {
+fun PlayerCardColumns(players: List<Player>, screenWidthDp: Int, activePlayerIndex: Int) {
     val columnsCount = 2
     val playersPerColumn = (players.size + columnsCount - 1) / columnsCount
     val columns = (0 until columnsCount).map { columnIndex ->
@@ -32,10 +32,11 @@ fun PlayerCardColumns(players: List<Player>, screenWidthDp: Int) {
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = if (index == 0) Alignment.Start else Alignment.End
             ) {
-                columnPlayers.forEach { player ->
+                columnPlayers.forEachIndexed { i, player ->
                     PlayerCard(
                         player = player,
-                        width = (screenWidthDp * Constants.PLAYER_CARD_WIDTH).dp
+                        width = (screenWidthDp * Constants.PLAYER_CARD_WIDTH).dp,
+                        isActive = (index * playersPerColumn + i) == activePlayerIndex
                     )
                 }
             }
