@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
@@ -21,8 +21,8 @@ fun BoardScreen(
     playerViewModel: PlayerViewModel = hiltViewModel(),
     board: Board
 ) {
-    val players by playerViewModel.players.observeAsState(emptyList())
-    val activePlayerIndex by playerViewModel.activePlayerIndex.observeAsState(0)
+    val players by playerViewModel.players.collectAsState()
+    val activePlayerIndex by playerViewModel.activePlayerIndex.collectAsState()
 
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp.dp
