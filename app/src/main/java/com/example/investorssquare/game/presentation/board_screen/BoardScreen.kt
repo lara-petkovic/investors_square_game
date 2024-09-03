@@ -5,21 +5,30 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.investorssquare.game.domain.model.Board
-import com.example.investorssquare.game.domain.model.Player
 import com.example.investorssquare.game.presentation.board_screen.components.Board
 import com.example.investorssquare.game.presentation.board_screen.components.PlayerCardColumns
 import com.example.investorssquare.util.Constants
 
 @Composable
-fun BoardScreen(players: List<Player>, board: Board) {
+fun BoardScreen(
+    playerViewModel: PlayerViewModel = hiltViewModel(),
+    board: Board
+) {
+    val players by playerViewModel.players.observeAsState(emptyList())
+    val activePlayerIndex by playerViewModel.activePlayerIndex.observeAsState(0)
+
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp.dp
     val sideMargin = (screenWidthDp.value * Constants.SIDE_BOARD_MARGIN).dp
     val topMargin = (screenWidthDp.value * Constants.TOP_BOARD_MARGIN).dp
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -27,6 +36,10 @@ fun BoardScreen(players: List<Player>, board: Board) {
         verticalArrangement = Arrangement.Top
     ) {
         Board(screenWidthDp, sideMargin, board)
-        PlayerCardColumns(players = players, screenWidthDp = screenWidthDp.value.toInt())
+        PlayerCardColumns(
+            players = players,
+            screenWidthDp = screenWidthDp.value.toInt(),
+            activePlayerIndex = activePlayerIndex
+        )
     }
 }
