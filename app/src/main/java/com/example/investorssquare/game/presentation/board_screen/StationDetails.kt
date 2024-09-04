@@ -77,7 +77,7 @@ fun StationDetails(
                         painter = painterResource(context.resources.getIdentifier(station?.imageUrl?:"", "drawable", context.packageName)),
                         contentDescription = null,
                         modifier = Modifier
-                            .height((popupHeight.value*0.32).dp),
+                            .height((popupHeight.value*0.30).dp),
                         contentScale = ContentScale.Crop
                     )
                 }
@@ -87,40 +87,18 @@ fun StationDetails(
                     fontSize = 14.sp,
                     color = Color.Black
                 )
-                Spacer(modifier = Modifier.height(3.dp))
-                Column(
-                    modifier = Modifier.fillMaxWidth().height((popupHeight.value*0.46).dp).verticalScroll(scrollState),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Text(
-                            text = "RENT ${station?.rent?.get(0) ?: 0}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontSize = 12.sp,
-                            color = Color.Black
-                        )
-                        Box(modifier = Modifier.size(16.dp)) {
-                            Image(
-                                painter = painterResource(R.drawable.coin),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(3.dp))
+                Box(modifier = Modifier.fillMaxWidth().padding(4.dp)){
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        modifier = Modifier.fillMaxWidth().height((popupHeight.value*0.48).dp).verticalScroll(scrollState).border(1.dp, Color.Black),
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        for(i in 1..((station?.rent?.size?.minus(1)) ?: 0)){
+                        for(i in 0..((station?.rent?.size?.minus(1)) ?: 0)){
                             Row(
                                 modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(
-                                    text = "${i+1} ${station?.commonNamePlural} owned",
+                                    text = "${i+1} ${if(i>0)station?.commonNamePlural else station?.commonName} owned",
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontSize = 11.sp,
                                     color = Color.Black
@@ -181,10 +159,9 @@ fun StationDetails(
                                 )
                             }
                         }
+                        Spacer(modifier = Modifier.height(6.dp))
                     }
-                    Spacer(modifier = Modifier.height(6.dp))
                 }
-                Spacer(modifier = Modifier.height(6.dp))
                 Button(
                     onClick = { onDismissRequest() },
                     modifier = Modifier

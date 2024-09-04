@@ -68,7 +68,7 @@ fun UtilityDetails(
                         painter = painterResource(context.resources.getIdentifier(utility?.imageUrl?:"", "drawable", context.packageName)),
                         contentDescription = null,
                         modifier = Modifier
-                            .height((popupHeight.value*0.38).dp),
+                            .height((popupHeight.value*0.32).dp),
                         contentScale = ContentScale.Crop
                     )
                 }
@@ -78,64 +78,69 @@ fun UtilityDetails(
                     fontSize = 14.sp,
                     color = Color.Black
                 )
-                Spacer(modifier = Modifier.height(3.dp))
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height((popupHeight.value*0.4).dp)
-                        .verticalScroll(scrollState)
-                        .padding(horizontal = 9.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    for(i in 0..((utility?.rent?.size?.minus(1)) ?: 0)){
-                        Text(
-
-                            text = "${i+1} ${if(i>0)utility?.commonNamePlural else utility?.commonName} owned - ${utility?.rent?.get(i)} times amount shown on dice",
-                            style = MaterialTheme.typography.labelSmall,
-                            fontSize = 10.sp,
-                            color = Color.Black
-                        )
-                        Spacer(modifier = Modifier.height(3.dp))
-                    }
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(1.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Text(
-                            text = "Mortgage Value ${utility?.mortgagePrice ?: 0}",
-                            style = MaterialTheme.typography.bodySmall,
-                            fontSize = 11.sp,
-                            color = Color.Black
-                        )
-                        Box(modifier = Modifier.size(13.dp)) {
-                            Image(
-                                painter = painterResource(R.drawable.coin),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize()
+                Box(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height((popupHeight.value * 0.46).dp)
+                            .verticalScroll(scrollState)
+                            .padding(horizontal = 3.dp)
+                            .border(1.dp, Color.Black),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        for (i in 0..((utility?.rent?.size?.minus(1)) ?: 0)) {
+                            Text(
+                                modifier = Modifier.padding(3.dp),
+                                text = "${i + 1} ${if (i > 0) utility?.commonNamePlural else utility?.commonName} owned - ${
+                                    utility?.rent?.get(
+                                        i
+                                    )
+                                } times amount shown on dice",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontSize = 10.sp,
+                                color = Color.Black,
                             )
+                            Spacer(modifier = Modifier.height(3.dp))
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(1.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Mortgage Value ${utility?.mortgagePrice ?: 0}",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontSize = 11.sp,
+                                color = Color.Black
+                            )
+                            Box(modifier = Modifier.size(13.dp)) {
+                                Image(
+                                    painter = painterResource(R.drawable.coin),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(1.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Sell Value ${utility?.sellPrice ?: 0}",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontSize = 11.sp,
+                                color = Color.Black
+                            )
+                            Box(modifier = Modifier.size(13.dp)) {
+                                Image(
+                                    painter = painterResource(R.drawable.coin),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
                         }
                     }
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(1.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Text(
-                            text = "Sell Value ${utility?.sellPrice ?: 0}",
-                            style = MaterialTheme.typography.bodySmall,
-                            fontSize = 11.sp,
-                            color = Color.Black
-                        )
-                        Box(modifier = Modifier.size(13.dp)) {
-                            Image(
-                                painter = painterResource(R.drawable.coin),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
                 }
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(1.dp))
                 Button(
                     onClick = { onDismissRequest() },
                     modifier = Modifier

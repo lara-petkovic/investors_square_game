@@ -97,55 +97,101 @@ fun PropertyDetails(
                         color = textColor
                     )
                 }
-                Spacer(modifier = Modifier.height(3.dp))
-                Column(
-                    modifier = Modifier.fillMaxWidth().height((popupHeight.value*0.72).dp).verticalScroll(scrollState),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(1.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Text(
-                            text = "RENT ${property?.rent?.get(0) ?: 0}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontSize = 14.sp,
-                            color = Color.Black
-                        )
-                        Box(modifier = Modifier.size(16.dp)) {
-                            Image(
-                                painter = painterResource(R.drawable.coin),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize()
+                Box(modifier = Modifier.fillMaxWidth().padding(4.dp)){
+                    Column(
+                        modifier = Modifier.fillMaxWidth().height((popupHeight.value*0.72).dp).verticalScroll(scrollState).border(1.dp, Color.Black),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(1.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Text(
+                                text = "RENT ${property?.rent?.get(0) ?: 0}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontSize = 14.sp,
+                                color = Color.Black
                             )
+                            Box(modifier = Modifier.size(16.dp)) {
+                                Image(
+                                    painter = painterResource(R.drawable.coin),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
                         }
-                    }
-                    Spacer(modifier = Modifier.height(3.dp))
-                    Column {
-                        for(i in 1..((property?.rent?.size?.minus(2)) ?: 0)){
+                        Spacer(modifier = Modifier.height(3.dp))
+                        Column {
+                            for(i in 1..((property?.rent?.size?.minus(2)) ?: 0)){
+                                var dots by remember { mutableStateOf("...") }
+                                val density = LocalDensity.current
+                                Row(
+                                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(1.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ){
+                                        Text(
+                                            text = "$i × ",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontSize = 14.sp,
+                                            color = Color.Black
+                                        )
+                                        Box(modifier = Modifier.size(16.dp)) {
+                                            Image(
+                                                painter = painterResource(context.resources.getIdentifier(board.houseImageUrl, "drawable", context.packageName)),
+                                                contentDescription = null,
+                                                modifier = Modifier.fillMaxSize()
+                                            )
+                                        }
+                                    }
+                                    Text(
+                                        text = dots,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = Color.Black,
+                                        modifier = Modifier.weight(1f),
+                                        textAlign = TextAlign.Center,
+                                        onTextLayout = { textLayoutResult ->
+                                            val spaceWidth = with(density) { textLayoutResult.size.width.toDp() }
+                                            val dotWidth = with(density) { textLayoutResult.getBoundingBox(0).width.toDp() }
+                                            val dotCount = (spaceWidth / dotWidth).toInt().coerceAtLeast(0)
+                                            dots = ".".repeat(dotCount)
+                                        }
+                                    )
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(1.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ){
+                                        Text(
+                                            text = "${property?.rent?.get(i) ?: 0}",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontSize = 14.sp,
+                                            color = Color.Black
+                                        )
+                                        Box(modifier = Modifier.size(16.dp)) {
+                                            Image(
+                                                painter = painterResource(R.drawable.coin),
+                                                contentDescription = null,
+                                                modifier = Modifier.fillMaxSize()
+                                            )
+                                        }
+                                    }
+                                }
+                            }
                             var dots by remember { mutableStateOf("...") }
                             val density = LocalDensity.current
                             Row(
                                 modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(1.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ){
-                                    Text(
-                                        text = "$i × ",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        fontSize = 14.sp,
-                                        color = Color.Black
+                                Box(modifier = Modifier.size(16.dp)) {
+                                    Image(
+                                        painter = painterResource(context.resources.getIdentifier(board.hotelImageUrl, "drawable", context.packageName)),
+                                        contentDescription = null,
+                                        modifier = Modifier.fillMaxSize()
                                     )
-                                    Box(modifier = Modifier.size(16.dp)) {
-                                        Image(
-                                            painter = painterResource(context.resources.getIdentifier(board.houseImageUrl, "drawable", context.packageName)),
-                                            contentDescription = null,
-                                            modifier = Modifier.fillMaxSize()
-                                        )
-                                    }
                                 }
                                 Text(
                                     text = dots,
@@ -165,7 +211,7 @@ fun PropertyDetails(
                                     verticalAlignment = Alignment.CenterVertically
                                 ){
                                     Text(
-                                        text = "${property?.rent?.get(i) ?: 0}",
+                                        text = "${property?.rent?.get(property?.rent?.size?.minus(1)?:0) ?: 0}",
                                         style = MaterialTheme.typography.bodyMedium,
                                         fontSize = 14.sp,
                                         color = Color.Black
@@ -180,109 +226,64 @@ fun PropertyDetails(
                                 }
                             }
                         }
-                        var dots by remember { mutableStateOf("...") }
-                        val density = LocalDensity.current
+                        Spacer(modifier = Modifier.height(6.dp))
                         Row(
-                            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Box(modifier = Modifier.size(16.dp)) {
+                            horizontalArrangement = Arrangement.spacedBy(1.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Text(
+                                text = "Building Cost ${property?.housePrice ?: 0}",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontSize = 12.sp,
+                                color = Color.Black
+                            )
+                            Box(modifier = Modifier.size(14.dp)) {
                                 Image(
-                                    painter = painterResource(context.resources.getIdentifier(board.hotelImageUrl, "drawable", context.packageName)),
+                                    painter = painterResource(R.drawable.coin),
                                     contentDescription = null,
                                     modifier = Modifier.fillMaxSize()
                                 )
                             }
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(1.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
                             Text(
-                                text = dots,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Black,
-                                modifier = Modifier.weight(1f),
-                                textAlign = TextAlign.Center,
-                                onTextLayout = { textLayoutResult ->
-                                    val spaceWidth = with(density) { textLayoutResult.size.width.toDp() }
-                                    val dotWidth = with(density) { textLayoutResult.getBoundingBox(0).width.toDp() }
-                                    val dotCount = (spaceWidth / dotWidth).toInt().coerceAtLeast(0)
-                                    dots = ".".repeat(dotCount)
-                                }
+                                text = "Mortgage Value ${property?.mortgagePrice ?: 0}",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontSize = 12.sp,
+                                color = Color.Black
                             )
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(1.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ){
-                                Text(
-                                    text = "${property?.rent?.get(property?.rent?.size?.minus(1)?:0) ?: 0}",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    fontSize = 14.sp,
-                                    color = Color.Black
+                            Box(modifier = Modifier.size(14.dp)) {
+                                Image(
+                                    painter = painterResource(R.drawable.coin),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize()
                                 )
-                                Box(modifier = Modifier.size(16.dp)) {
-                                    Image(
-                                        painter = painterResource(R.drawable.coin),
-                                        contentDescription = null,
-                                        modifier = Modifier.fillMaxSize()
-                                    )
-                                }
+                            }
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(1.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Text(
+                                text = "Sell Value ${property?.sellPrice ?: 0}",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontSize = 12.sp,
+                                color = Color.Black
+                            )
+                            Box(modifier = Modifier.size(14.dp)) {
+                                Image(
+                                    painter = painterResource(R.drawable.coin),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize()
+                                )
                             }
                         }
                     }
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(1.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Text(
-                            text = "Building Cost ${property?.housePrice ?: 0}",
-                            style = MaterialTheme.typography.bodySmall,
-                            fontSize = 12.sp,
-                            color = Color.Black
-                        )
-                        Box(modifier = Modifier.size(14.dp)) {
-                            Image(
-                                painter = painterResource(R.drawable.coin),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
-                    }
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(1.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Text(
-                            text = "Mortgage Value ${property?.mortgagePrice ?: 0}",
-                            style = MaterialTheme.typography.bodySmall,
-                            fontSize = 12.sp,
-                            color = Color.Black
-                        )
-                        Box(modifier = Modifier.size(14.dp)) {
-                            Image(
-                                painter = painterResource(R.drawable.coin),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
-                    }
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(1.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Text(
-                            text = "Sell Value ${property?.sellPrice ?: 0}",
-                            style = MaterialTheme.typography.bodySmall,
-                            fontSize = 12.sp,
-                            color = Color.Black
-                        )
-                        Box(modifier = Modifier.size(14.dp)) {
-                            Image(
-                                painter = painterResource(R.drawable.coin),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
-                    }
                 }
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(2.dp))
                 Button(
                     onClick = { onDismissRequest() },
                     modifier = Modifier
