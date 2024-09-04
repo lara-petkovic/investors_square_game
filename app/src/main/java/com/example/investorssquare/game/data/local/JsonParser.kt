@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.ui.graphics.Color
 import com.example.investorssquare.game.domain.model.*
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
@@ -32,9 +33,13 @@ class JsonParser(private val context: Context) {
         val fields = jsonObject["fields"]?.jsonArray ?: throw Exception("Fields array is null")
         val fieldList = fields.mapIndexed { index, element -> parseField(element.jsonObject, index, propertyCommonName, propertyCommonNamePlural, stationCommonName, stationCommonNamePlural, utilityCommonName, utilityCommonNamePlural) }
 
+        val communityChestCards = jsonObject["community-chest-cards"]?.jsonArray?:throw Exception("Community chest cards are required.")
+        val chanceCards = jsonObject["chance-cards"]?.jsonArray?:throw Exception("Chance cards are required.")
         val playerColors = parsePlayerColors(jsonObject)
 
-        return Board(boardName, imageUrl, houseImageUrl, hotelImageUrl, propertyCommonName, propertyCommonNamePlural, stationCommonName, stationCommonNamePlural, utilityCommonName, utilityCommonNamePlural, diceColor, fieldList, playerColors)
+        val board =Board(boardName, imageUrl, houseImageUrl, hotelImageUrl, propertyCommonName, propertyCommonNamePlural, stationCommonName, stationCommonNamePlural, utilityCommonName, utilityCommonNamePlural, diceColor, fieldList, playerColors, loadCommunityCards(communityChestCards, false), loadCommunityCards(chanceCards, true))
+        board.shuffleCommunityCards()
+        return board
     }
 
     private fun loadJsonFromFile(fileName: String): String {
@@ -43,6 +48,15 @@ class JsonParser(private val context: Context) {
         } catch (e: IOException) {
             throw RuntimeException("Error reading JSON file. Make sure the file exists in the assets directory.", e)
         }
+    }
+    private fun loadCommunityCards(array: JsonArray, isChanceCard: Boolean): MutableList<CommunityCard>{
+        return array.mapIndexed { index, element -> parseCommunityCard(element.jsonObject, index, isChanceCard) }.toMutableList()
+
+    }
+    private fun parseCommunityCard(cardObject: JsonObject, index: Int, isChanceCard: Boolean): CommunityCard{
+        val text = cardObject["text"]?.jsonPrimitive?.content ?: throw Exception("Text is required for community card")
+        val actionCode = cardObject["action"]?.jsonPrimitive?.int ?: throw Exception("Action code is required for community card")
+        return CommunityCard(text, actionCode, isChanceCard)
     }
 
     private fun parseField(fieldObject: JsonObject, index: Int, pcn:String, pcnp:String, scn:String, scnp:String, ucn:String, ucnp:String): Field {
