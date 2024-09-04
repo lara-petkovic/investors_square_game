@@ -4,7 +4,8 @@ import androidx.compose.ui.graphics.Color
 
 data class Player(
     val name: String,
-    val money: Int,
+    var money: Int,
     val color: Color,
-    val properties: List<Property> = emptyList()
+    var position: Int = 0,
+    var properties: List<Property> = emptyList()
 )
