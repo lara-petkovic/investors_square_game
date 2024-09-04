@@ -54,13 +54,12 @@ fun PlayerCard(player: Player, width: Dp, isActive: Boolean) {
                 contentAlignment = Alignment.Center
             ) {
                 Row(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp),
+                    modifier = Modifier.padding(horizontal = 8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     // Left-aligned content
-                    Box(modifier = Modifier.weight(1f)) { // Take up remaining space
+                    Box(modifier = Modifier.weight(1f)) {
                         Text(
                             text = player.name,
                             fontSize = 14.sp,
@@ -70,23 +69,21 @@ fun PlayerCard(player: Player, width: Dp, isActive: Boolean) {
                     }
 
                     // Right-aligned content
-                    Box {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = player.money.toString(),
-                                fontSize = 15.sp,
-                                color = Color.Black
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = player.money.toString(),
+                            fontSize = 15.sp,
+                            color = Color.Black
+                        )
+                        Box(modifier = Modifier.size((width.value * 0.13).dp)) {
+                            Image(
+                                painter = painterResource(R.drawable.coin),
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxSize()
                             )
-                            Box(modifier = Modifier.size((width.value * 0.13).dp)) {
-                                Image(
-                                    painter = painterResource(R.drawable.coin),
-                                    contentDescription = null,
-                                    modifier = Modifier.fillMaxSize()
-                                )
-                            }
                         }
                     }
                 }

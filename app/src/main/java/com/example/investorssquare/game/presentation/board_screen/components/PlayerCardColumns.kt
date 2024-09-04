@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.investorssquare.game.domain.model.Player
@@ -15,28 +14,30 @@ import com.example.investorssquare.util.Constants
 @Composable
 fun PlayerCardColumns(players: List<Player>, screenWidthDp: Int, activePlayerIndex: Int) {
     val columnsCount = 2
-    val playersPerColumn = (players.size + columnsCount - 1) / columnsCount
-    val columns = (0 until columnsCount).map { columnIndex ->
-        players.drop(columnIndex * playersPerColumn).take(playersPerColumn)
+    val rowsCount = (players.size + columnsCount - 1) / columnsCount
+
+    val rows = (0 until rowsCount).map { rowIndex ->
+        (0 until columnsCount).mapNotNull { columnIndex ->
+            players.getOrNull(rowIndex * columnsCount + columnIndex)
+        }
     }
 
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 40.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        columns.forEachIndexed { index, columnPlayers ->
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = if (index == 0) Alignment.Start else Alignment.End
+        rows.forEach { rowPlayers ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(22.dp)
             ) {
-                columnPlayers.forEachIndexed { i, player ->
+                rowPlayers.forEach { player ->
                     PlayerCard(
                         player = player,
                         width = (screenWidthDp * Constants.PLAYER_CARD_WIDTH).dp,
-                        isActive = (index * playersPerColumn + i) == activePlayerIndex
+                        isActive = player == players[activePlayerIndex]
                     )
                 }
             }
