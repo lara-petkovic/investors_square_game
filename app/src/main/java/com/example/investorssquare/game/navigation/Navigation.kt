@@ -9,7 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Player
 import com.example.investorssquare.game.presentation.board_screen.BoardScreen
-import com.example.investorssquare.game.presentation.board_screen.PlayerViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 
 @Composable
 fun Navigation(board: Board) {

@@ -1,9 +1,7 @@
 package com.example.investorssquare.game.presentation.board_screen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -27,6 +25,7 @@ import com.example.investorssquare.R
 import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.presentation.board_screen.components.Board
 import com.example.investorssquare.game.presentation.board_screen.components.PlayerCardColumns
+import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import com.example.investorssquare.util.Constants
 
 @Composable

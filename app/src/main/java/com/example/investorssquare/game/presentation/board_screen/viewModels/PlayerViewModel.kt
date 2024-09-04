@@ -1,4 +1,4 @@
-package com.example.investorssquare.game.presentation.board_screen
+package com.example.investorssquare.game.presentation.board_screen.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

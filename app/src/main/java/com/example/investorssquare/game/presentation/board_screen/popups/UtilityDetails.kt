@@ -1,4 +1,4 @@
-package com.example.investorssquare.game.presentation.board_screen
+package com.example.investorssquare.game.presentation.board_screen.popups
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,7 +28,6 @@ import androidx.compose.ui.window.PopupProperties
 import com.example.investorssquare.R
 import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Field
-import com.example.investorssquare.game.domain.model.Station
 import com.example.investorssquare.game.domain.model.Utility
 
 @Composable

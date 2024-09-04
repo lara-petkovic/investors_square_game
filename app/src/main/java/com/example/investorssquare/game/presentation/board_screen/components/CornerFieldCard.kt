@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Field
-import com.example.investorssquare.game.presentation.board_screen.PlayerViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
