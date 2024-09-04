@@ -25,11 +25,11 @@ class Board(
     }
     fun drawChanceCard(): CommunityCard{
         chanceCards.moveFirstToEnd()
-        return chanceCards.get(chanceCards.size-1)
+        return chanceCards[chanceCards.size-1]
     }
     fun drawCommunityChestCard(): CommunityCard{
         communityChestCards.moveFirstToEnd()
-        return communityChestCards.get(communityChestCards.size-1)
+        return communityChestCards[communityChestCards.size-1]
     }
     private fun <T> MutableList<T>.moveFirstToEnd() {
         if (this.isNotEmpty()) {
