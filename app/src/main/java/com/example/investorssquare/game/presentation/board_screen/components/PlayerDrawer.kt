@@ -14,14 +14,16 @@ import com.example.investorssquare.game.domain.model.Player
 
 @Composable
 fun PlayerDrawer(
-    canvasSize: Dp,
+    canvasWidth: Dp,
+    canvasHeight: Dp,
     players: List<Player>,
     circleSize: Dp = 6.dp,
     spacing: Dp = 4.dp
 ) {
-    Canvas(modifier = Modifier.size(canvasSize)) {
-        val canvasWidth = size.width
-        val canvasHeight = size.height
+    Canvas(modifier = Modifier.size(canvasWidth, canvasHeight)) {
+        val widthPx = canvasWidth.toPx()
+        val heightPx = canvasHeight.toPx()
+
         val rows = when (players.size) {
             6, 5 -> 3
             4, 3, 2 -> 2
@@ -32,10 +34,10 @@ fun PlayerDrawer(
             else -> 1
         }
 
-        val totalWidth = (circleSize + spacing) * cols - spacing
-        val totalHeight = (circleSize + spacing) * rows - spacing
-        val startX = (canvasWidth - totalWidth.toPx()) / 2
-        val startY = (canvasHeight - totalHeight.toPx()) / 2
+        val totalWidthPx = (circleSize + spacing) * cols - spacing
+        val totalHeightPx = (circleSize + spacing) * rows - spacing
+        val startX = (widthPx - totalWidthPx.toPx()) / 2
+        val startY = (heightPx - totalHeightPx.toPx()) / 2
 
         players.forEachIndexed { idx, player ->
             val row = idx / cols
