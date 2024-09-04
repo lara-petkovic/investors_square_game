@@ -1,6 +1,7 @@
 package com.example.investorssquare.game.presentation.board_screen.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
@@ -17,11 +19,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -46,6 +53,7 @@ fun Board(
     var showPopup by remember { mutableStateOf(false) }
     var popupField by remember { mutableStateOf<Field?>(null) }
     var centerOfTheBoard by remember { mutableStateOf(IntOffset.Zero) }
+    val context = LocalContext.current
 
     BoxWithConstraints(
         modifier = Modifier.size(boardSize)
@@ -65,6 +73,15 @@ fun Board(
             Box(
                 modifier = Modifier.fillMaxSize()
             ) {
+                if (board.imageUrl.isNotEmpty()) {
+                    Image(
+                        painter = painterResource(context.resources.getIdentifier(board.imageUrl?:"", "drawable", context.packageName)),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
                 CornerFieldCard(
                     fieldSize = fieldHeight,
                     modifier = Modifier.align(Alignment.BottomEnd),
