@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -75,7 +76,8 @@ fun StationDetails(
                     text = "${station?.name}",
                     style = MaterialTheme.typography.titleMedium,
                     fontSize = 14.sp,
-                    color = Color.Black
+                    color = Color.Black,
+                    textAlign = TextAlign.Justify
                 )
                 Box(modifier = Modifier.fillMaxWidth().padding(4.dp)){
                     Column(

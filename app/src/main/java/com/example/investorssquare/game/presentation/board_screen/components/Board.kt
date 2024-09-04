@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
+import com.example.investorssquare.game.presentation.board_screen.popups.CommunityCardPopup
 import com.example.investorssquare.game.presentation.board_screen.popups.PropertyDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.StationDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.UtilityDetails
@@ -221,6 +222,16 @@ fun Board(
                         offset = IntOffset((with(LocalDensity.current) { fieldHeight.toPx() }+1.75*with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),(with(LocalDensity.current) { fieldHeight.toPx() }+(0.02f*9*with(LocalDensity.current) { fieldWidth.toPx() })).toInt()),
                         popupWidth = (5.5 * fieldWidth.value).dp,
                         popupHeight = (0.96 * 9 * fieldWidth.value).dp,
+                        board = board
+                    )
+                }
+                if(field.type==FieldType.CHANCE || field.type==FieldType.COMMUNITY_CHEST){
+                    CommunityCardPopup(
+                        isChance = field.type==FieldType.CHANCE,
+                        onDismissRequest = { showPopup = false},
+                        offset = IntOffset((with(LocalDensity.current) { fieldHeight.toPx() }+(0.05f*9*with(LocalDensity.current) { fieldWidth.toPx() })).toInt(), (with(LocalDensity.current) { fieldHeight.toPx() }+1.5*with(LocalDensity.current) { fieldWidth.toPx() }).toInt()),
+                        popupWidth = (0.9 * 9 * fieldWidth.value).dp,
+                        popupHeight = (6 * fieldWidth.value).dp,
                         board = board
                     )
                 }
