@@ -61,7 +61,7 @@
       "price": "200",
       "mortgage-price": "100",
       "sell-price": "100",
-      "image-url": "@drawable/station1"
+      "image-url": "train"
     },
     {
       "name": "Oriental Avenue",
@@ -147,7 +147,7 @@
       "price": "200",
       "mortgage-price": "100",
       "sell-price": "100",
-      "image-url": "@drawable/station2"
+      "image-url": "train"
     },
     {
       "name": "St. James Place",
@@ -228,7 +228,7 @@
       "price": "200",
       "mortgage-price": "100",
       "sell-price": "100",
-      "image-url": "@drawable/station3"
+      "image-url": "train"
     },
     {
       "name": "Atlantic Avenue",
@@ -314,7 +314,7 @@
       "price": "200",
       "mortgage-price": "100",
       "sell-price": "100",
-      "image-url": "@drawable/station4"
+      "image-url": "train"
     },
     {
       "name": "Chance",

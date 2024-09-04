@@ -77,7 +77,7 @@ fun StationDetails(
                         painter = painterResource(context.resources.getIdentifier(station?.imageUrl?:"", "drawable", context.packageName)),
                         contentDescription = null,
                         modifier = Modifier
-                            .height((popupHeight.value*0.4).dp),
+                            .height((popupHeight.value*0.32).dp),
                         contentScale = ContentScale.Crop
                     )
                 }
@@ -89,7 +89,7 @@ fun StationDetails(
                 )
                 Spacer(modifier = Modifier.height(3.dp))
                 Column(
-                    modifier = Modifier.fillMaxWidth().height((popupHeight.value*0.36).dp).verticalScroll(scrollState),
+                    modifier = Modifier.fillMaxWidth().height((popupHeight.value*0.46).dp).verticalScroll(scrollState),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Row(
@@ -99,7 +99,7 @@ fun StationDetails(
                         Text(
                             text = "RENT ${station?.rent?.get(0) ?: 0}",
                             style = MaterialTheme.typography.bodyMedium,
-                            fontSize = 14.sp,
+                            fontSize = 12.sp,
                             color = Color.Black
                         )
                         Box(modifier = Modifier.size(16.dp)) {
@@ -111,7 +111,9 @@ fun StationDetails(
                         }
                     }
                     Spacer(modifier = Modifier.height(3.dp))
-                    Column {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         for(i in 1..((station?.rent?.size?.minus(1)) ?: 0)){
                             Row(
                                 modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
@@ -141,6 +143,42 @@ fun StationDetails(
                                         )
                                     }
                                 }
+                            }
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(1.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Text(
+                                text = "Mortgage Value ${station?.mortgagePrice ?: 0}",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontSize = 11.sp,
+                                color = Color.Black
+                            )
+                            Box(modifier = Modifier.size(13.dp)) {
+                                Image(
+                                    painter = painterResource(R.drawable.coin),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(1.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Text(
+                                text = "Sell Value ${station?.sellPrice ?: 0}",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontSize = 11.sp,
+                                color = Color.Black
+                            )
+                            Box(modifier = Modifier.size(13.dp)) {
+                                Image(
+                                    painter = painterResource(R.drawable.coin),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize()
+                                )
                             }
                         }
                     }
