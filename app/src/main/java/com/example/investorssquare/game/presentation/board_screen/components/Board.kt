@@ -78,7 +78,8 @@ fun Board(
                         painter = painterResource(context.resources.getIdentifier(board.imageUrl?:"", "drawable", context.packageName)),
                         contentDescription = null,
                         modifier = Modifier
-                            .fillMaxSize(),
+                            .fillMaxSize()
+                            .graphicsLayer(alpha = 0.5f),
                         contentScale = ContentScale.Crop
                     )
                 }

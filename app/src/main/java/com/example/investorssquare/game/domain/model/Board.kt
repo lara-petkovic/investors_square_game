@@ -1,5 +1,5 @@
 package com.example.investorssquare.game.domain.model
-
+import kotlin.random.Random
 import androidx.compose.ui.graphics.Color
 
 class Board(
@@ -15,5 +15,26 @@ class Board(
     val utilityCommonNamePlural: String,
     val diceColor: Color,
     val fields: List<Field>,
-    val playerColors: List<Color>
-)
+    val playerColors: List<Color>,
+    val communityChestCards: MutableList<CommunityCard>,
+    val chanceCards: MutableList<CommunityCard>
+){
+    fun shuffleCommunityCards(){
+        communityChestCards.shuffle(Random.Default)
+        chanceCards.shuffle(Random.Default)
+    }
+    fun drawChanceCard(): CommunityCard{
+        chanceCards.moveFirstToEnd()
+        return chanceCards.get(chanceCards.size-1)
+    }
+    fun drawCommunityChestCard(): CommunityCard{
+        communityChestCards.moveFirstToEnd()
+        return communityChestCards.get(communityChestCards.size-1)
+    }
+    private fun <T> MutableList<T>.moveFirstToEnd() {
+        if (this.isNotEmpty()) {
+            val firstElement = this.removeAt(0)
+            this.add(firstElement)
+        }
+    }
+}
