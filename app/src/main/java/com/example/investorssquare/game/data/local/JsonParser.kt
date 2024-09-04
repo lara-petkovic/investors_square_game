@@ -28,7 +28,11 @@ class JsonParser(private val context: Context) {
         val stationCommonNamePlural = jsonObject["station-common-name-plural"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
         val utilityCommonName = jsonObject["utility-common-name"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
         val utilityCommonNamePlural = jsonObject["utility-common-name-plural"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
+        val communityCestCommonName = jsonObject["community-chest-common-name"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
+        val chanceCommonName = jsonObject["chance-common-name"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
         val diceColor = Color(android.graphics.Color.parseColor(jsonObject["dice-color"]?.jsonPrimitive?.content ?: throw Exception("Set color is null")))
+        val communityChestPrimaryColor = Color(android.graphics.Color.parseColor(jsonObject["community-chest-primary-color"]?.jsonPrimitive?.content ?: throw Exception("Set color is null")))
+        val chancePrimaryColor = Color(android.graphics.Color.parseColor(jsonObject["chance-primary-color"]?.jsonPrimitive?.content ?: throw Exception("Set color is null")))
 
         val fields = jsonObject["fields"]?.jsonArray ?: throw Exception("Fields array is null")
         val fieldList = fields.mapIndexed { index, element -> parseField(element.jsonObject, index, propertyCommonName, propertyCommonNamePlural, stationCommonName, stationCommonNamePlural, utilityCommonName, utilityCommonNamePlural) }
@@ -37,7 +41,26 @@ class JsonParser(private val context: Context) {
         val chanceCards = jsonObject["chance-cards"]?.jsonArray?:throw Exception("Chance cards are required.")
         val playerColors = parsePlayerColors(jsonObject)
 
-        val board =Board(boardName, imageUrl, houseImageUrl, hotelImageUrl, propertyCommonName, propertyCommonNamePlural, stationCommonName, stationCommonNamePlural, utilityCommonName, utilityCommonNamePlural, diceColor, fieldList, playerColors, loadCommunityCards(communityChestCards, false), loadCommunityCards(chanceCards, true))
+        val board =Board(
+            boardName,
+            imageUrl,
+            houseImageUrl,
+            hotelImageUrl,
+            propertyCommonName,
+            propertyCommonNamePlural,
+            stationCommonName,
+            stationCommonNamePlural,
+            utilityCommonName,
+            utilityCommonNamePlural,
+            diceColor,
+            communityChestPrimaryColor,
+            chancePrimaryColor,
+            communityCestCommonName,
+            chanceCommonName,
+            fieldList,
+            playerColors,
+            loadCommunityCards(communityChestCards, false),
+            loadCommunityCards(chanceCards, true))
         board.shuffleCommunityCards()
         return board
     }

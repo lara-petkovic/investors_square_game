@@ -93,7 +93,8 @@ fun PropertyDetails(
                     Text(
                         text = property?.name ?: "",
                         style = MaterialTheme.typography.labelMedium,
-                        color = textColor
+                        color = textColor,
+                        textAlign = TextAlign.Justify
                     )
                 }
                 Box(modifier = Modifier.fillMaxWidth().padding(4.dp)){

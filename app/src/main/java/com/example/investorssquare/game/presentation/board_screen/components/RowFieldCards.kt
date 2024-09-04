@@ -45,7 +45,11 @@ fun RowFieldCards(
                 fieldHeight,
                 field,
                 Modifier.clickable {
-                    if (field.type == FieldType.PROPERTY || field.type == FieldType.STATION || field.type == FieldType.UTILITY) {
+                    if (field.type == FieldType.PROPERTY
+                            || field.type == FieldType.STATION
+                            || field.type == FieldType.UTILITY
+                            || field.type == FieldType.CHANCE
+                            || field.type == FieldType.COMMUNITY_CHEST) {
                         onFieldClick(field)
                     }
                 }
