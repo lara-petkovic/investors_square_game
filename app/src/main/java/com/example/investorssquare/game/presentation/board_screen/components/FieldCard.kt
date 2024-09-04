@@ -50,15 +50,13 @@ fun FieldCard(
                         .height(fieldHeight * Constants.FIELD_CARD_STRAP_HEIGHT_PERCENTAGE)
                         .background(property?.setColor ?: Color.Gray)
                         .align(Alignment.TopStart)
-                ){
-                    cardHeight *= 1 + Constants.FIELD_CARD_STRAP_HEIGHT_PERCENTAGE
-                }
+                )
             }
 
             val playersOnField = playerVM.players.value.filter { it.position == field.index }
 
             PlayerDrawer(
-                canvasHeight = cardHeight,
+                canvasHeight = fieldHeight * (1 + Constants.FIELD_CARD_STRAP_HEIGHT_PERCENTAGE),
                 canvasWidth = fieldWidth,
                 players = playersOnField
             )
