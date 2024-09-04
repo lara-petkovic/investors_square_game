@@ -84,7 +84,7 @@ fun StationDetails(
                 Text(
                     text = "${station?.name}",
                     style = MaterialTheme.typography.titleMedium,
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     color = Color.Black
                 )
                 Spacer(modifier = Modifier.height(3.dp))
