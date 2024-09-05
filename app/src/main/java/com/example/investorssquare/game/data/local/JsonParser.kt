@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.compose.ui.graphics.Color
 import com.example.investorssquare.game.domain.model.*
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
@@ -28,17 +27,12 @@ class JsonParser(private val context: Context) {
         val stationCommonNamePlural = jsonObject["station-common-name-plural"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
         val utilityCommonName = jsonObject["utility-common-name"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
         val utilityCommonNamePlural = jsonObject["utility-common-name-plural"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
-        val communityCestCommonName = jsonObject["community-chest-common-name"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
-        val chanceCommonName = jsonObject["chance-common-name"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
         val diceColor = Color(android.graphics.Color.parseColor(jsonObject["dice-color"]?.jsonPrimitive?.content ?: throw Exception("Set color is null")))
-        val communityChestPrimaryColor = Color(android.graphics.Color.parseColor(jsonObject["community-chest-primary-color"]?.jsonPrimitive?.content ?: throw Exception("Set color is null")))
-        val chancePrimaryColor = Color(android.graphics.Color.parseColor(jsonObject["chance-primary-color"]?.jsonPrimitive?.content ?: throw Exception("Set color is null")))
-
         val fields = jsonObject["fields"]?.jsonArray ?: throw Exception("Fields array is null")
         val fieldList = fields.mapIndexed { index, element -> parseField(element.jsonObject, index, propertyCommonName, propertyCommonNamePlural, stationCommonName, stationCommonNamePlural, utilityCommonName, utilityCommonNamePlural) }
 
-        val communityChestCards = jsonObject["community-chest-cards"]?.jsonArray?:throw Exception("Community chest cards are required.")
-        val chanceCards = jsonObject["chance-cards"]?.jsonArray?:throw Exception("Chance cards are required.")
+        val communityChest = jsonObject["community-chest"]?.jsonObject?:throw Exception("Community chest cards are required.")
+        val chance = jsonObject["chance"]?.jsonObject?:throw Exception("Chance cards are required.")
         val playerColors = parsePlayerColors(jsonObject)
 
         val board =Board(
@@ -53,14 +47,11 @@ class JsonParser(private val context: Context) {
             utilityCommonName,
             utilityCommonNamePlural,
             diceColor,
-            communityChestPrimaryColor,
-            chancePrimaryColor,
-            communityCestCommonName,
-            chanceCommonName,
             fieldList,
             playerColors,
-            loadCommunityCards(communityChestCards, false),
-            loadCommunityCards(chanceCards, true))
+            loadCommunity(chance),
+            loadCommunity(communityChest)
+        )
         board.shuffleCommunityCards()
         return board
     }
@@ -72,9 +63,13 @@ class JsonParser(private val context: Context) {
             throw RuntimeException("Error reading JSON file. Make sure the file exists in the assets directory.", e)
         }
     }
-    private fun loadCommunityCards(array: JsonArray, isChanceCard: Boolean): MutableList<CommunityCard>{
-        return array.mapIndexed { index, element -> parseCommunityCard(element.jsonObject, index, isChanceCard) }.toMutableList()
-
+    private fun loadCommunity(obj: JsonObject): Community{
+        val commonName = obj["common-name"]?.jsonPrimitive?.content ?: throw Exception("Image URL is null")
+        val primaryColor = Color(android.graphics.Color.parseColor(obj["primary-color"]?.jsonPrimitive?.content ?: throw Exception("Set color is null")))
+        val imageUrl =obj["image-url"]?.jsonPrimitive?.content ?: throw Exception("Set color is null")
+        val array = obj["cards"]?.jsonArray?: throw Exception("Fields array is null")
+        val cards = array.mapIndexed { index, element -> parseCommunityCard(element.jsonObject, index, true) }.toMutableList()
+        return Community(imageUrl, commonName, cards, primaryColor)
     }
     private fun parseCommunityCard(cardObject: JsonObject, index: Int, isChanceCard: Boolean): CommunityCard{
         val text = cardObject["text"]?.jsonPrimitive?.content ?: throw Exception("Text is required for community card")
@@ -136,17 +131,15 @@ class JsonParser(private val context: Context) {
                     taxPercentage = fieldObject["tax-percentage"]?.jsonPrimitive?.int ?: throw Exception("Tax percentage is null")
                 )
             }
-            FieldType.CHANCE -> Chance(name, index)
-            FieldType.COMMUNITY_CHEST -> CommunityChest(name, index)
+            FieldType.CHANCE -> Field(name, FieldType.CHANCE, index)
+            FieldType.COMMUNITY_CHEST -> Field(name, FieldType.COMMUNITY_CHEST, index)
             else -> CornerField(name, index, FieldType.valueOf(type))
         }
     }
-
     private fun parseRent(fieldObject: JsonObject): List<Int> {
         return fieldObject["rent"]?.jsonArray?.map { it.jsonPrimitive.int }
             ?: throw Exception("Rent is null")
     }
-
     private fun parsePlayerColors(jsonObject: JsonObject): List<Color> {
         val colorsArray = jsonObject["player-colors"]?.jsonArray ?: throw Exception("Player colors array is null")
         return colorsArray.map { Color(android.graphics.Color.parseColor(it.jsonPrimitive.content)) }

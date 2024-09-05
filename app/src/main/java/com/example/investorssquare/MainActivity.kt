@@ -19,9 +19,6 @@ class MainActivity : ComponentActivity() {
 
         val jsonParser = JsonParser(this)
         val board: Board = jsonParser.loadBoard("table_prototype.json")
-
-        val c = board.drawChanceCard()
-        val c1 = board.drawCommunityChestCard()
         setContent {
             InvestorsSquareTheme {
                 Box {

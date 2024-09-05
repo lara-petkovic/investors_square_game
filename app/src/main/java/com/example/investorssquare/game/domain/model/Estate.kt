@@ -1,6 +1,6 @@
 package com.example.investorssquare.game.domain.model
 
-abstract class Estate(
+open class Estate(
     override val name: String,
     override val type: FieldType,
     override val index: Int,

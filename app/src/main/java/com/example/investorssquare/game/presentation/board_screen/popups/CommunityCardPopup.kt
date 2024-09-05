@@ -47,7 +47,7 @@ fun CommunityCardPopup(
     var isClosing by remember { mutableStateOf(false) }
 
     val card = remember {
-        if (isChance) board.drawChanceCard() else board.drawCommunityChestCard()
+        if (isChance) board.chance.drawCard() else board.communityChest.drawCard()
     }
 
     val rotation by animateFloatAsState(
@@ -81,14 +81,14 @@ fun CommunityCardPopup(
                 .clip(RoundedCornerShape(5.dp))
                 .border(
                     width = 3.dp,
-                    color = if (isChance) board.chancePrimaryColor else board.communityChestPrimaryColor,
+                    color = if (isChance) board.chance.primaryColor else board.communityChest.primaryColor,
                     shape = RoundedCornerShape(5.dp)
                 )
                 .background(
                     color = if (isChance)
-                        board.chancePrimaryColor.copy(alpha = 0.1f)
+                        board.chance.primaryColor.copy(alpha = 0.1f)
                     else
-                        board.communityChestPrimaryColor.copy(alpha = 0.1f)
+                        board.communityChest.primaryColor.copy(alpha = 0.1f)
                 )
         ) {
             if (rotation <= 90f) {
@@ -108,10 +108,10 @@ fun CommunityCardPopup(
                 ) {
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = if (isChance) board.chanceCommonName.uppercase() else board.communityChestCommonName.uppercase(),
+                        text = if (isChance) board.chance.commonName.uppercase() else board.communityChest.commonName.uppercase(),
                         style = MaterialTheme.typography.titleLarge,
                         fontSize = 18.sp,
-                        color = if (isChance) board.chancePrimaryColor else board.communityChestPrimaryColor,
+                        color = if (isChance) board.chance.primaryColor else board.communityChest.primaryColor,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(6.dp))

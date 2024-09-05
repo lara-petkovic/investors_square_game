@@ -10,143 +10,149 @@
   "station-common-name-plural": "stations",
   "utility-common-name": "utility",
   "utility-common-name-plural": "utilities",
-  "community-chest-primary-color": "#6666ff",
-  "chance-primary-color": "#ff9900",
-  "chance-common-name": "Chance",
-  "community-chest-common-name": "Community Chest",
   "default-rules": {},
-  "chance-cards": [
-    {
-      "text": "Advance to Boardwalk",
-      "action": "1"
-    },
-    {
-      "text": "Advance to Go (Collect 200)",
-      "action": "2"
-    },
-    {
-      "text": "Advance to Illinois Avenue. If you pass Go, collect 200",
-      "action": "3"
-    },
-    {
-      "text": "Advance to St Charles Place. If you pass Go, collect 200",
-      "action": "4"
-    },
-    {
-      "text": "Advance to the nearest Railroad. If unowned, you may buy it from the Bank. If owned, pay owner twice the rental to which they are otherwise entitled.",
-      "action": "5"
-    },
-    {
-      "text": "Advance to the nearest Railroad. If unowned, you may buy it from the Bank. If owned, pay owner twice the rental to which they are otherwise entitled.",
-      "action": "6"
-    },
-    {
-      "text": "Advance to the nearest Utility. If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total ten times amount thrown.",
-      "action": "7"
-    },
-    {
-      "text": "Bank pays you dividend of 50",
-      "action": "8"
-    },
-    {
-      "text": "Get out of Jail free",
-      "action": "9"
-    },
-    {
-      "text": "Go back three spaces",
-      "action": "10"
-    },
-    {
-      "text": "Go to Jail. Go directly to Jail, do not pass Go, do not collect 200",
-      "action": "11"
-    },
-    {
-      "text": "Make general repairs on all your property. For each house pay 25. For each hotel pay 100.",
-      "action": "12"
-    },
-    {
-      "text": "Speeding fine 15",
-      "action": "13"
-    },
-    {
-      "text": "Take a trip to reading Railroad. If you pass go, collect 200.",
-      "action": "14"
-    },
-    {
-      "text": "You have been elected chairman of the board. Pay each player 50.",
-      "action": "15"
-    },
-    {
-      "text": "Your building loan matures. Collect 150.",
-      "action": "16"
-    }
-  ],
-  "community-chest-cards": [
-    {
-      "text": "Advance to go (Collect 200)",
-      "action": "17"
-    },
-    {
-      "text": "Bank error in your favor. Collect 200.",
-      "action": "18"
-    },
-    {
-      "text": "Doctors fee. Pay 50.",
-      "action": "19"
-    },
-    {
-      "text": "From sale of stock you get 50.",
-      "action": "20"
-    },
-    {
-      "text": "Get out of Jail free.",
-      "action": "21"
-    },
-    {
-      "text": "Go to Jail. Go directly to Jail, do not pass Go, do not collect 200.",
-      "action": "22"
-    },
-    {
-      "text": "Holiday fund matures. Receive 100.",
-      "action": "23"
-    },
-    {
-      "text": "Income tax refund. Collect 20.",
-      "action": "24"
-    },
-    {
-      "text": "Its your birthday. Collect 10 from each player.",
-      "action": "25"
-    },
-    {
-      "text": "Life insurance matures. Collect 100.",
-      "action": "26"
-    },
-    {
-      "text": "Pay hospital 100.",
-      "action": "27"
-    },
-    {
-      "text": "Pay school tax 150.",
-      "action": "28"
-    },
-    {
-      "text": "Receive 25 consultancy fee.",
-      "action": "29"
-    },
-    {
-      "text": "You are assessed for street repair. Pay 40 per house, 115 per hotel.",
-      "action": "30"
-    },
-    {
-      "text": "You have won second prize in a beauty contest. Collect 10.",
-      "action": "31"
-    },
-    {
-      "text": "You inherit 100.",
-      "action": "32"
-    }
-  ],
+  "chance": {
+    "image-url": "chance_card",
+    "primary-color": "#ff9900",
+    "common-name": "Chance",
+    "cards": [
+      {
+        "text": "Advance to Boardwalk",
+        "action": "1"
+      },
+      {
+        "text": "Advance to Go (Collect 200)",
+        "action": "2"
+      },
+      {
+        "text": "Advance to Illinois Avenue. If you pass Go, collect 200",
+        "action": "3"
+      },
+      {
+        "text": "Advance to St Charles Place. If you pass Go, collect 200",
+        "action": "4"
+      },
+      {
+        "text": "Advance to the nearest Railroad. If unowned, you may buy it from the Bank. If owned, pay owner twice the rental to which they are otherwise entitled.",
+        "action": "5"
+      },
+      {
+        "text": "Advance to the nearest Railroad. If unowned, you may buy it from the Bank. If owned, pay owner twice the rental to which they are otherwise entitled.",
+        "action": "6"
+      },
+      {
+        "text": "Advance to the nearest Utility. If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total ten times amount thrown.",
+        "action": "7"
+      },
+      {
+        "text": "Bank pays you dividend of 50",
+        "action": "8"
+      },
+      {
+        "text": "Get out of Jail free",
+        "action": "9"
+      },
+      {
+        "text": "Go back three spaces",
+        "action": "10"
+      },
+      {
+        "text": "Go to Jail. Go directly to Jail, do not pass Go, do not collect 200",
+        "action": "11"
+      },
+      {
+        "text": "Make general repairs on all your property. For each house pay 25. For each hotel pay 100.",
+        "action": "12"
+      },
+      {
+        "text": "Speeding fine 15",
+        "action": "13"
+      },
+      {
+        "text": "Take a trip to reading Railroad. If you pass go, collect 200.",
+        "action": "14"
+      },
+      {
+        "text": "You have been elected chairman of the board. Pay each player 50.",
+        "action": "15"
+      },
+      {
+        "text": "Your building loan matures. Collect 150.",
+        "action": "16"
+      }
+    ]
+  },
+  "community-chest": {
+    "image-url": "community_chest_card",
+    "primary-color": "#6666ff",
+    "common-name": "Community Chest",
+    "cards": [
+      {
+        "text": "Advance to go (Collect 200)",
+        "action": "17"
+      },
+      {
+        "text": "Bank error in your favor. Collect 200.",
+        "action": "18"
+      },
+      {
+        "text": "Doctors fee. Pay 50.",
+        "action": "19"
+      },
+      {
+        "text": "From sale of stock you get 50.",
+        "action": "20"
+      },
+      {
+        "text": "Get out of Jail free.",
+        "action": "21"
+      },
+      {
+        "text": "Go to Jail. Go directly to Jail, do not pass Go, do not collect 200.",
+        "action": "22"
+      },
+      {
+        "text": "Holiday fund matures. Receive 100.",
+        "action": "23"
+      },
+      {
+        "text": "Income tax refund. Collect 20.",
+        "action": "24"
+      },
+      {
+        "text": "Its your birthday. Collect 10 from each player.",
+        "action": "25"
+      },
+      {
+        "text": "Life insurance matures. Collect 100.",
+        "action": "26"
+      },
+      {
+        "text": "Pay hospital 100.",
+        "action": "27"
+      },
+      {
+        "text": "Pay school tax 150.",
+        "action": "28"
+      },
+      {
+        "text": "Receive 25 consultancy fee.",
+        "action": "29"
+      },
+      {
+        "text": "You are assessed for street repair. Pay 40 per house, 115 per hotel.",
+        "action": "30"
+      },
+      {
+        "text": "You have won second prize in a beauty contest. Collect 10.",
+        "action": "31"
+      },
+      {
+        "text": "You inherit 100.",
+        "action": "32"
+      }
+    ]
+  },
   "player-colors": ["#ff0000", "#00ff00", "#0000ff", "#ff00ff", "#ffff00", "#00ffff"],
   "fields": [
     {
