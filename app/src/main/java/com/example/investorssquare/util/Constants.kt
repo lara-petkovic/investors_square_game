@@ -7,4 +7,5 @@ object Constants {
     const val FIELDS_PER_ROW = 9
     const val PLAYER_CARD_WIDTH = 0.45
     const val FIELD_CARD_STRAP_HEIGHT_PERCENTAGE = 0.25f
+    const val STARTER_MONEY_VALUE = 1500 //TODO Lara: discuss about board loading whether this should belong there
 }

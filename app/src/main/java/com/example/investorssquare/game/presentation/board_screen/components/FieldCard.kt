@@ -23,6 +23,7 @@ import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import com.example.investorssquare.util.Constants
+import com.example.investorssquare.util.Constants.FIELD_CARD_STRAP_HEIGHT_PERCENTAGE
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -40,23 +41,25 @@ fun FieldCard(
         border = BorderStroke(width = 1.dp, color = Color.Black)
     ) {
         val property = field as? Property
-        var cardHeight = fieldHeight
 
         Box(modifier = Modifier.fillMaxSize()) {
             if (field.type == FieldType.PROPERTY) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(fieldHeight * Constants.FIELD_CARD_STRAP_HEIGHT_PERCENTAGE)
+                        .height(fieldHeight * FIELD_CARD_STRAP_HEIGHT_PERCENTAGE)
                         .background(property?.setColor ?: Color.Gray)
                         .align(Alignment.TopStart)
                 )
             }
 
-            val playersOnField = playerVM.players.value.filter { it.position == field.index }
+            val playerPositions = playerVM.playerPositions.value
+            val playersOnField = playerVM.players.value.filterIndexed { playerIndex, _ ->
+                playerPositions[playerIndex] == field.index
+            }
 
             PlayerDrawer(
-                canvasHeight = fieldHeight * (1 + Constants.FIELD_CARD_STRAP_HEIGHT_PERCENTAGE),
+                canvasHeight = fieldHeight * (1 + FIELD_CARD_STRAP_HEIGHT_PERCENTAGE),
                 canvasWidth = fieldWidth,
                 players = playersOnField
             )

@@ -1,13 +1,11 @@
 package com.example.investorssquare.game.presentation.board_screen.viewModels
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.investorssquare.game.domain.model.Player
+import com.example.investorssquare.util.Constants.STARTER_MONEY_VALUE
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -18,9 +16,6 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
 
     private val _activePlayerIndex = MutableStateFlow(0)
     val activePlayerIndex: StateFlow<Int> get() = _activePlayerIndex
-
-    private val _timerRunning = MutableStateFlow(false)
-    val timerRunning: StateFlow<Boolean> get() = _timerRunning
 
     private val _diceNumber1 = MutableStateFlow(1)
     val diceNumber1: StateFlow<Int> get() = _diceNumber1
@@ -34,21 +29,12 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     private val _isFinishButtonVisible = MutableStateFlow(false)
     val isFinishButtonVisible: StateFlow<Boolean> get() = _isFinishButtonVisible
 
-    init {
-        startTimer()
-    }
+    private val _playerPositions = MutableStateFlow(List(_players.value.size) { 0 })
+    val playerPositions: StateFlow<List<Int>> get() = _playerPositions
 
-    private fun startTimer() {
-        viewModelScope.launch {
-            while (true) {
-                _timerRunning.value = true
-                delay(5000) // 5 seconds
-                switchToNextPlayer()
-                _timerRunning.value = false
-                delay(500) // Small delay to avoid immediate re-trigger
-            }
-        }
-    }
+    private val _money = MutableStateFlow(List(_players.value.size) { STARTER_MONEY_VALUE })
+    val money: StateFlow<List<Int>> get() = _money
+
 
     private fun switchToNextPlayer() {
         val currentIndex = _activePlayerIndex.value
@@ -58,7 +44,10 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
 
     fun setPlayers(players: List<Player>) {
         _players.value = players
+        _playerPositions.value = List(players.size) { 0 }
+        _money.value = List(players.size) { STARTER_MONEY_VALUE }
     }
+
 
     fun rollDice() {
         _diceNumber1.value = Random.nextInt(1, 7)
@@ -71,5 +60,11 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     fun finishTurn() {
         _isDiceButtonEnabled.value = true // Re-enable dice button
         _isFinishButtonVisible.value = false // Hide finish button
+    }
+
+    fun updateMoney(playerIndex: Int, amount: Int) {
+        _money.value = _money.value.mapIndexed { index, money ->
+            if (index == playerIndex) money + amount else money
+        }
     }
 }

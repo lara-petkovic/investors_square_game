@@ -16,24 +16,36 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.investorssquare.R
 import com.example.investorssquare.game.domain.model.Player
+import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.util.Constants.PLAYER_CARD_WIDTH
 
 @Composable
-fun PlayerCard(player: Player, width: Dp, isActive: Boolean) {
+fun PlayerCard(player: Player, playerVM: PlayerViewModel) {
+    val players by playerVM.players.collectAsState()
+    val playerIndex = players.indexOf(player)
+
+    val activePlayerIndex by playerVM.activePlayerIndex.collectAsState()
+    val isActive = player == players.getOrNull(activePlayerIndex)
+    val moneyOfPlayers by playerVM.money.collectAsState()
+    val money = moneyOfPlayers.getOrNull(playerIndex) ?: 0
+
     Box(
         modifier = Modifier
-            .width(width)
+            .width((LocalConfiguration.current.screenWidthDp * PLAYER_CARD_WIDTH).dp)
             .height(60.dp)
             .border(
                 width = 2.5.dp,
@@ -74,11 +86,11 @@ fun PlayerCard(player: Player, width: Dp, isActive: Boolean) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = player.money.toString(),
+                            text = money.toString(),
                             fontSize = 15.sp,
                             color = Color.Black
                         )
-                        Box(modifier = Modifier.size((width.value * 0.13).dp)) {
+                        Box(modifier = Modifier.size(((LocalConfiguration.current.screenWidthDp * PLAYER_CARD_WIDTH) * 0.13).dp)) {
                             Image(
                                 painter = painterResource(R.drawable.coin),
                                 contentDescription = null,

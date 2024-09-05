@@ -21,12 +21,12 @@ fun Navigation(board: Board) {
             val playerViewModel: PlayerViewModel = hiltViewModel()
 
             playerViewModel.setPlayers(listOf(
-                Player("Lara", 1500,board.playerColors[0]),
-                Player("Dusan", 1300, board.playerColors[1]),
-                Player("Kornelije", 1200, board.playerColors[2]),
-                Player("Jelly", 1100, board.playerColors[3]),
-                Player("Luka", 1400, board.playerColors[4]),
-                Player("Uros", 1250, board.playerColors[5])
+                Player("Lara", board.playerColors[0]),
+                Player("Dusan", board.playerColors[1]),
+                Player("Kornelije", board.playerColors[2]),
+                Player("Jelly", board.playerColors[3]),
+                Player("Luka", board.playerColors[4]),
+                Player("Uros", board.playerColors[5])
             ))
 
             Box {

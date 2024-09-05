@@ -6,13 +6,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.investorssquare.game.domain.model.Player
-import com.example.investorssquare.util.Constants
+import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 
 @Composable
-fun PlayerCardColumns(players: List<Player>, screenWidthDp: Int, activePlayerIndex: Int) {
+fun PlayerCardColumns(playerVM: PlayerViewModel) {
+    val players by playerVM.players.collectAsState()
+
     val columnsCount = 2
     val rowsCount = (players.size + columnsCount - 1) / columnsCount
 
@@ -36,8 +39,7 @@ fun PlayerCardColumns(players: List<Player>, screenWidthDp: Int, activePlayerInd
                 rowPlayers.forEach { player ->
                     PlayerCard(
                         player = player,
-                        width = (screenWidthDp * Constants.PLAYER_CARD_WIDTH).dp,
-                        isActive = player == players[activePlayerIndex]
+                        playerVM = playerVM
                     )
                 }
             }

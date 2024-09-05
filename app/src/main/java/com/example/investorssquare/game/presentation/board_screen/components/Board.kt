@@ -37,7 +37,8 @@ import com.example.investorssquare.game.presentation.board_screen.popups.Communi
 import com.example.investorssquare.game.presentation.board_screen.popups.PropertyDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.StationDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.UtilityDetails
-import com.example.investorssquare.util.Constants
+import com.example.investorssquare.util.Constants.FIELDS_PER_ROW
+import com.example.investorssquare.util.Constants.RELATIVE_FIELD_HEIGHT
 import kotlin.math.roundToInt
 
 @Composable
@@ -47,8 +48,8 @@ fun Board(
     board: Board
 ) {
     val boardSize = (screenWidthDp.value - sideMargin.value * 2).dp
-    val fieldHeight = (boardSize.value * Constants.RELATIVE_FIELD_HEIGHT).dp
-    val fieldWidth = ((boardSize.value - 2 * fieldHeight.value) / Constants.FIELDS_PER_ROW).dp
+    val fieldHeight = (boardSize.value * RELATIVE_FIELD_HEIGHT).dp
+    val fieldWidth = ((boardSize.value - 2 * fieldHeight.value) / FIELDS_PER_ROW).dp
     var showPopup by remember { mutableStateOf(false) }
     var popupField by remember { mutableStateOf<Field?>(null) }
     var centerOfTheBoard by remember { mutableStateOf(IntOffset.Zero) }
@@ -238,5 +239,4 @@ fun Board(
             }
         }
     }
-
 }
