@@ -79,7 +79,7 @@ fun StationDetails(
                     color = Color.Black,
                     textAlign = TextAlign.Justify
                 )
-                Box(modifier = Modifier.fillMaxWidth().padding(4.dp)){
+                Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 6.dp, vertical=4.dp)){
                     Column(
                         modifier = Modifier.fillMaxWidth().height((popupHeight.value*0.48).dp).verticalScroll(scrollState).border(1.dp, Color.Black),
                         horizontalAlignment = Alignment.CenterHorizontally,
