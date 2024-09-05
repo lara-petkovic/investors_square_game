@@ -9,18 +9,29 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.investorssquare.R
+import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 
 @Composable
-fun DiceButton(number1: Int, number2: Int) {
+fun DiceButton(playerViewModel: PlayerViewModel = hiltViewModel()) {
+    val number1 by playerViewModel.diceNumber1.collectAsState()
+    val number2 by playerViewModel.diceNumber2.collectAsState()
+    val isDiceButtonEnabled by playerViewModel.isDiceButtonEnabled.collectAsState()
+
     Button(
-        onClick = { /*TODO*/ },
-        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+        onClick = {
+            playerViewModel.rollDice()
+        },
+        enabled = isDiceButtonEnabled,
+        colors = ButtonDefaults.buttonColors(containerColor = if (isDiceButtonEnabled) Color.Transparent else Color.Gray),
         shape = RectangleShape,
         contentPadding = PaddingValues(0.dp),
         modifier = Modifier

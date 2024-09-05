@@ -16,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.presentation.board_screen.components.Board
 import com.example.investorssquare.game.presentation.board_screen.components.DiceButton
+import com.example.investorssquare.game.presentation.board_screen.components.FinishButton
 import com.example.investorssquare.game.presentation.board_screen.components.PlayerCardColumns
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
@@ -51,9 +52,13 @@ fun BoardScreen(
         Box(modifier = Modifier
             .align(Alignment.CenterHorizontally)
             .padding(top = 20.dp)) {
-            DiceButton(3, 5)
+            DiceButton(playerViewModel = playerViewModel)
         }
 
+        Box(modifier = Modifier
+            .align(Alignment.CenterHorizontally)
+            .padding(top = 10.dp)) {
+            FinishButton(playerViewModel = playerViewModel)
+        }
     }
 }
-
