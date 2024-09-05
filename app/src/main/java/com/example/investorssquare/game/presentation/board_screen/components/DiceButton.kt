@@ -1,5 +1,6 @@
 package com.example.investorssquare.game.presentation.board_screen.components
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,17 +9,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.investorssquare.R
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun DiceButton(playerViewModel: PlayerViewModel = hiltViewModel()) {
@@ -26,34 +27,66 @@ fun DiceButton(playerViewModel: PlayerViewModel = hiltViewModel()) {
     val number2 by playerViewModel.diceNumber2.collectAsState()
     val isDiceButtonEnabled by playerViewModel.isDiceButtonEnabled.collectAsState()
 
+    var currentDice1 by remember { mutableIntStateOf(number1) }
+    var currentDice2 by remember { mutableIntStateOf(number2) }
+    var isRolling by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val mediaPlayer = remember { MediaPlayer.create(context, R.raw.dice_sound_effect) }
+
     Button(
         onClick = {
+            isRolling = true
             playerViewModel.rollDice()
+            mediaPlayer.start() // Play sound effect when dice are rolled
         },
-        enabled = isDiceButtonEnabled,
+        enabled = isDiceButtonEnabled && !isRolling,
         colors = ButtonDefaults.buttonColors(containerColor = if (isDiceButtonEnabled) Color.Transparent else Color.Gray),
         shape = RectangleShape,
         contentPadding = PaddingValues(0.dp),
-        modifier = Modifier
-            .size(width = 100.dp, height = 40.dp)
+        modifier = Modifier.size(width = 100.dp, height = 40.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            Image(
-                painter = painterResource(id = getDiceImage(number1)),
-                contentDescription = null,
-                modifier = Modifier.size(40.dp)
-            )
-
-            Image(
-                painter = painterResource(id = getDiceImage(number2)),
-                contentDescription = null,
-                modifier = Modifier.size(40.dp)
-            )
+            DiceImage(diceNumber = currentDice1)
+            DiceImage(diceNumber = currentDice2)
         }
     }
+
+    // Dice roll animation
+    LaunchedEffect(isRolling) {
+        if (isRolling) {
+            val diceNumbers = (1..6).toList()
+            val animationDuration = 1000L
+
+            val startTime = System.currentTimeMillis()
+            while (System.currentTimeMillis() - startTime < animationDuration) {
+                currentDice1 = diceNumbers.random()
+                currentDice2 = diceNumbers.random()
+
+                // Delay and gradually increase the delay to simulate slowing down
+                val progress = (System.currentTimeMillis() - startTime) / animationDuration.toFloat()
+                delay((50 + (150 * progress)).toLong())
+            }
+
+            currentDice1 = number1
+            currentDice2 = number2
+
+            isRolling = false
+        }
+    }
+}
+
+@Composable
+fun DiceImage(diceNumber: Int) {
+    val painterResourceId = getDiceImage(diceNumber)
+    Image(
+        painter = painterResource(id = painterResourceId),
+        contentDescription = null,
+        modifier = Modifier.size(40.dp)
+    )
 }
 
 private fun getDiceImage(number: Int): Int {
