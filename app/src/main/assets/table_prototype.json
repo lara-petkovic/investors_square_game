@@ -1,6 +1,6 @@
 {
   "name": "Board1",
-  "image-url": "background",
+  "image-url": "board_image",
   "dice-color": "#ffffff",
   "house-image-url": "house",
   "hotel-image-url": "hotel",
