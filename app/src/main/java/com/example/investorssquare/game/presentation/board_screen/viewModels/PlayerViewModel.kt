@@ -2,6 +2,7 @@ package com.example.investorssquare.game.presentation.board_screen.viewModels
 
 import androidx.lifecycle.ViewModel
 import com.example.investorssquare.game.domain.model.Player
+import com.example.investorssquare.util.Constants.NUMBER_OF_FIELDS
 import com.example.investorssquare.util.Constants.STARTER_MONEY_VALUE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,13 +54,28 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
         _diceNumber1.value = Random.nextInt(1, 7)
         _diceNumber2.value = Random.nextInt(1, 7)
 
-        _isDiceButtonEnabled.value = false // Disable dice button after roll
-        _isFinishButtonVisible.value = true // Show finish button
+        _isDiceButtonEnabled.value = false
+        _isFinishButtonVisible.value = true
     }
 
+    fun moveActivePlayer() {
+        val currentPlayerIndex = _activePlayerIndex.value
+        val currentPos = _playerPositions.value[currentPlayerIndex]
+
+        val diceSum = _diceNumber1.value + _diceNumber2.value
+        val newPos = (currentPos + diceSum) % NUMBER_OF_FIELDS
+
+        _playerPositions.value = _playerPositions.value.mapIndexed { index, pos ->
+            if (index == currentPlayerIndex) newPos else pos
+        }
+    }
+
+
     fun finishTurn() {
-        _isDiceButtonEnabled.value = true // Re-enable dice button
-        _isFinishButtonVisible.value = false // Hide finish button
+        _isDiceButtonEnabled.value = true
+        _isFinishButtonVisible.value = false
+
+        switchToNextPlayer()
     }
 
     fun updateMoney(playerIndex: Int, amount: Int) {

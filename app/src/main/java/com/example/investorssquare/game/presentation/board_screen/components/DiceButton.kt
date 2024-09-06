@@ -73,6 +73,7 @@ fun DiceButton(playerViewModel: PlayerViewModel = hiltViewModel()) {
 
             currentDice1 = number1
             currentDice2 = number2
+            playerViewModel.moveActivePlayer()
 
             isRolling = false
         }

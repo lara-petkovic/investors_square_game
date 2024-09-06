@@ -22,17 +22,16 @@ import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
-import com.example.investorssquare.util.Constants
 import com.example.investorssquare.util.Constants.FIELD_CARD_STRAP_HEIGHT_PERCENTAGE
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun FieldCard(
-        fieldWidth: Dp,
-        fieldHeight: Dp,
-        field:Field,
-        modifier: Modifier,
-        playerVM: PlayerViewModel = hiltViewModel()
+    fieldWidth: Dp,
+    fieldHeight: Dp,
+    field:Field,
+    modifier: Modifier,
+    playersVM: PlayerViewModel = hiltViewModel()
 ){
     Card(
         modifier = modifier.size(fieldWidth, fieldHeight),
@@ -53,15 +52,11 @@ fun FieldCard(
                 )
             }
 
-            val playerPositions = playerVM.playerPositions.value
-            val playersOnField = playerVM.players.value.filterIndexed { playerIndex, _ ->
-                playerPositions[playerIndex] == field.index
-            }
-
             PlayerDrawer(
                 canvasHeight = fieldHeight * (1 + FIELD_CARD_STRAP_HEIGHT_PERCENTAGE),
                 canvasWidth = fieldWidth,
-                players = playersOnField
+                playersVM = playersVM,
+                fieldIndex = field.index
             )
         }
     }
