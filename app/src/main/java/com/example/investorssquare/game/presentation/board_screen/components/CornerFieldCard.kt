@@ -35,17 +35,11 @@ fun CornerFieldCard(
     ) {
         val field: Field = board.fields[index]
 
-        val players = playerVM.players.value
-        val playerPositions = playerVM.playerPositions.value
-
-        val playersOnField = players.filterIndexed { playerIndex, _ ->
-            playerIndex < playerPositions.size && playerPositions[playerIndex] == index
-        }
-
         PlayerDrawer(
             canvasHeight = fieldSize,
             canvasWidth = fieldSize,
-            players = playersOnField
+            playersVM = playerVM,
+            fieldIndex = index
         )
     }
 }
