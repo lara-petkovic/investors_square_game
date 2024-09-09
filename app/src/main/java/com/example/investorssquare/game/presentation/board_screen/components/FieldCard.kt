@@ -21,7 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.domain.model.Property
-import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 import com.example.investorssquare.util.Constants.FIELD_CARD_STRAP_HEIGHT_PERCENTAGE
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -31,7 +31,7 @@ fun FieldCard(
     fieldHeight: Dp,
     field:Field,
     modifier: Modifier,
-    playersVM: PlayerViewModel = hiltViewModel()
+    playersVM: BoardViewModel = hiltViewModel()
 ){
     Card(
         modifier = modifier.size(fieldWidth, fieldHeight),
@@ -55,7 +55,7 @@ fun FieldCard(
             PlayerDrawer(
                 canvasHeight = fieldHeight * (1 + FIELD_CARD_STRAP_HEIGHT_PERCENTAGE),
                 canvasWidth = fieldWidth,
-                playersVM = playersVM,
+                boardVM = playersVM,
                 fieldIndex = field.index
             )
         }

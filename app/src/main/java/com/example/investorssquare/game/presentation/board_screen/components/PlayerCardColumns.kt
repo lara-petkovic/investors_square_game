@@ -10,10 +10,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 
 @Composable
-fun PlayerCardColumns(playerVM: PlayerViewModel) {
+fun PlayerCardColumns(playerVM: BoardViewModel) {
     val players by playerVM.players.collectAsState()
 
     val columnsCount = 2
@@ -38,8 +38,7 @@ fun PlayerCardColumns(playerVM: PlayerViewModel) {
             ) {
                 rowPlayers.forEach { player ->
                     PlayerCard(
-                        player = player,
-                        playerVM = playerVM
+                        playerViewModel = player
                     )
                 }
             }

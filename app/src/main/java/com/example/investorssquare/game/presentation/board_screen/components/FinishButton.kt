@@ -9,16 +9,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 
 @Composable
-fun FinishButton(playerViewModel: PlayerViewModel = hiltViewModel()) {
-    val isFinishButtonVisible by playerViewModel.isFinishButtonVisible.collectAsState()
+fun FinishButton(boardViewModel: BoardViewModel = hiltViewModel()) {
+    val isFinishButtonVisible by boardViewModel.isFinishButtonVisible.collectAsState()
 
     if (isFinishButtonVisible) {
         Button(
             onClick = {
-                playerViewModel.finishTurn()
+                boardViewModel.finishTurn()
             },
             modifier = Modifier
                 .padding(top = 10.dp)

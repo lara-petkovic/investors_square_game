@@ -7,9 +7,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.investorssquare.game.domain.model.Board
-import com.example.investorssquare.game.domain.model.Player
-import com.example.investorssquare.game.presentation.board_screen.BoardScreen
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.game.presentation.board_screen.BoardScreen
+import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.util.Constants.STARTER_MONEY_VALUE
 
 @Composable
 fun Navigation(board: Board) {
@@ -18,19 +19,30 @@ fun Navigation(board: Board) {
     NavHost(navController = navController, startDestination = Screen.BoardScreen.route) {
         composable(route = Screen.BoardScreen.route) {
 
-            val playerViewModel: PlayerViewModel = hiltViewModel()
+            val boardViewModel: BoardViewModel = hiltViewModel()
 
-            playerViewModel.setPlayers(listOf(
-                Player("Lara", board.playerColors[0]),
-                Player("Dusan", board.playerColors[1]),
-                Player("Kornelije", board.playerColors[2]),
-                Player("Jelly", board.playerColors[3]),
-                Player("Luka", board.playerColors[4]),
-                Player("Uros", board.playerColors[5])
-            ))
+            boardViewModel.setPlayers(
+                listOf(
+                    "Lara",
+                    "Dusan",
+                    "Kornelije",
+                    "Jelly",
+                    "Luka",
+                    "Uros"
+                ),
+                listOf(
+                    board.playerColors[0],
+                    board.playerColors[1],
+                    board.playerColors[2],
+                    board.playerColors[3],
+                    board.playerColors[4],
+                    board.playerColors[5]
+                ),
+                STARTER_MONEY_VALUE
+            )
 
             Box {
-                BoardScreen(playerViewModel = playerViewModel, board = board)
+                BoardScreen(boardViewModel = boardViewModel, board = board)
             }
         }
     }

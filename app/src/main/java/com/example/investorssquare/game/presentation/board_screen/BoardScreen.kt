@@ -17,13 +17,11 @@ import com.example.investorssquare.game.presentation.board_screen.components.Dic
 import com.example.investorssquare.game.presentation.board_screen.components.FinishButton
 import com.example.investorssquare.game.presentation.board_screen.components.PlayerCardColumns
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
-import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import com.example.investorssquare.util.Constants.SIDE_BOARD_MARGIN
 import com.example.investorssquare.util.Constants.TOP_BOARD_MARGIN
 
 @Composable
 fun BoardScreen(
-    playerViewModel: PlayerViewModel = hiltViewModel(),
     boardViewModel: BoardViewModel = hiltViewModel(),
     board: Board
 ) {
@@ -39,18 +37,18 @@ fun BoardScreen(
     ) {
         Board(screenWidthDp, sideMargin, board)
 
-        PlayerCardColumns(playerVM = playerViewModel)
+        PlayerCardColumns(playerVM = boardViewModel)
 
         Box(modifier = Modifier
             .align(Alignment.CenterHorizontally)
             .padding(top = 20.dp)) {
-            DiceButton(playerViewModel = playerViewModel)
+            DiceButton(boardViewModel = boardViewModel)
         }
 
         Box(modifier = Modifier
             .align(Alignment.CenterHorizontally)
             .padding(top = 10.dp)) {
-            FinishButton(playerViewModel = playerViewModel)
+            FinishButton(boardViewModel = boardViewModel)
         }
     }
 }
