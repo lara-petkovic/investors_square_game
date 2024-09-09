@@ -18,14 +18,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.investorssquare.R
-import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 import kotlinx.coroutines.delay
 
 @Composable
-fun DiceButton(playerViewModel: PlayerViewModel = hiltViewModel()) {
-    val number1 by playerViewModel.diceNumber1.collectAsState()
-    val number2 by playerViewModel.diceNumber2.collectAsState()
-    val isDiceButtonEnabled by playerViewModel.isDiceButtonEnabled.collectAsState()
+fun DiceButton(boardViewModel: BoardViewModel = hiltViewModel()) {
+    val number1 by boardViewModel.diceViewModel.diceNumber1.collectAsState()
+    val number2 by boardViewModel.diceViewModel.diceNumber2.collectAsState()
+    val isDiceButtonEnabled by boardViewModel.diceViewModel.isDiceButtonEnabled.collectAsState()
 
     var currentDice1 by remember { mutableIntStateOf(number1) }
     var currentDice2 by remember { mutableIntStateOf(number2) }
@@ -37,7 +37,7 @@ fun DiceButton(playerViewModel: PlayerViewModel = hiltViewModel()) {
     Button(
         onClick = {
             isRolling = true
-            playerViewModel.rollDice()
+            boardViewModel.rollDice()
             mediaPlayer.start() // Play sound effect when dice are rolled
         },
         enabled = isDiceButtonEnabled && !isRolling,
@@ -73,7 +73,7 @@ fun DiceButton(playerViewModel: PlayerViewModel = hiltViewModel()) {
 
             currentDice1 = number1
             currentDice2 = number2
-            playerViewModel.moveActivePlayer()
+            boardViewModel.moveActivePlayer()
 
             isRolling = false
         }

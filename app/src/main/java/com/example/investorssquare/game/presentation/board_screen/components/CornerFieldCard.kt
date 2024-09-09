@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Field
-import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -24,7 +24,7 @@ fun CornerFieldCard(
     index: Int,
     board: Board,
     onFieldClick: (Field) -> Unit,
-    playerVM: PlayerViewModel = hiltViewModel()
+    playerVM: BoardViewModel = hiltViewModel()
 ) {
     Card(
         modifier = modifier
@@ -38,7 +38,7 @@ fun CornerFieldCard(
         PlayerDrawer(
             canvasHeight = fieldSize,
             canvasWidth = fieldSize,
-            playersVM = playerVM,
+            boardVM = playerVM,
             fieldIndex = index
         )
     }

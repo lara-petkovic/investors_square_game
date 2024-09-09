@@ -1,5 +1,6 @@
 package com.example.investorssquare.game.presentation.board_screen.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,8 +17,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,27 +28,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.investorssquare.R
-import com.example.investorssquare.game.domain.model.Player
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import com.example.investorssquare.util.Constants.PLAYER_CARD_WIDTH
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun PlayerCard(player: Player, playerVM: PlayerViewModel) {
-    val players by playerVM.players.collectAsState()
-    val playerIndex = players.indexOf(player)
-
-    val activePlayerIndex by playerVM.activePlayerIndex.collectAsState()
-    val isActive = player == players.getOrNull(activePlayerIndex)
-    val moneyOfPlayers by playerVM.money.collectAsState()
-    val money = moneyOfPlayers.getOrNull(playerIndex) ?: 0
-
+fun PlayerCard(playerViewModel: PlayerViewModel) {
     Box(
         modifier = Modifier
             .width((LocalConfiguration.current.screenWidthDp * PLAYER_CARD_WIDTH).dp)
             .height(60.dp)
             .border(
                 width = 2.5.dp,
-                color = if (isActive) Color.Red else lerp(player.color, Color.Black, 0.2f),
+                color = if (playerViewModel.isActive.value) Color.Red else lerp(playerViewModel.color.value, Color.Black, 0.2f),
                 shape = RoundedCornerShape(8.dp)
             )
             .clip(RoundedCornerShape(8.dp))
@@ -57,7 +48,7 @@ fun PlayerCard(player: Player, playerVM: PlayerViewModel) {
         Card(
             modifier = Modifier.fillMaxSize(),
             shape = RoundedCornerShape(8.dp),
-            colors = CardDefaults.cardColors(containerColor = player.color.copy(alpha = 0.6f))
+            colors = CardDefaults.cardColors(containerColor = playerViewModel.color.value.copy(alpha = 0.6f))
         ) {
             Box(
                 modifier = Modifier
@@ -73,7 +64,7 @@ fun PlayerCard(player: Player, playerVM: PlayerViewModel) {
                     // Left-aligned content
                     Box(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = player.name,
+                            text = playerViewModel.name.value,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
@@ -86,7 +77,7 @@ fun PlayerCard(player: Player, playerVM: PlayerViewModel) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = money.toString(),
+                            text = playerViewModel.money.value.toString(),
                             fontSize = 15.sp,
                             color = Color.Black
                         )

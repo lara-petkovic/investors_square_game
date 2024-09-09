@@ -1,5 +1,6 @@
 package com.example.investorssquare.game.presentation.board_screen.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
@@ -13,32 +14,33 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.example.investorssquare.R
-import com.example.investorssquare.game.domain.model.Player
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun PlayerDrawer(
     canvasWidth: Dp,
     canvasHeight: Dp,
-    playersVM: PlayerViewModel,
+    boardVM: BoardViewModel,
     fieldIndex: Int,
     imageSize: Dp = 16.dp,
     spacing: Dp = (-5).dp
 ) {
-    val players = playersVM.players.collectAsState().value
-    val playerPositions = playersVM.playerPositions.collectAsState().value
+    val players = boardVM.players.collectAsState().value
+    val playerPositions = boardVM.playersPositions.collectAsState().value
 
-    val playersOnField = players.filterIndexed { playerIndex, _ ->
+    val indexesOfPlayersOnTheField = players.filterIndexed { playerIndex, _ ->
         playerIndex < playerPositions.size && playerPositions[playerIndex] == fieldIndex
     }
 
     Box(modifier = Modifier.size(canvasWidth, canvasHeight)) {
-        val rows = when (playersOnField.size) {
+        val rows = when (indexesOfPlayersOnTheField.size) {
             6, 5 -> 3
             4, 3, 2 -> 2
             else -> 1
         }
-        val cols = when (playersOnField.size) {
+        val cols = when (indexesOfPlayersOnTheField.size) {
             6, 5, 4, 3 -> 2
             else -> 1
         }
@@ -49,7 +51,7 @@ fun PlayerDrawer(
         val startX = (canvasWidth - totalWidthPx) / 2
         val startY = (canvasHeight - totalHeightPx) / 2
 
-        playersOnField.forEachIndexed { idx, player ->
+        indexesOfPlayersOnTheField.forEachIndexed { idx, player ->
             val row = idx / cols
             val col = idx % cols
             val x = startX + (col * (imageSize + spacing))
@@ -68,9 +70,10 @@ fun PlayerDrawer(
     }
 }
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-private fun imageByColor(player: Player): Int {
-    val playerImageRes = when (player.color) {
+private fun imageByColor(playerViewModel: PlayerViewModel): Int {
+    val playerImageRes = when (playerViewModel.color.value) {
         Color.Magenta -> R.drawable.player_purple    //*
         Color.Cyan -> R.drawable.player_cyan
         Color.Green -> R.drawable.player_green
