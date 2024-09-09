@@ -4,12 +4,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -20,6 +20,7 @@ class BoardViewModel @Inject constructor() : ViewModel() {
 
     var diceViewModel: DiceViewModel = DiceViewModel()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val playersPositions: StateFlow<List<Int>> = combine(
         _players,
         _players.flatMapLatest { players ->
@@ -45,7 +46,7 @@ class BoardViewModel @Inject constructor() : ViewModel() {
             }
         }
     }
-    private fun getActivePlayer(): PlayerViewModel?{
+    private fun getActivePlayer(): PlayerViewModel? {
         for(player in _players.value){
             if(player.isActive.value){
                 return player
@@ -55,7 +56,7 @@ class BoardViewModel @Inject constructor() : ViewModel() {
     }
     fun setPlayers(playerNames: List<String>, playerColors: List<Color>, money: Int) {
         _players.value = List(playerNames.size) { PlayerViewModel() }
-        for(i in 0.._players.value.size-1){
+        for(i in 0..<_players.value.size){
             _players.value[i].setMoney(money)
             _players.value[i].setName(playerNames[i])
             _players.value[i].setColor(playerColors[i])
