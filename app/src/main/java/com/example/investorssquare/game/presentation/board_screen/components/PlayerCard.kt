@@ -17,6 +17,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,13 +36,16 @@ import com.example.investorssquare.util.Constants.PLAYER_CARD_WIDTH
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun PlayerCard(playerViewModel: PlayerViewModel) {
+    val isActive by playerViewModel.isActive.collectAsState()
+    val playerColor by playerViewModel.color.collectAsState()
+    val money by playerViewModel.money.collectAsState()
     Box(
         modifier = Modifier
             .width((LocalConfiguration.current.screenWidthDp * PLAYER_CARD_WIDTH).dp)
             .height(60.dp)
             .border(
                 width = 2.5.dp,
-                color = if (playerViewModel.isActive.value) Color.Red else lerp(playerViewModel.color.value, Color.Black, 0.2f),
+                color = if (isActive) Color.Red else lerp(playerColor, Color.Black, 0.2f),
                 shape = RoundedCornerShape(8.dp)
             )
             .clip(RoundedCornerShape(8.dp))
@@ -77,7 +82,7 @@ fun PlayerCard(playerViewModel: PlayerViewModel) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = playerViewModel.money.value.toString(),
+                            text = money.toString(),
                             fontSize = 15.sp,
                             color = Color.Black
                         )
