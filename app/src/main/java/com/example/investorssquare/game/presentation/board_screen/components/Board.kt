@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +39,7 @@ import com.example.investorssquare.game.presentation.board_screen.popups.Communi
 import com.example.investorssquare.game.presentation.board_screen.popups.PropertyDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.StationDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.UtilityDetails
+import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 import com.example.investorssquare.util.Constants.FIELDS_PER_ROW
 import com.example.investorssquare.util.Constants.RELATIVE_FIELD_HEIGHT
 import kotlin.math.roundToInt
@@ -46,13 +48,14 @@ import kotlin.math.roundToInt
 fun Board(
     screenWidthDp: Dp,
     sideMargin: Dp,
-    board: Board
+    board: Board,
+    boardViewModel: BoardViewModel
 ) {
+    val showPopup by boardViewModel.showPopup.collectAsState()
+    val currentField by boardViewModel.currentField.collectAsState()
     val boardSize = (screenWidthDp.value - sideMargin.value * 2).dp
     val fieldHeight = (boardSize.value * RELATIVE_FIELD_HEIGHT).dp
     val fieldWidth = ((boardSize.value - 2 * fieldHeight.value) / FIELDS_PER_ROW).dp
-    var showPopup by remember { mutableStateOf(false) }
-    var popupField by remember { mutableStateOf<Field?>(null) }
     var centerOfTheBoard by remember { mutableStateOf(IntOffset.Zero) }
     val context = LocalContext.current
 
@@ -89,8 +92,6 @@ fun Board(
                     index = 0,
                     board = board,
                     onFieldClick = { field ->
-                        popupField = field
-                        showPopup = true
                     }
                 )
                 RowFieldCards(
@@ -100,8 +101,6 @@ fun Board(
                     startIndex = 0,
                     board = board,
                     onFieldClick = { field ->
-                        popupField = field
-                        showPopup = true
                     }
                 )
                 CornerFieldCard(
@@ -110,8 +109,6 @@ fun Board(
                     index = 10,
                     board = board,
                     onFieldClick = { field ->
-                        popupField = field
-                        showPopup = true
                     }
                 )
                 RowFieldCards(
@@ -121,8 +118,6 @@ fun Board(
                     startIndex = 10,
                     board = board,
                     onFieldClick = { field ->
-                        popupField = field
-                        showPopup = true
                     },
                     rotation = 90f,
                     translationY = -with(LocalDensity.current) { fieldWidth.toPx() } * 4.5f - with(LocalDensity.current){fieldHeight.toPx()} * 0.5f,
@@ -135,8 +130,6 @@ fun Board(
                     index = 20,
                     board = board,
                     onFieldClick = { field ->
-                        popupField = field
-                        showPopup = true
                     }
                 )
                 RowFieldCards(
@@ -146,8 +139,6 @@ fun Board(
                     startIndex = 20,
                     board = board,
                     onFieldClick = { field ->
-                        popupField = field
-                        showPopup = true
                     },
                     rotation = 180f,
                     translationY = -with(LocalDensity.current) { fieldWidth.toPx() } * 9.0f - with(LocalDensity.current){fieldHeight.toPx()} * 1f,
@@ -158,8 +149,6 @@ fun Board(
                     index = 30,
                     board = board,
                     onFieldClick = { field ->
-                        popupField = field
-                        showPopup = true
                     }
                 )
                 RowFieldCards(
@@ -169,8 +158,6 @@ fun Board(
                     startIndex = 30,
                     board = board,
                     onFieldClick = { field ->
-                        popupField = field
-                        showPopup = true
                     },
                     rotation = 270f,
                     translationY = -with(LocalDensity.current) { fieldWidth.toPx() } * 4.5f - with(LocalDensity.current){fieldHeight.toPx()} * 0.5f,
@@ -194,46 +181,46 @@ fun Board(
                 ){}
             }
         }
-        popupField?.let { field ->
+        currentField?.let { currentField ->
             if (showPopup) {
-                if(field.type==FieldType.PROPERTY){
+                if(currentField.type==FieldType.PROPERTY){
                     PropertyDetails(
-                        field = field,
-                        onDismissRequest = { showPopup = false },
+                        field = currentField,
+                        onDismissRequest = { boardViewModel.dismissPopup()},
                         offset = IntOffset((with(LocalDensity.current) { fieldHeight.toPx() }+1.75*with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),(with(LocalDensity.current) { fieldHeight.toPx() }+(0.02f*9*with(LocalDensity.current) { fieldWidth.toPx() })).toInt()),
                         popupWidth = (5.5 * fieldWidth.value).dp,
                         popupHeight = (0.96 * 9 * fieldWidth.value).dp,
-                        board = board
+                        boardViewModel = boardViewModel
                     )
                 }
-                if(field.type==FieldType.STATION){
+                if(currentField.type==FieldType.STATION){
                     StationDetails(
-                        field = field,
-                        onDismissRequest = { showPopup = false },
+                        field = currentField,
+                        onDismissRequest = { boardViewModel.dismissPopup() },
                         offset = IntOffset((with(LocalDensity.current) { fieldHeight.toPx() }+1.75*with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),(with(LocalDensity.current) { fieldHeight.toPx() }+(0.02f*9*with(LocalDensity.current) { fieldWidth.toPx() })).toInt()),
                         popupWidth = (5.5 * fieldWidth.value).dp,
                         popupHeight = (0.96 * 9 * fieldWidth.value).dp,
-                        board = board
+                        boardViewModel = boardViewModel
                     )
                 }
-                if(field.type==FieldType.UTILITY){
+                if(currentField.type==FieldType.UTILITY){
                     UtilityDetails(
-                        field = field,
-                        onDismissRequest = { showPopup = false },
+                        field = currentField,
+                        onDismissRequest = { boardViewModel.dismissPopup() },
                         offset = IntOffset((with(LocalDensity.current) { fieldHeight.toPx() }+1.75*with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),(with(LocalDensity.current) { fieldHeight.toPx() }+(0.02f*9*with(LocalDensity.current) { fieldWidth.toPx() })).toInt()),
                         popupWidth = (5.5 * fieldWidth.value).dp,
                         popupHeight = (0.96 * 9 * fieldWidth.value).dp,
-                        board = board
+                        boardViewModel = boardViewModel
                     )
                 }
-                if(field.type==FieldType.CHANCE || field.type==FieldType.COMMUNITY_CHEST){
+                if(currentField.type==FieldType.CHANCE || currentField.type==FieldType.COMMUNITY_CHEST){
                     CommunityCardPopup(
-                        isChance = field.type==FieldType.CHANCE,
-                        onDismissRequest = { showPopup = false},
+                        isChance = currentField.type==FieldType.CHANCE,
+                        onDismissRequest = { boardViewModel.dismissPopup()},
                         offset = IntOffset((with(LocalDensity.current) { fieldHeight.toPx() }+(0.05f*9*with(LocalDensity.current) { fieldWidth.toPx() })).toInt(), (with(LocalDensity.current) { fieldHeight.toPx() }+1.5*with(LocalDensity.current) { fieldWidth.toPx() }).toInt()),
                         popupWidth = (0.9 * 9 * fieldWidth.value).dp,
                         popupHeight = (6 * fieldWidth.value).dp,
-                        board = board
+                        boardViewModel = boardViewModel
                     )
                 }
             }

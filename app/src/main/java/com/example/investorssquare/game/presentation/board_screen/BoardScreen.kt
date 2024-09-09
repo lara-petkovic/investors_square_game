@@ -25,6 +25,7 @@ fun BoardScreen(
     boardViewModel: BoardViewModel = hiltViewModel(),
     board: Board
 ) {
+    boardViewModel.setBoard(board)
     val screenWidthDp = LocalConfiguration.current.screenWidthDp.dp
     val sideMargin = (screenWidthDp.value * SIDE_BOARD_MARGIN).dp
     val topMargin = (screenWidthDp.value * TOP_BOARD_MARGIN).dp
@@ -35,9 +36,9 @@ fun BoardScreen(
             .padding(start = sideMargin, end = sideMargin, top = topMargin),
         verticalArrangement = Arrangement.Top
     ) {
-        Board(screenWidthDp, sideMargin, board)
+        Board(screenWidthDp, sideMargin, board, boardViewModel)
 
-        PlayerCardColumns(playerVM = boardViewModel)
+        PlayerCardColumns(boardVM = boardViewModel)
 
         Box(modifier = Modifier
             .align(Alignment.CenterHorizontally)

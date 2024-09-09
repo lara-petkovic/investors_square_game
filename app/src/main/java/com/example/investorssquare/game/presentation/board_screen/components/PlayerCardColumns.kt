@@ -13,8 +13,8 @@ import androidx.compose.ui.unit.dp
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 
 @Composable
-fun PlayerCardColumns(playerVM: BoardViewModel) {
-    val players by playerVM.players.collectAsState()
+fun PlayerCardColumns(boardVM: BoardViewModel) {
+    val players by boardVM.players.collectAsState()
 
     val columnsCount = 2
     val rowsCount = (players.size + columnsCount - 1) / columnsCount

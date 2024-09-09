@@ -1,5 +1,6 @@
 package com.example.investorssquare.game.presentation.board_screen.popups
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -33,7 +34,9 @@ import androidx.compose.ui.window.PopupProperties
 import com.example.investorssquare.game.domain.model.Board
 import kotlinx.coroutines.delay
 import com.example.investorssquare.R
+import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun CommunityCardPopup(
     isChance: Boolean,
@@ -41,13 +44,13 @@ fun CommunityCardPopup(
     offset : IntOffset,
     popupWidth: Dp,
     popupHeight: Dp,
-    board: Board
+    boardViewModel: BoardViewModel
 ) {
     var isFlipped by remember { mutableStateOf(false) }
     var isClosing by remember { mutableStateOf(false) }
 
     val card = remember {
-        if (isChance) board.chance.drawCard() else board.communityChest.drawCard()
+        if (isChance) boardViewModel.board.value?.chance?.drawCard() else boardViewModel.board.value?.communityChest?.drawCard()
     }
 
     val rotation by animateFloatAsState(
@@ -81,14 +84,14 @@ fun CommunityCardPopup(
                 .clip(RoundedCornerShape(5.dp))
                 .border(
                     width = 3.dp,
-                    color = if (isChance) board.chance.primaryColor else board.communityChest.primaryColor,
+                    color = (if (isChance) boardViewModel.board.value?.chance?.primaryColor else boardViewModel.board.value?.communityChest?.primaryColor)!!,
                     shape = RoundedCornerShape(5.dp)
                 )
                 .background(
-                    color = if (isChance)
-                        board.chance.primaryColor.copy(alpha = 0.1f)
+                    color = (if (isChance)
+                        boardViewModel.board.value?.chance?.primaryColor?.copy(alpha = 0.1f)
                     else
-                        board.communityChest.primaryColor.copy(alpha = 0.1f)
+                        boardViewModel.board.value?.communityChest?.primaryColor?.copy(alpha = 0.1f))!!
                 )
         ) {
             if (rotation <= 90f) {
@@ -108,10 +111,10 @@ fun CommunityCardPopup(
                 ) {
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = if (isChance) board.chance.commonName.uppercase() else board.communityChest.commonName.uppercase(),
+                        text = (if (isChance) boardViewModel.board.value?.chance?.commonName?.uppercase() else boardViewModel.board.value?.communityChest?.commonName?.uppercase())!!,
                         style = MaterialTheme.typography.titleLarge,
                         fontSize = 18.sp,
-                        color = if (isChance) board.chance.primaryColor else board.communityChest.primaryColor,
+                        color = (if (isChance) boardViewModel.board.value?.chance?.primaryColor else boardViewModel.board.value?.communityChest?.primaryColor)!!,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(6.dp))
@@ -119,14 +122,16 @@ fun CommunityCardPopup(
                         modifier = Modifier.fillMaxSize().border(1.dp, Color.Black).background(color=Color.White),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            modifier = Modifier.padding(horizontal = 3.dp),
-                            text = card.text,
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontSize = 13.sp,
-                            color = Color.Black,
-                            textAlign = TextAlign.Center,
-                        )
+                        if (card != null) {
+                            Text(
+                                modifier = Modifier.padding(horizontal = 3.dp),
+                                text = card.text,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontSize = 13.sp,
+                                color = Color.Black,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
                     }
                 }
             }

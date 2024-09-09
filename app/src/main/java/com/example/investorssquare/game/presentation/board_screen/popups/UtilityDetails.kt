@@ -30,6 +30,7 @@ import com.example.investorssquare.R
 import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.Utility
+import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 
 @Composable
 fun UtilityDetails(
@@ -38,7 +39,7 @@ fun UtilityDetails(
     offset : IntOffset,
     popupWidth: Dp,
     popupHeight: Dp,
-    board: Board
+    boardViewModel: BoardViewModel
 ) {
     val utility = field as? Utility
     val scrollState = rememberScrollState()
@@ -143,7 +144,9 @@ fun UtilityDetails(
                 }
                 Spacer(modifier = Modifier.height(1.dp))
                 Button(
-                    onClick = { onDismissRequest() },
+                    onClick = {
+                        utility?.index?.let { boardViewModel.buyEstate(it) }
+                    },
                     modifier = Modifier
                         .size((popupWidth.value * 0.5).dp, (popupHeight.value * 0.07).dp)
                         .padding(0.dp),
