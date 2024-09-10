@@ -116,7 +116,13 @@ class BoardViewModel @Inject constructor() : ViewModel() {
             EstateViewModel(estate)
         }
     }
-    private fun getEstateByFieldIndex(index: Int): EstateViewModel?{
+    fun getOwnerOfEstate(fieldIndex: Int): PlayerViewModel?{
+        val ownerIndex = getEstateByFieldIndex(fieldIndex)?.ownerIndex?.value!!
+        if(ownerIndex==-1)
+            return null
+        return players.value[ownerIndex]
+    }
+    fun getEstateByFieldIndex(index: Int): EstateViewModel?{
         return _estates.value.firstOrNull(){ estate ->
             estate.estate.value.index==index
         }

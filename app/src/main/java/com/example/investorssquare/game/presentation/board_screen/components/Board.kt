@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.investorssquare.game.domain.model.Board
+import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.presentation.board_screen.popups.CommunityCardPopup
@@ -44,6 +46,7 @@ import com.example.investorssquare.util.Constants.FIELDS_PER_ROW
 import com.example.investorssquare.util.Constants.RELATIVE_FIELD_HEIGHT
 import kotlin.math.roundToInt
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun Board(
     screenWidthDp: Dp,
@@ -52,6 +55,7 @@ fun Board(
     boardViewModel: BoardViewModel
 ) {
     val showPopup by boardViewModel.showPopup.collectAsState()
+    val estates by boardViewModel.estates.collectAsState()
     val currentField by boardViewModel.currentField.collectAsState()
     val boardSize = (screenWidthDp.value - sideMargin.value * 2).dp
     val fieldHeight = (boardSize.value * RELATIVE_FIELD_HEIGHT).dp
@@ -85,6 +89,21 @@ fun Board(
                             .fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
+                }
+                for(estate in estates){
+                    if(estate.ownerIndex.value!=-1)
+                        BoughtEstateMarker(
+                            fieldWidth = fieldWidth,
+                            field = estate.estate.value,
+                            modifier = Modifier.offset {
+                                IntOffset(
+                                    x = calculateXOffsetForBoughtEstateMarker(estate.estate.value.index, fieldHeight, fieldWidth, boardSize).roundToPx(),
+                                    y = calculateYOffsetForBoughtEstateMarker(estate.estate.value.index, fieldHeight, fieldWidth, boardSize).roundToPx()
+                                )
+                            },
+                            boardViewModel = boardViewModel,
+                            horizontal = estate.estate.value.index<10 || (estate.estate.value.index in 21..29)
+                        )
                 }
                 CornerFieldCard(
                     fieldSize = fieldHeight,
@@ -226,4 +245,25 @@ fun Board(
             }
         }
     }
+}
+
+fun calculateXOffsetForBoughtEstateMarker(fieldIndex: Int, fieldHeight: Dp, fieldWidth: Dp, boardSize: Dp): Dp{
+    if(fieldIndex<10)
+        return boardSize-(fieldHeight.value + (fieldIndex-1+0.25)* fieldWidth.value).dp-(0.5*fieldWidth.value).dp
+    else if(fieldIndex<20)
+        return boardSize-(fieldHeight.value + 8.5*fieldWidth.value).dp-(0.5*fieldWidth.value).dp
+    else if(fieldIndex<30)
+        return boardSize-(fieldHeight.value + (30-fieldIndex-1+0.25)* fieldWidth.value).dp-(0.5*fieldWidth.value).dp
+    else
+        return boardSize-fieldHeight-(0.25*fieldWidth.value).dp
+}
+fun calculateYOffsetForBoughtEstateMarker(fieldIndex: Int, fieldHeight: Dp, fieldWidth: Dp, boardSize: Dp): Dp{
+    if(fieldIndex<10)
+        return boardSize-fieldHeight-(0.25*fieldWidth.value).dp
+    else if(fieldIndex<20)
+        return boardSize-(fieldHeight.value + (fieldIndex-11+0.25)* fieldWidth.value).dp-(0.5*fieldWidth.value).dp
+    else if(fieldIndex<30)
+        return boardSize-(fieldHeight.value + 8.5*fieldWidth.value).dp-(0.5*fieldWidth.value).dp
+    else
+        return boardSize-(fieldHeight.value + (40-fieldIndex-1+0.25)* fieldWidth.value).dp-(0.5*fieldWidth.value).dp
 }
