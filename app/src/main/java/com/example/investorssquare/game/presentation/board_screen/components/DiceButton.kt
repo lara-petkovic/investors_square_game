@@ -65,10 +65,7 @@ fun DiceButton(boardViewModel: BoardViewModel = hiltViewModel()) {
             while (System.currentTimeMillis() - startTime < animationDuration) {
                 currentDice1 = diceNumbers.random()
                 currentDice2 = diceNumbers.random()
-
-                // Delay and gradually increase the delay to simulate slowing down
-                val progress = (System.currentTimeMillis() - startTime) / animationDuration.toFloat()
-                delay((50 + (150 * progress)).toLong())
+                delay(20)
             }
 
             currentDice1 = number1
