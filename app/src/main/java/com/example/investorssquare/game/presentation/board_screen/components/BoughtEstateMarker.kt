@@ -1,6 +1,7 @@
 package com.example.investorssquare.game.presentation.board_screen.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -24,13 +25,13 @@ fun BoughtEstateMarker(
 ){
     val playerVM = boardViewModel.getOwnerOfEstate(field.index)
     val playerColor = playerVM?.color?.collectAsState()
-    val estateVM = boardViewModel.getEstateByFieldIndex(field.index)
-    val width = if(horizontal) fieldWidth/2 else fieldWidth/4
-    val height = if(horizontal) fieldWidth/4 else fieldWidth/2
+    val width = if(horizontal) fieldWidth/2 else fieldWidth/3.7f
+    val height = if(horizontal) fieldWidth/3.7f else fieldWidth/2
     Box(
         modifier = modifier
             .background(playerColor?.value!!)
             .size(width,height)
+            .border(1.dp, color = Color.Black)
     )
     {
 
