@@ -1,6 +1,5 @@
 package com.example.investorssquare.game.presentation.board_screen.components
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
@@ -9,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -17,7 +17,6 @@ import com.example.investorssquare.R
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 
-@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun PlayerDrawer(
     canvasWidth: Dp,
@@ -58,6 +57,8 @@ fun PlayerDrawer(
             val y = startY + (row * (imageSize + spacing))
 
             val playerImageRes = imageByColor(player)
+            val playerPosition = player.position.collectAsState().value
+            val rotationAngle = playerRotationAngle(playerPosition)
 
             Image(
                 painter = painterResource(id = playerImageRes),
@@ -65,13 +66,22 @@ fun PlayerDrawer(
                 modifier = Modifier
                     .size(imageSize)
                     .offset(x, y)
+                    .graphicsLayer(rotationZ = rotationAngle)
             )
         }
     }
 }
 
-@SuppressLint("StateFlowValueCalledInComposition")
-@Composable
+private fun playerRotationAngle(playerPosition: Int): Float {
+    val rotationAngle = when (playerPosition % 40) {
+        in 11..19 -> -90f
+        in 21..29 -> -180f
+        in 31..39 -> 90f
+        else -> 0f
+    }
+    return rotationAngle
+}
+
 private fun imageByColor(playerViewModel: PlayerViewModel): Int {
     val playerImageRes = when (playerViewModel.color.value) {
         Color.Magenta -> R.drawable.player_purple    //*

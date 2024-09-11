@@ -41,17 +41,17 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
         return false
     }
     fun moveBySteps(steps: Int){
-        _position.value = (_position.value+steps) % NUMBER_OF_FIELDS
+        _position.value = (_position.value + steps) % NUMBER_OF_FIELDS
     }
     fun moveToField(field: Int){
         if(field < NUMBER_OF_FIELDS)
             _position.value = field
     }
     fun pay(price: Int){
-        _money.value-=price
+        _money.value -= price
     }
     fun receive(amount: Int){
-        _money.value+=amount
+        _money.value += amount
     }
     fun finishMove(){
         _isActive.value = false

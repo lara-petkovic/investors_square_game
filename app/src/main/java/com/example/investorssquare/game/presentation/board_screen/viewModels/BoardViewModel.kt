@@ -7,6 +7,7 @@ import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.game.domain.model.Field
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -29,6 +30,7 @@ class BoardViewModel @Inject constructor() : ViewModel() {
 
     var diceViewModel: DiceViewModel = DiceViewModel()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val playersPositions: StateFlow<List<Int>> = combine(
         _players,
         _players.flatMapLatest { players ->
@@ -60,7 +62,7 @@ class BoardViewModel @Inject constructor() : ViewModel() {
             }
         }
     }
-    private fun getActivePlayer(): PlayerViewModel?{
+    private fun getActivePlayer(): PlayerViewModel? {
         for(player in _players.value){
             if(player.isActive.value){
                 return player
