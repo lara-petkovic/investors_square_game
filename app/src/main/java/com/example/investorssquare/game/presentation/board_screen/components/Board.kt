@@ -1,6 +1,7 @@
 package com.example.investorssquare.game.presentation.board_screen.components
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -23,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
@@ -34,19 +34,19 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.investorssquare.game.domain.model.Board
-import com.example.investorssquare.game.domain.model.Estate
-import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.presentation.board_screen.popups.CommunityCardPopup
+import com.example.investorssquare.game.presentation.board_screen.popups.PaymentPopupCard
 import com.example.investorssquare.game.presentation.board_screen.popups.PropertyDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.StationDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.UtilityDetails
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 import com.example.investorssquare.util.Constants.FIELDS_PER_ROW
+import com.example.investorssquare.util.Constants.NUMBER_OF_FIELDS
 import com.example.investorssquare.util.Constants.RELATIVE_FIELD_HEIGHT
 import kotlin.math.roundToInt
 
-@SuppressLint("StateFlowValueCalledInComposition")
+@SuppressLint("StateFlowValueCalledInComposition", "DiscouragedApi")
 @Composable
 fun Board(
     screenWidthDp: Dp,
@@ -55,6 +55,8 @@ fun Board(
     boardViewModel: BoardViewModel
 ) {
     val showPopup by boardViewModel.showPopup.collectAsState()
+    val showPaymentPopup by boardViewModel.showPaymentPopup.collectAsState()
+    val paymentDetails by boardViewModel.paymentDetails.collectAsState()
     val estates by boardViewModel.estates.collectAsState()
     val currentField by boardViewModel.currentField.collectAsState()
     val boardSize = (screenWidthDp.value - sideMargin.value * 2).dp
@@ -83,15 +85,14 @@ fun Board(
             ) {
                 if (board.imageUrl.isNotEmpty()) {
                     Image(
-                        painter = painterResource(context.resources.getIdentifier(board.imageUrl?:"", "drawable", context.packageName)),
+                        painter = painterResource(context.resources.getIdentifier(board.imageUrl, "drawable", context.packageName)),
                         contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxSize(),
+                        modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
                 }
                 for(estate in estates){
-                    if(estate.ownerIndex.value!=-1)
+                    if(estate.ownerIndex.value != -1)
                         BoughtEstateMarker(
                             fieldWidth = fieldWidth,
                             field = estate.estate.value,
@@ -110,8 +111,7 @@ fun Board(
                     modifier = Modifier.align(Alignment.BottomEnd),
                     index = 0,
                     board = board,
-                    onFieldClick = { field ->
-                    }
+                    onFieldClick = { }
                 )
                 RowFieldCards(
                     fieldHeight = fieldHeight,
@@ -119,16 +119,14 @@ fun Board(
                     modifier = Modifier.align(Alignment.BottomCenter),
                     startIndex = 0,
                     board = board,
-                    onFieldClick = { field ->
-                    }
+                    onFieldClick = { }
                 )
                 CornerFieldCard(
                     fieldSize = fieldHeight,
                     modifier = Modifier.align(Alignment.BottomStart),
                     index = 10,
                     board = board,
-                    onFieldClick = { field ->
-                    }
+                    onFieldClick = { }
                 )
                 RowFieldCards(
                     fieldHeight = fieldHeight,
@@ -136,8 +134,7 @@ fun Board(
                     modifier = Modifier.align(Alignment.BottomStart),
                     startIndex = 10,
                     board = board,
-                    onFieldClick = { field ->
-                    },
+                    onFieldClick = { },
                     rotation = 90f,
                     translationY = -with(LocalDensity.current) { fieldWidth.toPx() } * 4.5f - with(LocalDensity.current){fieldHeight.toPx()} * 0.5f,
                     translationX = -with(LocalDensity.current){fieldHeight.toPx()} * 2.5f,
@@ -148,8 +145,7 @@ fun Board(
                     modifier = Modifier.align(Alignment.TopStart),
                     index = 20,
                     board = board,
-                    onFieldClick = { field ->
-                    }
+                    onFieldClick = { }
                 )
                 RowFieldCards(
                     fieldHeight = fieldHeight,
@@ -157,8 +153,7 @@ fun Board(
                     modifier = Modifier.align(Alignment.BottomCenter),
                     startIndex = 20,
                     board = board,
-                    onFieldClick = { field ->
-                    },
+                    onFieldClick = { },
                     rotation = 180f,
                     translationY = -with(LocalDensity.current) { fieldWidth.toPx() } * 9.0f - with(LocalDensity.current){fieldHeight.toPx()} * 1f,
                 )
@@ -167,8 +162,7 @@ fun Board(
                     modifier = Modifier.align(Alignment.TopEnd),
                     index = 30,
                     board = board,
-                    onFieldClick = { field ->
-                    }
+                    onFieldClick = { }
                 )
                 RowFieldCards(
                     fieldHeight = fieldHeight,
@@ -176,8 +170,7 @@ fun Board(
                     modifier = Modifier.align(Alignment.BottomCenter),
                     startIndex = 30,
                     board = board,
-                    onFieldClick = { field ->
-                    },
+                    onFieldClick = { },
                     rotation = 270f,
                     translationY = -with(LocalDensity.current) { fieldWidth.toPx() } * 4.5f - with(LocalDensity.current){fieldHeight.toPx()} * 0.5f,
                     translationX = with(LocalDensity.current){fieldHeight.toPx()} * 2.5f,
@@ -200,9 +193,20 @@ fun Board(
                 ){}
             }
         }
+        if (showPaymentPopup && paymentDetails != null) {
+            PaymentPopupCard(
+                payer = paymentDetails!!.payer,
+                receiver = paymentDetails!!.receiver,
+                amount = paymentDetails!!.amount,
+                onDismissRequest = { boardViewModel.dismissPaymentPopup() }
+            )
+        } else {
+            Log.e("BoardScreen", "paymentDetails is null")
+        }
+
         currentField?.let { currentField ->
             if (showPopup) {
-                if(currentField.type==FieldType.PROPERTY){
+                if(currentField.type == FieldType.PROPERTY) {
                     PropertyDetails(
                         field = currentField,
                         onDismissRequest = { boardViewModel.dismissPopup()},
@@ -212,7 +216,7 @@ fun Board(
                         boardViewModel = boardViewModel
                     )
                 }
-                if(currentField.type==FieldType.STATION){
+                if(currentField.type == FieldType.STATION) {
                     StationDetails(
                         field = currentField,
                         onDismissRequest = { boardViewModel.dismissPopup() },
@@ -222,7 +226,7 @@ fun Board(
                         boardViewModel = boardViewModel
                     )
                 }
-                if(currentField.type==FieldType.UTILITY){
+                if(currentField.type == FieldType.UTILITY) {
                     UtilityDetails(
                         field = currentField,
                         onDismissRequest = { boardViewModel.dismissPopup() },
@@ -232,7 +236,7 @@ fun Board(
                         boardViewModel = boardViewModel
                     )
                 }
-                if(currentField.type==FieldType.CHANCE || currentField.type==FieldType.COMMUNITY_CHEST){
+                if(currentField.type == FieldType.CHANCE || currentField.type == FieldType.COMMUNITY_CHEST) {
                     CommunityCardPopup(
                         isChance = currentField.type==FieldType.CHANCE,
                         onDismissRequest = { boardViewModel.dismissPopup()},
@@ -247,23 +251,23 @@ fun Board(
     }
 }
 
-fun calculateXOffsetForBoughtEstateMarker(fieldIndex: Int, fieldHeight: Dp, fieldWidth: Dp, boardSize: Dp): Dp{
-    if(fieldIndex<10)
-        return boardSize-(fieldHeight.value + (fieldIndex-1+0.25)* fieldWidth.value).dp-(0.5*fieldWidth.value).dp
-    else if(fieldIndex<20)
-        return boardSize-(fieldHeight.value + 8.5*fieldWidth.value).dp-(0.5*fieldWidth.value).dp
-    else if(fieldIndex<30)
-        return boardSize-(fieldHeight.value + (30-fieldIndex-1+0.25)* fieldWidth.value).dp-(0.5*fieldWidth.value).dp
+fun calculateXOffsetForBoughtEstateMarker(fieldIndex: Int, fieldHeight: Dp, fieldWidth: Dp, boardSize: Dp): Dp {
+    return if(fieldIndex < 10)
+        boardSize-(fieldHeight.value + (fieldIndex-1+0.25)* fieldWidth.value).dp-(0.5*fieldWidth.value).dp
+    else if(fieldIndex < 20)
+        boardSize-(fieldHeight.value + 8.5*fieldWidth.value).dp-(0.5*fieldWidth.value).dp
+    else if(fieldIndex < 30)
+        boardSize-(fieldHeight.value + (30-fieldIndex-1+0.25)* fieldWidth.value).dp-(0.5*fieldWidth.value).dp
     else
-        return boardSize-fieldHeight-(0.25*fieldWidth.value).dp
+        boardSize-fieldHeight-(0.25*fieldWidth.value).dp
 }
-fun calculateYOffsetForBoughtEstateMarker(fieldIndex: Int, fieldHeight: Dp, fieldWidth: Dp, boardSize: Dp): Dp{
-    if(fieldIndex<10)
-        return boardSize-fieldHeight-(0.25*fieldWidth.value).dp
-    else if(fieldIndex<20)
-        return boardSize-(fieldHeight.value + (fieldIndex-11+0.25)* fieldWidth.value).dp-(0.5*fieldWidth.value).dp
-    else if(fieldIndex<30)
-        return boardSize-(fieldHeight.value + 8.5*fieldWidth.value).dp-(0.5*fieldWidth.value).dp
+fun calculateYOffsetForBoughtEstateMarker(fieldIndex: Int, fieldHeight: Dp, fieldWidth: Dp, boardSize: Dp): Dp {
+    return if(fieldIndex < 10)
+        boardSize-fieldHeight-(0.25*fieldWidth.value).dp
+    else if(fieldIndex < 20)
+        boardSize-(fieldHeight.value + (fieldIndex-11+0.25)* fieldWidth.value).dp-(0.5*fieldWidth.value).dp
+    else if(fieldIndex < 30)
+        boardSize-(fieldHeight.value + 8.5*fieldWidth.value).dp-(0.5*fieldWidth.value).dp
     else
-        return boardSize-(fieldHeight.value + (40-fieldIndex-1+0.25)* fieldWidth.value).dp-(0.5*fieldWidth.value).dp
+        boardSize-(fieldHeight.value + (NUMBER_OF_FIELDS-fieldIndex-1+0.25)* fieldWidth.value).dp-(0.5*fieldWidth.value).dp
 }

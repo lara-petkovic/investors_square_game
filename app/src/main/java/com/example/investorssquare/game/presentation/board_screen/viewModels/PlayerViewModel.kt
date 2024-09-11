@@ -2,7 +2,6 @@ package com.example.investorssquare.game.presentation.board_screen.viewModels
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
-import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.util.Constants.NUMBER_OF_FIELDS
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,8 +30,8 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     private val _estates = MutableStateFlow<List<EstateViewModel>>(emptyList())
     val estates: StateFlow<List<EstateViewModel>> get() = _estates
 
-    fun buyNewEstate(estate: EstateViewModel): Boolean{
-        if(isActive.value && money.value>=estate.estate.value.price){
+    fun buyNewEstate(estate: EstateViewModel): Boolean {
+        if(isActive.value && money.value >= estate.estate.value.price) {
             pay(estate.estate.value.price)
             estate.setOwnerIndex(index.value)
             _estates.value += estate
@@ -43,35 +42,35 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     fun moveBySteps(steps: Int){
         _position.value = (_position.value + steps) % NUMBER_OF_FIELDS
     }
-    fun moveToField(field: Int){
+    fun moveToField(field: Int) {
         if(field < NUMBER_OF_FIELDS)
             _position.value = field
     }
-    fun pay(price: Int){
+    fun pay(price: Int) {
         _money.value -= price
     }
-    fun receive(amount: Int){
+    fun receive(amount: Int) {
         _money.value += amount
     }
-    fun finishMove(){
+    fun finishMove() {
         _isActive.value = false
     }
-    fun startMove(){
+    fun startMove() {
         _isActive.value = true
     }
-    fun setMoney(money:Int){
+    fun setMoney(money:Int) {
         _money.value = money
     }
-    fun setColor(color:Color){
+    fun setColor(color:Color) {
         _color.value = color
     }
-    fun setIndex(index:Int){
+    fun setIndex(index:Int) {
         _index.value = index
     }
-    fun setPosition(position:Int){
+    fun setPosition(position:Int) {
         _position.value = position
     }
-    fun setName(name:String){
+    fun setName(name:String) {
         _name.value = name
     }
 }

@@ -1,4 +1,5 @@
 [versions]
+accompanistDrawablepainter = "0.35.0-alpha"
 agp = "8.5.2"
 gson = "2.11.0"
 hiltAndroid = "2.48"
@@ -16,8 +17,10 @@ composeBom = "2024.04.01"
 navigationCompose = "2.7.7"
 uiTestAndroid = "1.6.6"
 runtimeLivedata = "1.6.8"
+media3Common = "1.4.1"
 
 [libraries]
+accompanist-drawablepainter = { module = "com.google.accompanist:accompanist-drawablepainter", version.ref = "accompanistDrawablepainter" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
@@ -40,6 +43,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-ui-test-android = { group = "androidx.compose.ui", name = "ui-test-android", version.ref = "uiTestAndroid" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+androidx-media3-common = { group = "androidx.media3", name = "media3-common", version.ref = "media3Common" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
