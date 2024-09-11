@@ -18,22 +18,21 @@ import com.example.investorssquare.game.presentation.board_screen.viewModels.Boa
 @Composable
 fun BoughtEstateMarker(
     fieldWidth: Dp,
-    field:Field,
+    field: Field,
     modifier: Modifier,
     boardViewModel: BoardViewModel,
     horizontal: Boolean = true
-){
+) {
     val playerVM = boardViewModel.getOwnerOfEstate(field.index)
-    val playerColor = playerVM?.color?.collectAsState()
-    val width = if(horizontal) fieldWidth/2 else fieldWidth/3.7f
-    val height = if(horizontal) fieldWidth/3.7f else fieldWidth/2
+    val playerColor = playerVM?.color?.collectAsState()?.value ?: Color.Gray
+
+    val width = if (horizontal) fieldWidth / 2 else fieldWidth / 3.7f
+    val height = if (horizontal) fieldWidth / 3.7f else fieldWidth / 2
+
     Box(
         modifier = modifier
-            .background(playerColor?.value!!)
-            .size(width,height)
+            .background(playerColor)
+            .size(width, height)
             .border(1.dp, color = Color.Black)
     )
-    {
-
-    }
 }

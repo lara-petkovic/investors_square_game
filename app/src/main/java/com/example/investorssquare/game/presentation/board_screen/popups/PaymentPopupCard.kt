@@ -28,84 +28,91 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getDrawable
 import com.example.investorssquare.R
+import com.example.investorssquare.game.presentation.board_screen.viewModels.PaymentDetails
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun PaymentPopupCard(
-    payer: PlayerViewModel,
-    receiver: PlayerViewModel,
-    amount: Int,
-    onDismissRequest: () -> Unit
+    paymentDetails: PaymentDetails?, onDismiss: () -> Unit
 ) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black.copy(alpha = 0.2f))
-            .clickable { onDismissRequest() }
+            .clickable { onDismiss() }
     ) {
-        Card(
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+        if (paymentDetails != null) {
+            Card(
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.padding(16.dp)
             ) {
-                // Payer section
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f)
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    Image(
-                        painter = painterResource(id = imageByColor(payer)),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(60.dp)
-                            .background(Color.Gray.copy(alpha = 0.2f), shape = RoundedCornerShape(30.dp))
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = payer.name.value)
-                }
+                    // Payer section
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Image(
+                            painter = painterResource(id = imageByColor(paymentDetails.payer)),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(60.dp)
+                                .background(
+                                    Color.Gray.copy(alpha = 0.2f),
+                                    shape = RoundedCornerShape(30.dp)
+                                )
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = paymentDetails.payer.name.value)
+                    }
 
-                // Arrow with amount
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 8.dp)
-                ) {
-                    Text(text = "$amount", color = Color.Black)
-                    Image(
-                        modifier = Modifier.clip(RectangleShape),
-                        painter = rememberDrawablePainter(
-                            drawable = getDrawable(
-                                LocalContext.current,
-                                R.drawable.gif_arrow
-                            )
-                        ),
-                        contentDescription = "Loading animation",
-                        contentScale = ContentScale.FillWidth,
-                    )
-                }
-
-                // Receiver section
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Image(
-                        painter = painterResource(id = imageByColor(receiver)),
-                        contentDescription = null,
+                    // Arrow with amount
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
-                            .size(60.dp)
-                            .background(Color.Gray.copy(alpha = 0.2f), shape = RoundedCornerShape(30.dp))
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = receiver.name.value)
+                            .weight(1f)
+                            .padding(horizontal = 8.dp)
+                    ) {
+                        Text(text = "$${paymentDetails.amount}", color = Color.Black)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Image(
+                            modifier = Modifier.clip(RectangleShape),
+                            painter = rememberDrawablePainter(
+                                drawable = getDrawable(
+                                    LocalContext.current,
+                                    R.drawable.gif_arrow
+                                )
+                            ),
+                            contentDescription = "Loading animation",
+                            contentScale = ContentScale.FillWidth,
+                        )
+                    }
+
+                    // Receiver section
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Image(
+                            painter = painterResource(id = imageByColor(paymentDetails.receiver)),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(60.dp)
+                                .background(
+                                    Color.Gray.copy(alpha = 0.2f),
+                                    shape = RoundedCornerShape(30.dp)
+                                )
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = paymentDetails.receiver.name.value)
+                    }
                 }
             }
         }

@@ -7,13 +7,13 @@ import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 class EstateViewModel @Inject constructor(estate: Estate) : ViewModel() {
-    private val _estate = MutableStateFlow<Estate>(estate)
+    private val _estate = MutableStateFlow(estate)
     val estate: StateFlow<Estate> get() = _estate
 
     private val _ownerIndex = MutableStateFlow(-1)
     val ownerIndex: StateFlow<Int> get() = _ownerIndex
 
-    fun setOwnerIndex(ownerIndex: Int){
+    fun setOwnerIndex(ownerIndex: Int) {
         _ownerIndex.value = ownerIndex
     }
 }

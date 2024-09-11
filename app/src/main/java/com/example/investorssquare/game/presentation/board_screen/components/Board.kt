@@ -55,8 +55,6 @@ fun Board(
     boardViewModel: BoardViewModel
 ) {
     val showPopup by boardViewModel.showPopup.collectAsState()
-    val showPaymentPopup by boardViewModel.showPaymentPopup.collectAsState()
-    val paymentDetails by boardViewModel.paymentDetails.collectAsState()
     val estates by boardViewModel.estates.collectAsState()
     val currentField by boardViewModel.currentField.collectAsState()
     val boardSize = (screenWidthDp.value - sideMargin.value * 2).dp
@@ -192,16 +190,6 @@ fun Board(
                     shape = RectangleShape
                 ){}
             }
-        }
-        if (showPaymentPopup && paymentDetails != null) {
-            PaymentPopupCard(
-                payer = paymentDetails!!.payer,
-                receiver = paymentDetails!!.receiver,
-                amount = paymentDetails!!.amount,
-                onDismissRequest = { boardViewModel.dismissPaymentPopup() }
-            )
-        } else {
-            Log.e("BoardScreen", "paymentDetails is null")
         }
 
         currentField?.let { currentField ->
