@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import com.example.investorssquare.game.domain.model.Board
 import kotlinx.coroutines.delay
 import com.example.investorssquare.R
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
@@ -50,12 +49,14 @@ fun CommunityCardPopup(
     var isClosing by remember { mutableStateOf(false) }
 
     val card = remember {
-        if (isChance) boardViewModel.board.value?.chance?.drawCard() else boardViewModel.board.value?.communityChest?.drawCard()
+        if (isChance) boardViewModel.board.value?.chance?.drawCard()
+        else boardViewModel.board.value?.communityChest?.drawCard()
     }
 
     val rotation by animateFloatAsState(
         targetValue = if (isFlipped) 180f else 0f,
-        animationSpec = tween(durationMillis = 1400)
+        animationSpec = tween(durationMillis = 1400),
+        label = ""
     )
 
     LaunchedEffect(Unit) {
@@ -84,7 +85,8 @@ fun CommunityCardPopup(
                 .clip(RoundedCornerShape(5.dp))
                 .border(
                     width = 3.dp,
-                    color = (if (isChance) boardViewModel.board.value?.chance?.primaryColor else boardViewModel.board.value?.communityChest?.primaryColor)!!,
+                    color = (if (isChance) boardViewModel.board.value?.chance?.primaryColor
+                            else boardViewModel.board.value?.communityChest?.primaryColor)!!,
                     shape = RoundedCornerShape(5.dp)
                 )
                 .background(
@@ -111,15 +113,17 @@ fun CommunityCardPopup(
                 ) {
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = (if (isChance) boardViewModel.board.value?.chance?.commonName?.uppercase() else boardViewModel.board.value?.communityChest?.commonName?.uppercase())!!,
+                        text = (if (isChance) boardViewModel.board.value?.chance?.commonName?.uppercase()
+                                else boardViewModel.board.value?.communityChest?.commonName?.uppercase())!!,
                         style = MaterialTheme.typography.titleLarge,
                         fontSize = 18.sp,
-                        color = (if (isChance) boardViewModel.board.value?.chance?.primaryColor else boardViewModel.board.value?.communityChest?.primaryColor)!!,
+                        color = (if (isChance) boardViewModel.board.value?.chance?.primaryColor
+                                else boardViewModel.board.value?.communityChest?.primaryColor)!!,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Box(
-                        modifier = Modifier.fillMaxSize().border(1.dp, Color.Black).background(color=Color.White),
+                        modifier = Modifier.fillMaxSize().border(1.dp, Color.Black).background(color = Color.White),
                         contentAlignment = Alignment.Center
                     ) {
                         if (card != null) {

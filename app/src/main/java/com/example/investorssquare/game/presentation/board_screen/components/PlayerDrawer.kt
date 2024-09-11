@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.times
 import com.example.investorssquare.R
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.util.Constants.NUMBER_OF_FIELDS
 
 @Composable
 fun PlayerDrawer(
@@ -73,7 +74,7 @@ fun PlayerDrawer(
 }
 
 private fun playerRotationAngle(playerPosition: Int): Float {
-    val rotationAngle = when (playerPosition % 40) {
+    val rotationAngle = when (playerPosition % NUMBER_OF_FIELDS) {
         in 11..19 -> -90f
         in 21..29 -> -180f
         in 31..39 -> 90f
