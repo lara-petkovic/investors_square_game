@@ -1,7 +1,6 @@
 package com.example.investorssquare.game.presentation.board_screen.components
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -38,7 +37,6 @@ import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.presentation.board_screen.popups.CommunityCardPopup
-import com.example.investorssquare.game.presentation.board_screen.popups.PaymentPopupCard
 import com.example.investorssquare.game.presentation.board_screen.popups.PropertyDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.StationDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.UtilityDetails
@@ -47,7 +45,6 @@ import com.example.investorssquare.game.presentation.board_screen.viewModels.Pla
 import com.example.investorssquare.util.Constants.FIELDS_PER_ROW
 import com.example.investorssquare.util.Constants.NUMBER_OF_FIELDS
 import com.example.investorssquare.util.Constants.RELATIVE_FIELD_HEIGHT
-import kotlinx.coroutines.flow.map
 import kotlin.math.roundToInt
 
 @SuppressLint("StateFlowValueCalledInComposition", "DiscouragedApi")
