@@ -31,46 +31,57 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     val estates: StateFlow<List<EstateViewModel>> get() = _estates
 
     fun buyNewEstate(estate: EstateViewModel): Boolean {
-        if(isActive.value && money.value >= estate.estate.value.price) {
+        return if (isActive.value && money.value >= estate.estate.value.price) {
             pay(estate.estate.value.price)
             estate.setOwnerIndex(index.value)
             _estates.value += estate
-            return true
+            true
+        } else {
+            false
         }
-        return false
     }
-    fun moveBySteps(steps: Int){
+
+    fun moveBySteps(steps: Int) {
         _position.value = (_position.value + steps) % NUMBER_OF_FIELDS
     }
+
     fun moveToField(field: Int) {
-        if(field < NUMBER_OF_FIELDS)
-            _position.value = field
+        if (field < NUMBER_OF_FIELDS) _position.value = field
     }
+
     fun pay(price: Int) {
         _money.value -= price
     }
+
     fun receive(amount: Int) {
         _money.value += amount
     }
+
     fun finishMove() {
         _isActive.value = false
     }
+
     fun startMove() {
         _isActive.value = true
     }
-    fun setMoney(money:Int) {
+
+    fun setMoney(money: Int) {
         _money.value = money
     }
-    fun setColor(color:Color) {
+
+    fun setColor(color: Color) {
         _color.value = color
     }
-    fun setIndex(index:Int) {
+
+    fun setIndex(index: Int) {
         _index.value = index
     }
-    fun setPosition(position:Int) {
+
+    fun setPosition(position: Int) {
         _position.value = position
     }
-    fun setName(name:String) {
+
+    fun setName(name: String) {
         _name.value = name
     }
 }

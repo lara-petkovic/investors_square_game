@@ -25,12 +25,12 @@ class BoardViewModel @Inject constructor() : ViewModel() {
     val board: StateFlow<Board?> get() = _board
 
     private val _estates = MutableStateFlow<List<EstateViewModel>>(emptyList())
-    val estates : StateFlow<List<EstateViewModel>> get() = _estates
+    val estates: StateFlow<List<EstateViewModel>> get() = _estates
 
     private val _players = MutableStateFlow<List<PlayerViewModel>>(emptyList())
     val players: StateFlow<List<PlayerViewModel>> get() = _players
 
-    var diceViewModel: DiceViewModel = DiceViewModel()
+    val diceViewModel = DiceViewModel()
 
     private val _isFinishButtonVisible = MutableStateFlow(false)
     val isFinishButtonVisible: StateFlow<Boolean> get() = _isFinishButtonVisible
@@ -48,20 +48,17 @@ class BoardViewModel @Inject constructor() : ViewModel() {
     val paymentDetails: StateFlow<PaymentDetails?> = _paymentDetails
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val playersPositions: StateFlow<List<Int>> = combine(
-        _players,
-        _players.flatMapLatest { players ->
-            combine(players.map { it.position }) { positions -> positions.toList() }
+    val playersPositions: StateFlow<List<Int>> = _players.flatMapLatest { players ->
+        combine(players.map { it.position }) { positions ->
+            positions.toList()
         }
-    ) { _, positions ->
-        positions
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.Eagerly,
         initialValue = emptyList()
     )
 
-    fun dismissPopup(){
+    fun dismissPopup() {
         _showPopup.value = false
         _currentField.value = null
     }
@@ -72,14 +69,15 @@ class BoardViewModel @Inject constructor() : ViewModel() {
     }
 
     fun setPlayers(playerNames: List<String>, playerColors: List<Color>, money: Int) {
-        _players.value = List(playerNames.size) { PlayerViewModel() }
-        for(i in 0..<_players.value.size){
-            _players.value[i].setMoney(money)
-            _players.value[i].setName(playerNames[i])
-            _players.value[i].setColor(playerColors[i])
-            _players.value[i].setIndex(i)
+        _players.value = playerNames.mapIndexed { index, name ->
+            PlayerViewModel().apply {
+                setMoney(money)
+                setName(name)
+                setColor(playerColors[index])
+                setIndex(index)
+            }
         }
-        _players.value[0].startMove()
+        _players.value.firstOrNull()?.startMove()
     }
 
     fun rollDice() {
@@ -88,16 +86,19 @@ class BoardViewModel @Inject constructor() : ViewModel() {
     }
 
     fun moveActivePlayer() {
-        val activePlayer = getActivePlayer()
-        activePlayer?.moveBySteps(diceViewModel.getDiceSum())
-        activePlayer?.position?.value?.let { handleLandingPosition(activePlayer, it) }
+        getActivePlayer()?.let { player ->
+            player.moveBySteps(diceViewModel.getDiceSum())
+            player.position.value?.let { handleLandingPosition(player, it) }
+        }
     }
 
-    fun buyEstate(estateFieldIndex: Int){
-        val player = getActivePlayer()
-        val estate = getEstateByFieldIndex(estateFieldIndex)
-        estate?.let { player?.buyNewEstate(estate) }
-        dismissPopup()
+    fun buyEstate(estateFieldIndex: Int) {
+        getActivePlayer()?.let { player ->
+            getEstateByFieldIndex(estateFieldIndex)?.let { estate ->
+                player.buyNewEstate(estate)
+                dismissPopup()
+            }
+        }
     }
 
     fun finishTurn() {
@@ -106,25 +107,18 @@ class BoardViewModel @Inject constructor() : ViewModel() {
         switchToNextPlayer()
     }
 
-    fun setBoard(board: Board){
+    fun setBoard(board: Board) {
         _board.value = board
-        val estateFields = board.fields.filterIsInstance<Estate>()
-        _estates.value = estateFields.map { estate ->
-            EstateViewModel(estate)
-        }
+        _estates.value = board.fields.filterIsInstance<Estate>().map { EstateViewModel(it) }
     }
 
-    fun getOwnerOfEstate(fieldIndex: Int): PlayerViewModel?{
-        val ownerIndex = getEstateByFieldIndex(fieldIndex)?.ownerIndex?.value!!
-        if(ownerIndex==-1)
-            return null
-        return players.value[ownerIndex]
+    fun getOwnerOfEstate(fieldIndex: Int): PlayerViewModel? {
+        val ownerIndex = getEstateByFieldIndex(fieldIndex)?.ownerIndex?.value ?: return null
+        return players.value.getOrNull(ownerIndex).takeIf { ownerIndex != -1 }
     }
 
-    private fun getEstateByFieldIndex(index: Int): EstateViewModel?{
-        return _estates.value.firstOrNull { estate ->
-            estate.estate.value.index==index
-        }
+    private fun getEstateByFieldIndex(index: Int): EstateViewModel? {
+        return _estates.value.firstOrNull { it.estate.value.index == index }
     }
 
     private fun showPaymentPopup(payer: PlayerViewModel, receiver: PlayerViewModel, amount: Int) {
@@ -137,39 +131,32 @@ class BoardViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun switchToNextPlayer() {
-        for(i in 0..<_players.value.size){
-            if(_players.value[i].isActive.value){
-                _players.value[i].finishMove()
-                _players.value[if(i<_players.value.size-1) i+1 else 0].startMove()
-                break
-            }
+        val currentIndex = _players.value.indexOfFirst { it.isActive.value }
+        if (currentIndex != -1) {
+            _players.value[currentIndex].finishMove()
+            val nextIndex = (currentIndex + 1) % _players.value.size
+            _players.value[nextIndex].startMove()
         }
     }
 
     private fun getActivePlayer(): PlayerViewModel? {
-        for(player in _players.value){
-            if(player.isActive.value){
-                return player
-            }
-        }
-        return null
+        return _players.value.firstOrNull { it.isActive.value }
     }
 
     private fun handleLandingPosition(player: PlayerViewModel, position: Int) {
-        val estate = getEstateByFieldIndex(position)
-        if(estate != null && estate.ownerIndex.value != -1){
-            val moneyToTransfer = estate.estate.value.rent[0]
-            player.pay(moneyToTransfer)
-            val receiver = _players.value[estate.ownerIndex.value]
-            receiver.receive(moneyToTransfer)
-            showPaymentPopup(player, receiver, moneyToTransfer)
-        }
-        else{
-            showPopupForField(position)
-        }
+        getEstateByFieldIndex(position)?.let { estate ->
+            if (estate.ownerIndex.value != -1) {
+                val moneyToTransfer = estate.estate.value.rent[0]
+                player.pay(moneyToTransfer)
+                players.value[estate.ownerIndex.value].receive(moneyToTransfer)
+                showPaymentPopup(player, players.value[estate.ownerIndex.value], moneyToTransfer)
+            } else {
+                showPopupForField(position)
+            }
+        } ?: showPopupForField(position)
     }
 
-    private fun showPopupForField(fieldIndex: Int){
+    private fun showPopupForField(fieldIndex: Int) {
         _currentField.value = _board.value?.fields?.get(fieldIndex)
         _showPopup.value = true
     }
