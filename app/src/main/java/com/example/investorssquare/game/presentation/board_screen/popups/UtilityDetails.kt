@@ -31,6 +31,7 @@ import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.Utility
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.util.Constants.BUY
 
 @Composable
 fun UtilityDetails(
@@ -39,7 +40,8 @@ fun UtilityDetails(
     offset : IntOffset,
     popupWidth: Dp,
     popupHeight: Dp,
-    boardViewModel: BoardViewModel
+    boardViewModel: BoardViewModel,
+    buyButtonVisibility: Boolean
 ) {
     val utility = field as? Utility
     val scrollState = rememberScrollState()
@@ -142,20 +144,22 @@ fun UtilityDetails(
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(1.dp))
-                Button(
-                    onClick = {
-                        utility?.index?.let { boardViewModel.buyEstate(it) }
-                    },
-                    modifier = Modifier
-                        .size((popupWidth.value * 0.5).dp, (popupHeight.value * 0.07).dp)
-                        .padding(0.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
-                    contentPadding = PaddingValues(0.dp)
-                ) {
-                    Text("BUY", color = Color.White, style = MaterialTheme.typography.labelSmall)
+                if(buyButtonVisibility) {
+                    Spacer(modifier = Modifier.height(1.dp))
+                    Button(
+                        onClick = {
+                            utility?.index?.let { boardViewModel.buyEstate(it) }
+                        },
+                        modifier = Modifier
+                            .size((popupWidth.value * 0.5).dp, (popupHeight.value * 0.07).dp)
+                            .padding(0.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Text(BUY, color = Color.White, style = MaterialTheme.typography.labelSmall)
+                    }
+                    Spacer(modifier = Modifier.height(3.dp))
                 }
-                Spacer(modifier = Modifier.height(3.dp))
             }
         }
     }

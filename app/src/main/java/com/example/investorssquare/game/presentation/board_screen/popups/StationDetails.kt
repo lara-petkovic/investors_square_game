@@ -31,6 +31,7 @@ import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.Station
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.util.Constants.BUY
 
 @Composable
 fun StationDetails(
@@ -39,7 +40,8 @@ fun StationDetails(
     offset : IntOffset,
     popupWidth: Dp,
     popupHeight: Dp,
-    boardViewModel: BoardViewModel
+    boardViewModel: BoardViewModel,
+    buyButtonVisibility: Boolean
 ) {
     val station = field as? Station
     val scrollState = rememberScrollState()
@@ -155,19 +157,21 @@ fun StationDetails(
                         Spacer(modifier = Modifier.height(6.dp))
                     }
                 }
-                Button(
-                    onClick = {
-                        station?.index?.let { boardViewModel.buyEstate(it) }
-                    },
-                    modifier = Modifier
-                        .size((popupWidth.value * 0.5).dp, (popupHeight.value * 0.07).dp)
-                        .padding(0.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
-                    contentPadding = PaddingValues(0.dp)
-                ) {
-                    Text("BUY", color = Color.White, style = MaterialTheme.typography.labelSmall)
+                if(buyButtonVisibility) {
+                    Button(
+                        onClick = {
+                            station?.index?.let { boardViewModel.buyEstate(it) }
+                        },
+                        modifier = Modifier
+                            .size((popupWidth.value * 0.5).dp, (popupHeight.value * 0.07).dp)
+                            .padding(0.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Text(BUY, color = Color.White, style = MaterialTheme.typography.labelSmall)
+                    }
+                    Spacer(modifier = Modifier.height(3.dp))
                 }
-                Spacer(modifier = Modifier.height(3.dp))
             }
         }
     }

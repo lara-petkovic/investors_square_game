@@ -3,10 +3,12 @@ package com.example.investorssquare.game.presentation.board_screen.components
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -21,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.domain.model.Property
+import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardVMEvent
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 import com.example.investorssquare.util.Constants.FIELD_CARD_STRAP_HEIGHT_PERCENTAGE
 
@@ -29,35 +32,40 @@ import com.example.investorssquare.util.Constants.FIELD_CARD_STRAP_HEIGHT_PERCEN
 fun FieldCard(
     fieldWidth: Dp,
     fieldHeight: Dp,
-    field:Field,
-    modifier: Modifier,
-    playersVM: BoardViewModel = hiltViewModel()
-){
-    Card(
-        modifier = modifier.size(fieldWidth, fieldHeight),
-        shape = RectangleShape,
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-        border = BorderStroke(width = 1.dp, color = Color.Black)
+    field: Field,
+    modifier: Modifier = Modifier,
+    boardViewModel: BoardViewModel = hiltViewModel()
+) {
+    Box(
+        modifier = modifier
+            .clickable { boardViewModel.onEvent(BoardVMEvent.OnFieldClicked(field.index)) }
     ) {
-        val property = field as? Property
+        Card(
+            modifier = Modifier.size(fieldWidth, fieldHeight),
+            shape = RectangleShape,
+            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+            border = BorderStroke(width = 1.dp, color = Color.Black)
+        ) {
+            val property = field as? Property
 
-        Box(modifier = Modifier.fillMaxSize()) {
-            if (field.type == FieldType.PROPERTY) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(fieldHeight * FIELD_CARD_STRAP_HEIGHT_PERCENTAGE)
-                        .background(property?.setColor ?: Color.Gray)
-                        .align(Alignment.TopStart)
+            Box(modifier = Modifier.fillMaxSize()) {
+                if (field.type == FieldType.PROPERTY) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(fieldHeight * FIELD_CARD_STRAP_HEIGHT_PERCENTAGE)
+                            .background(property?.setColor ?: Color.Gray)
+                            .align(Alignment.TopStart)
+                    )
+                }
+
+                PlayerDrawer(
+                    canvasHeight = fieldHeight * (1 + FIELD_CARD_STRAP_HEIGHT_PERCENTAGE),
+                    canvasWidth = fieldWidth,
+                    boardVM = boardViewModel,
+                    fieldIndex = field.index
                 )
             }
-
-            PlayerDrawer(
-                canvasHeight = fieldHeight * (1 + FIELD_CARD_STRAP_HEIGHT_PERCENTAGE),
-                canvasWidth = fieldWidth,
-                boardVM = playersVM,
-                fieldIndex = field.index
-            )
         }
     }
 }

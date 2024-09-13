@@ -27,7 +27,7 @@ import com.example.investorssquare.util.Constants.TOP_BOARD_MARGIN
 
 @Composable
 fun BoardScreen(
-    boardViewModel: BoardViewModel = hiltViewModel(),
+    boardViewModel: BoardViewModel,
     board: Board
 ) {
     boardViewModel.setBoard(board)

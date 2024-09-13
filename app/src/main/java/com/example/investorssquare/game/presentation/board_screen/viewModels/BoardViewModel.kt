@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.game.domain.model.Field
+import com.example.investorssquare.game.domain.model.FieldType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -60,13 +61,36 @@ class BoardViewModel @Inject constructor() : ViewModel() {
 
     fun dismissPopup() {
         _showPopup.value = false
-        _currentField.value = null
+        //_currentField.value = null
     }
 
     fun dismissPaymentPopup() {
         _showPaymentPopup.value = false
-        _paymentDetails.value = null
+        //_paymentDetails.value = null
     }
+
+    fun onEvent(event: BoardVMEvent) {
+        when (event) {
+            is BoardVMEvent.OnFieldClicked -> handleCardInformationClick(event.fieldIndex)
+        }
+    }
+
+    private fun handleCardInformationClick(fieldIndex: Int) {
+        val field = _board.value?.fields?.getOrNull(fieldIndex)
+
+        if (field != null && canUserOpen(field)) {
+            showPopupForField(fieldIndex)
+        }
+    }
+
+    private fun showPopupForField(fieldIndex: Int) {
+        _currentField.value = _board.value?.fields?.get(fieldIndex)
+        _showPopup.value = true
+    }
+
+    private fun canUserOpen(field: Field) =
+        field.type !in listOf(FieldType.CHANCE, FieldType.COMMUNITY_CHEST, FieldType.TAX)
+
 
     fun setPlayers(playerNames: List<String>, playerColors: List<Color>, money: Int) {
         _players.value = playerNames.mapIndexed { index, name ->
@@ -88,14 +112,15 @@ class BoardViewModel @Inject constructor() : ViewModel() {
     fun moveActivePlayer() {
         getActivePlayer()?.let { player ->
             player.moveBySteps(diceViewModel.getDiceSum())
-            player.position.value?.let { handleLandingPosition(player, it) }
+            player.position.value.let { handleLandingPosition(player, it) }
         }
     }
 
     fun buyEstate(estateFieldIndex: Int) {
+        val estate = getEstateByFieldIndex(estateFieldIndex)
         getActivePlayer()?.let { player ->
-            getEstateByFieldIndex(estateFieldIndex)?.let { estate ->
-                player.buyNewEstate(estate)
+            estate?.let {
+                player.buyNewEstate(it)
                 dismissPopup()
             }
         }
@@ -139,26 +164,24 @@ class BoardViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    private fun getActivePlayer(): PlayerViewModel? {
+    fun getActivePlayer(): PlayerViewModel? {
         return _players.value.firstOrNull { it.isActive.value }
     }
 
     private fun handleLandingPosition(player: PlayerViewModel, position: Int) {
         getEstateByFieldIndex(position)?.let { estate ->
-            if (estate.ownerIndex.value != -1) {
+            val ownerIndex = estate.ownerIndex.value
+            if (ownerIndex != -1) {
                 val moneyToTransfer = estate.estate.value.rent[0]
                 player.pay(moneyToTransfer)
-                players.value[estate.ownerIndex.value].receive(moneyToTransfer)
-                showPaymentPopup(player, players.value[estate.ownerIndex.value], moneyToTransfer)
+                players.value.getOrNull(ownerIndex)?.let { receiver ->
+                    receiver.receive(moneyToTransfer)
+                    showPaymentPopup(player, receiver, moneyToTransfer)
+                }
             } else {
                 showPopupForField(position)
             }
         } ?: showPopupForField(position)
-    }
-
-    private fun showPopupForField(fieldIndex: Int) {
-        _currentField.value = _board.value?.fields?.get(fieldIndex)
-        _showPopup.value = true
     }
 }
 

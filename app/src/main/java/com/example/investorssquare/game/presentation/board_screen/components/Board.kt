@@ -34,6 +34,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.investorssquare.game.domain.model.Board
+import com.example.investorssquare.game.domain.model.Estate
+import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.presentation.board_screen.popups.CommunityCardPopup
 import com.example.investorssquare.game.presentation.board_screen.popups.PaymentPopupCard
@@ -41,9 +43,11 @@ import com.example.investorssquare.game.presentation.board_screen.popups.Propert
 import com.example.investorssquare.game.presentation.board_screen.popups.StationDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.UtilityDetails
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import com.example.investorssquare.util.Constants.FIELDS_PER_ROW
 import com.example.investorssquare.util.Constants.NUMBER_OF_FIELDS
 import com.example.investorssquare.util.Constants.RELATIVE_FIELD_HEIGHT
+import kotlinx.coroutines.flow.map
 import kotlin.math.roundToInt
 
 @SuppressLint("StateFlowValueCalledInComposition", "DiscouragedApi")
@@ -194,52 +198,87 @@ fun Board(
 
         currentField?.let { currentField ->
             if (showPopup) {
-                if(currentField.type == FieldType.PROPERTY) {
-                    PropertyDetails(
-                        field = currentField,
-                        onDismissRequest = { boardViewModel.dismissPopup()},
-                        offset = IntOffset((with(LocalDensity.current) { fieldHeight.toPx() }+1.75*with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),(with(LocalDensity.current) { fieldHeight.toPx() }+(0.02f*9*with(LocalDensity.current) { fieldWidth.toPx() })).toInt()),
-                        popupWidth = (5.5 * fieldWidth.value).dp,
-                        popupHeight = (0.96 * 9 * fieldWidth.value).dp,
-                        boardViewModel = boardViewModel
-                    )
-                }
-                if(currentField.type == FieldType.STATION) {
-                    StationDetails(
-                        field = currentField,
-                        onDismissRequest = { boardViewModel.dismissPopup() },
-                        offset = IntOffset((with(LocalDensity.current) { fieldHeight.toPx() }+1.75*with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),(with(LocalDensity.current) { fieldHeight.toPx() }+(0.02f*9*with(LocalDensity.current) { fieldWidth.toPx() })).toInt()),
-                        popupWidth = (5.5 * fieldWidth.value).dp,
-                        popupHeight = (0.96 * 9 * fieldWidth.value).dp,
-                        boardViewModel = boardViewModel
-                    )
-                }
-                if(currentField.type == FieldType.UTILITY) {
-                    UtilityDetails(
-                        field = currentField,
-                        onDismissRequest = { boardViewModel.dismissPopup() },
-                        offset = IntOffset((with(LocalDensity.current) { fieldHeight.toPx() }+1.75*with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),(with(LocalDensity.current) { fieldHeight.toPx() }+(0.02f*9*with(LocalDensity.current) { fieldWidth.toPx() })).toInt()),
-                        popupWidth = (5.5 * fieldWidth.value).dp,
-                        popupHeight = (0.96 * 9 * fieldWidth.value).dp,
-                        boardViewModel = boardViewModel
-                    )
-                }
-                if(currentField.type == FieldType.CHANCE || currentField.type == FieldType.COMMUNITY_CHEST) {
-                    CommunityCardPopup(
-                        isChance = currentField.type==FieldType.CHANCE,
-                        onDismissRequest = { boardViewModel.dismissPopup()},
-                        offset = IntOffset((with(LocalDensity.current) { fieldHeight.toPx() }+(0.05f*9*with(LocalDensity.current) { fieldWidth.toPx() })).toInt(), (with(LocalDensity.current) { fieldHeight.toPx() }+1.5*with(LocalDensity.current) { fieldWidth.toPx() }).toInt()),
-                        popupWidth = (0.9 * 9 * fieldWidth.value).dp,
-                        popupHeight = (6 * fieldWidth.value).dp,
-                        boardViewModel = boardViewModel
-                    )
+                currentField.let { field ->
+                    val activePlayer = boardViewModel.getActivePlayer()
+                    val buyButtonVisibility = activePlayer?.let { canBuyEstate(it, field) } ?: false
+
+                    when (field.type) {
+                        FieldType.PROPERTY -> PropertyDetails(
+                            field = field,
+                            onDismissRequest = { boardViewModel.dismissPopup() },
+                            offset = IntOffset(
+                                (with(LocalDensity.current) { fieldHeight.toPx() } + 1.75 * with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),
+                                (with(LocalDensity.current) { fieldHeight.toPx() } + (0.02f * 9 * with(LocalDensity.current) { fieldWidth.toPx() })).toInt()
+                            ),
+                            popupWidth = (5.5 * fieldWidth.value).dp,
+                            popupHeight = (0.96 * 9 * fieldWidth.value).dp,
+                            boardViewModel = boardViewModel,
+                            buyButtonVisibility = buyButtonVisibility
+                        )
+
+                        FieldType.STATION -> StationDetails(
+                            field = field,
+                            onDismissRequest = { boardViewModel.dismissPopup() },
+                            offset = IntOffset(
+                                (with(LocalDensity.current) { fieldHeight.toPx() } + 1.75 * with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),
+                                (with(LocalDensity.current) { fieldHeight.toPx() } + (0.02f * 9 * with(LocalDensity.current) { fieldWidth.toPx() })).toInt()
+                            ),
+                            popupWidth = (5.5 * fieldWidth.value).dp,
+                            popupHeight = (0.96 * 9 * fieldWidth.value).dp,
+                            boardViewModel = boardViewModel,
+                            buyButtonVisibility = buyButtonVisibility
+                        )
+
+                        FieldType.UTILITY -> UtilityDetails(
+                            field = field,
+                            onDismissRequest = { boardViewModel.dismissPopup() },
+                            offset = IntOffset(
+                                (with(LocalDensity.current) { fieldHeight.toPx() } + 1.75 * with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),
+                                (with(LocalDensity.current) { fieldHeight.toPx() } + (0.02f * 9 * with(LocalDensity.current) { fieldWidth.toPx() })).toInt()
+                            ),
+                            popupWidth = (5.5 * fieldWidth.value).dp,
+                            popupHeight = (0.96 * 9 * fieldWidth.value).dp,
+                            boardViewModel = boardViewModel,
+                            buyButtonVisibility = buyButtonVisibility
+                        )
+
+                        FieldType.CHANCE, FieldType.COMMUNITY_CHEST -> CommunityCardPopup(
+                            isChance = field.type == FieldType.CHANCE,
+                            onDismissRequest = { boardViewModel.dismissPopup() },
+                            offset = IntOffset(
+                                (with(LocalDensity.current) { fieldHeight.toPx() } + (0.05f * 9 * with(LocalDensity.current) { fieldWidth.toPx() })).toInt(),
+                                (with(LocalDensity.current) { fieldHeight.toPx() } + 1.5 * with(LocalDensity.current) { fieldWidth.toPx() }).toInt()
+                            ),
+                            popupWidth = (0.9 * 9 * fieldWidth.value).dp,
+                            popupHeight = (6 * fieldWidth.value).dp,
+                            boardViewModel = boardViewModel
+                        )
+
+                        FieldType.JAIL -> TODO()
+                        FieldType.GO_TO_JAIL -> TODO()
+                        FieldType.PARKING -> TODO()
+                        FieldType.GO -> TODO()
+                        FieldType.TAX -> TODO()
+                    }
                 }
             }
         }
     }
 }
 
-fun calculateXOffsetForBoughtEstateMarker(fieldIndex: Int, fieldHeight: Dp, fieldWidth: Dp, boardSize: Dp): Dp {
+private fun canBuyEstate(activePlayer: PlayerViewModel, currentField: Field): Boolean {
+    if (currentField !is Estate) {
+        return false
+    }
+
+    // Check if the player is on the correct field and does not already own this estate
+    val isOnCorrectField = activePlayer.position.value == currentField.index
+    val alreadyOwnsEstate = activePlayer.estates.value.any { it.estate.value.index == currentField.index }
+
+    return isOnCorrectField && !alreadyOwnsEstate
+}
+
+private fun calculateXOffsetForBoughtEstateMarker(fieldIndex: Int, fieldHeight: Dp, fieldWidth: Dp, boardSize: Dp): Dp {
     return if(fieldIndex < 10)
         boardSize-(fieldHeight.value + (fieldIndex-1+0.25)* fieldWidth.value).dp-(0.5*fieldWidth.value).dp
     else if(fieldIndex < 20)
@@ -249,7 +288,7 @@ fun calculateXOffsetForBoughtEstateMarker(fieldIndex: Int, fieldHeight: Dp, fiel
     else
         boardSize-fieldHeight-(0.25*fieldWidth.value).dp
 }
-fun calculateYOffsetForBoughtEstateMarker(fieldIndex: Int, fieldHeight: Dp, fieldWidth: Dp, boardSize: Dp): Dp {
+private fun calculateYOffsetForBoughtEstateMarker(fieldIndex: Int, fieldHeight: Dp, fieldWidth: Dp, boardSize: Dp): Dp {
     return if(fieldIndex < 10)
         boardSize-fieldHeight-(0.25*fieldWidth.value).dp
     else if(fieldIndex < 20)

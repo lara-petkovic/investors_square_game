@@ -9,4 +9,5 @@ object Constants {
     const val FIELD_CARD_STRAP_HEIGHT_PERCENTAGE = 0.25f
     const val STARTER_MONEY_VALUE = 1500
     const val NUMBER_OF_FIELDS = 40
+    const val BUY = "BUY"
 }
