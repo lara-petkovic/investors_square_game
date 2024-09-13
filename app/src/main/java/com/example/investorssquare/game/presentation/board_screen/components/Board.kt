@@ -254,11 +254,11 @@ fun Board(
                             boardViewModel = boardViewModel
                         )
 
-                        FieldType.JAIL -> TODO()
-                        FieldType.GO_TO_JAIL -> TODO()
-                        FieldType.PARKING -> TODO()
-                        FieldType.GO -> TODO()
-                        FieldType.TAX -> TODO()
+                        FieldType.JAIL -> {}
+                        FieldType.GO_TO_JAIL -> {}
+                        FieldType.PARKING -> {}
+                        FieldType.GO -> {}
+                        FieldType.TAX -> {}
                     }
                 }
             }

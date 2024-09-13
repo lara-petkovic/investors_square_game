@@ -27,7 +27,7 @@ class DiceViewModel @Inject constructor() : ViewModel() {
     fun getDiceSum(): Int{
         return _diceNumber1.value + _diceNumber2.value
     }
-    fun disableDiceButton(){
+    private fun disableDiceButton(){
         _isDiceButtonEnabled.value = false
     }
     fun enableDiceButton(){

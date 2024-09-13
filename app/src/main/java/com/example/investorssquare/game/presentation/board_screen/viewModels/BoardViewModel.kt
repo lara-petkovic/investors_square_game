@@ -71,7 +71,9 @@ class BoardViewModel @Inject constructor() : ViewModel() {
 
     fun onEvent(event: BoardVMEvent) {
         when (event) {
+            BoardVMEvent.RollDice -> handleDiceRoll()
             is BoardVMEvent.OnFieldClicked -> handleCardInformationClick(event.fieldIndex)
+            is BoardVMEvent.BuyEstate -> handleEstateBuy(event.fieldIndex)
         }
     }
 
@@ -104,7 +106,7 @@ class BoardViewModel @Inject constructor() : ViewModel() {
         _players.value.firstOrNull()?.startMove()
     }
 
-    fun rollDice() {
+    private fun handleDiceRoll() {
         diceViewModel.rollDice()
         _isFinishButtonVisible.value = true
     }
@@ -116,15 +118,31 @@ class BoardViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun buyEstate(estateFieldIndex: Int) {
-        val estate = getEstateByFieldIndex(estateFieldIndex)
-        getActivePlayer()?.let { player ->
-            estate?.let {
-                player.buyNewEstate(it)
-                dismissPopup()
+    private fun handleLandingPosition(player: PlayerViewModel, position: Int) {
+        getEstateByFieldIndex(position)?.let { estate ->
+            val ownerIndex = estate.ownerIndex.value
+            if (ownerIndex != -1) {
+                val moneyToTransfer = estate.estate.value.rent[0]
+                player.pay(moneyToTransfer)
+                players.value.getOrNull(ownerIndex)?.let { receiver ->
+                    receiver.receive(moneyToTransfer)
+                    showPaymentPopup(player, receiver, moneyToTransfer)
+                }
+            } else {
+                showPopupForField(position)
             }
+        } ?: showPopupForField(position)
+    }
+
+
+    private fun handleEstateBuy(estateFieldIndex: Int) {
+        val estate = getEstateByFieldIndex(estateFieldIndex)
+        estate?.let {
+            getActivePlayer()?.buyNewEstate(it)
+            dismissPopup()
         }
     }
+
 
     fun finishTurn() {
         diceViewModel.enableDiceButton()
@@ -138,9 +156,10 @@ class BoardViewModel @Inject constructor() : ViewModel() {
     }
 
     fun getOwnerOfEstate(fieldIndex: Int): PlayerViewModel? {
-        val ownerIndex = getEstateByFieldIndex(fieldIndex)?.ownerIndex?.value ?: return null
-        return players.value.getOrNull(ownerIndex).takeIf { ownerIndex != -1 }
+        val ownerIndex = getEstateByFieldIndex(fieldIndex)?.ownerIndex?.value
+        return players.value.getOrNull(ownerIndex ?: -1).takeIf { ownerIndex != -1 }
     }
+
 
     private fun getEstateByFieldIndex(index: Int): EstateViewModel? {
         return _estates.value.firstOrNull { it.estate.value.index == index }
@@ -166,22 +185,6 @@ class BoardViewModel @Inject constructor() : ViewModel() {
 
     fun getActivePlayer(): PlayerViewModel? {
         return _players.value.firstOrNull { it.isActive.value }
-    }
-
-    private fun handleLandingPosition(player: PlayerViewModel, position: Int) {
-        getEstateByFieldIndex(position)?.let { estate ->
-            val ownerIndex = estate.ownerIndex.value
-            if (ownerIndex != -1) {
-                val moneyToTransfer = estate.estate.value.rent[0]
-                player.pay(moneyToTransfer)
-                players.value.getOrNull(ownerIndex)?.let { receiver ->
-                    receiver.receive(moneyToTransfer)
-                    showPaymentPopup(player, receiver, moneyToTransfer)
-                }
-            } else {
-                showPopupForField(position)
-            }
-        } ?: showPopupForField(position)
     }
 }
 

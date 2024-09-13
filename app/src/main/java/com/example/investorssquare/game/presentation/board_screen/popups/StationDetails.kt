@@ -27,9 +27,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.example.investorssquare.R
-import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.Station
+import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardVMEvent
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 import com.example.investorssquare.util.Constants.BUY
 
@@ -160,7 +160,7 @@ fun StationDetails(
                 if(buyButtonVisibility) {
                     Button(
                         onClick = {
-                            station?.index?.let { boardViewModel.buyEstate(it) }
+                            station?.index?.let { boardViewModel.onEvent(BoardVMEvent.BuyEstate(it)) }
                         },
                         modifier = Modifier
                             .size((popupWidth.value * 0.5).dp, (popupHeight.value * 0.07).dp)

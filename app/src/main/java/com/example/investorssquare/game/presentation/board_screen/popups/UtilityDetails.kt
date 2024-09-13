@@ -1,5 +1,6 @@
 package com.example.investorssquare.game.presentation.board_screen.popups
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,12 +28,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.example.investorssquare.R
-import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.Utility
+import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardVMEvent
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 import com.example.investorssquare.util.Constants.BUY
 
+@SuppressLint("DiscouragedApi")
 @Composable
 fun UtilityDetails(
     field: Field,
@@ -148,7 +150,7 @@ fun UtilityDetails(
                     Spacer(modifier = Modifier.height(1.dp))
                     Button(
                         onClick = {
-                            utility?.index?.let { boardViewModel.buyEstate(it) }
+                            utility?.index?.let { boardViewModel.onEvent(BoardVMEvent.BuyEstate(it)) }
                         },
                         modifier = Modifier
                             .size((popupWidth.value * 0.5).dp, (popupHeight.value * 0.07).dp)

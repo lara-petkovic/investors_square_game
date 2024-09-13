@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.investorssquare.R
+import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardVMEvent
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 import kotlinx.coroutines.delay
 
@@ -37,7 +38,7 @@ fun DiceButton(boardViewModel: BoardViewModel = hiltViewModel()) {
     Button(
         onClick = {
             isRolling = true
-            boardViewModel.rollDice()
+            boardViewModel.onEvent(BoardVMEvent.RollDice)
             mediaPlayer.start() // Play sound effect when dice are rolled
         },
         enabled = isDiceButtonEnabled && !isRolling,
