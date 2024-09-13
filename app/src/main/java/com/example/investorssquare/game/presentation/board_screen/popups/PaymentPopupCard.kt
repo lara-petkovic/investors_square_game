@@ -47,79 +47,74 @@ fun PaymentPopupCard(
         if (paymentDetails != null) {
             Card(
                 shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier
+                    .padding(16.dp)
+                    .height(120.dp)
             ) {
                 Row(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    // Payer section
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Image(
-                            painter = painterResource(id = imageByColor(paymentDetails.payer)),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(60.dp)
-                                .background(
-                                    Color.Gray.copy(alpha = 0.2f),
-                                    shape = RoundedCornerShape(30.dp)
-                                )
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = paymentDetails.payer.name.value)
-                    }
+                    PlayerNameAndImage(paymentDetails.payer, Modifier.weight(1f))
 
-                    // Arrow with amount
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 8.dp)
-                    ) {
-                        Text(text = "$${paymentDetails.amount}", color = Color.Black)
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Image(
-                            modifier = Modifier.clip(RectangleShape),
-                            painter = rememberDrawablePainter(
-                                drawable = getDrawable(
-                                    LocalContext.current,
-                                    R.drawable.gif_arrow
-                                )
-                            ),
-                            contentDescription = "Loading animation",
-                            contentScale = ContentScale.FillWidth,
-                        )
-                    }
+                    Arrow(paymentDetails, Modifier.weight(0.5f))
 
-                    // Receiver section
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Image(
-                            painter = painterResource(id = imageByColor(paymentDetails.receiver)),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(60.dp)
-                                .background(
-                                    Color.Gray.copy(alpha = 0.2f),
-                                    shape = RoundedCornerShape(30.dp)
-                                )
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = paymentDetails.receiver.name.value)
-                    }
+                    PlayerNameAndImage(paymentDetails.receiver, Modifier.weight(1f))
                 }
             }
         }
     }
 }
 
-fun imageByColor(playerViewModel: PlayerViewModel): Int {
+@Composable
+private fun Arrow(paymentDetails: PaymentDetails, modifier: Modifier = Modifier) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .padding(horizontal = 8.dp)
+    ) {
+        Text(text = "$${paymentDetails.amount}", color = Color.Black)
+        Spacer(modifier = Modifier.height(8.dp))
+        Image(
+            modifier = Modifier.clip(RectangleShape),
+            painter = rememberDrawablePainter(
+                drawable = getDrawable(
+                    LocalContext.current,
+                    R.drawable.gif_arrow
+                )
+            ),
+            contentDescription = "Loading animation",
+            contentScale = ContentScale.FillWidth,
+        )
+    }
+}
+
+@SuppressLint("StateFlowValueCalledInComposition")
+@Composable
+private fun PlayerNameAndImage(playerVM: PlayerViewModel, modifier: Modifier = Modifier) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+        Image(
+            painter = painterResource(id = imageByColor(playerVM)),
+            contentDescription = null,
+            modifier = Modifier
+                .size(60.dp)
+                .background(
+                    Color.Gray.copy(alpha = 0.2f),
+                    shape = RoundedCornerShape(30.dp)
+                )
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(text = playerVM.name.value)
+    }
+}
+
+private fun imageByColor(playerViewModel: PlayerViewModel): Int {
     return when (playerViewModel.color.value) {
         Color.Magenta -> R.drawable.player_purple
         Color.Cyan -> R.drawable.player_cyan
