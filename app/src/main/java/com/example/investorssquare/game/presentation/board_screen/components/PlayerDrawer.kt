@@ -1,11 +1,12 @@
 package com.example.investorssquare.game.presentation.board_screen.components
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -14,9 +15,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.example.investorssquare.R
-import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import com.example.investorssquare.util.Constants.NUMBER_OF_FIELDS
+import kotlinx.coroutines.delay
 
 @Composable
 fun PlayerDrawer(
@@ -58,16 +60,43 @@ fun PlayerDrawer(
             val y = startY + (row * (imageSize + spacing))
 
             val playerImageRes = imageByColor(player)
-            val playerPosition = player.position.collectAsState().value
-            val rotationAngle = playerRotationAngle(playerPosition)
+            val playerPosition by player.position.collectAsState()
+            val prevPosition by rememberUpdatedState(playerPosition - 1)
+
+            val animX = remember { Animatable(x.value) }
+            val animY = remember { Animatable(y.value) }
+
+            LaunchedEffect(playerPosition) {
+                val durationMillis = 500
+                val targetX = if (playerPosition > prevPosition) x else x + (imageSize * 2)
+
+                animX.animateTo(
+                    targetValue = targetX.value,
+                    animationSpec = tween(durationMillis = durationMillis)
+                )
+                animY.animateTo(
+                    targetValue = y.value,
+                    animationSpec = tween(durationMillis = durationMillis)
+                )
+
+                // Animations between fields
+                if (prevPosition != playerPosition) {
+                    val stepCount = (playerPosition - prevPosition).coerceAtLeast(1)
+                    for (i in 1 until stepCount) {
+                        delay(durationMillis.toLong())
+                        animX.snapTo(x.value + (imageSize.value * i / stepCount))
+                        animY.snapTo(y.value)
+                    }
+                }
+            }
 
             Image(
                 painter = painterResource(id = playerImageRes),
                 contentDescription = "Player Icon",
                 modifier = Modifier
                     .size(imageSize)
-                    .offset(x, y)
-                    .graphicsLayer(rotationZ = rotationAngle)
+                    .offset(animX.value.dp, animY.value.dp)
+                    .graphicsLayer(rotationZ = playerRotationAngle(playerPosition))
             )
         }
     }
