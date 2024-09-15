@@ -37,14 +37,13 @@ fun PlayerDrawer(
     }
 
     Box(modifier = Modifier.size(canvasWidth, canvasHeight)) {
-        val rows = when (indexesOfPlayersOnTheField.size) {
-            6, 5 -> 3
-            4, 3, 2 -> 2
-            else -> 1
-        }
-        val cols = when (indexesOfPlayersOnTheField.size) {
-            6, 5, 4, 3 -> 2
-            else -> 1
+        val (rows, cols) = when (indexesOfPlayersOnTheField.size) {
+            6 -> 3 to 2
+            5 -> 3 to 2
+            4 -> 2 to 2
+            3 -> 2 to 2
+            2 -> 1 to 2
+            else -> 1 to 1
         }
 
         val totalWidthPx = (imageSize + spacing) * cols - spacing
@@ -66,28 +65,16 @@ fun PlayerDrawer(
             val animX = remember { Animatable(x.value) }
             val animY = remember { Animatable(y.value) }
 
-            LaunchedEffect(playerPosition) {
+            LaunchedEffect(playerPosition, indexesOfPlayersOnTheField.size) {
                 val durationMillis = 500
-                val targetX = if (playerPosition > prevPosition) x else x + (imageSize * 2)
-
                 animX.animateTo(
-                    targetValue = targetX.value,
+                    targetValue = x.value,
                     animationSpec = tween(durationMillis = durationMillis)
                 )
                 animY.animateTo(
                     targetValue = y.value,
                     animationSpec = tween(durationMillis = durationMillis)
                 )
-
-                // Animations between fields
-                if (prevPosition != playerPosition) {
-                    val stepCount = (playerPosition - prevPosition).coerceAtLeast(1)
-                    for (i in 1 until stepCount) {
-                        delay(durationMillis.toLong())
-                        animX.snapTo(x.value + (imageSize.value * i / stepCount))
-                        animY.snapTo(y.value)
-                    }
-                }
             }
 
             Image(
