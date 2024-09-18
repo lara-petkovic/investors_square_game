@@ -103,7 +103,7 @@ fun CommunityCardPopup(
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
-            }else {
+            } else {
                 Column(
                     modifier = Modifier.fillMaxSize().padding(8.dp).graphicsLayer {
                         scaleX = -1f

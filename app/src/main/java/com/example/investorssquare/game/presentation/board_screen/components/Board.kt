@@ -108,9 +108,7 @@ fun Board(
                 CornerFieldCard(
                     fieldSize = fieldHeight,
                     modifier = Modifier.align(Alignment.BottomEnd),
-                    index = 0,
-                    board = board,
-                    onFieldClick = { }
+                    index = 0
                 )
                 RowFieldCards(
                     fieldHeight = fieldHeight,
@@ -123,9 +121,7 @@ fun Board(
                 CornerFieldCard(
                     fieldSize = fieldHeight,
                     modifier = Modifier.align(Alignment.BottomStart),
-                    index = 10,
-                    board = board,
-                    onFieldClick = { }
+                    index = 10
                 )
                 RowFieldCards(
                     fieldHeight = fieldHeight,
@@ -142,9 +138,7 @@ fun Board(
                 CornerFieldCard(
                     fieldSize = fieldHeight,
                     modifier = Modifier.align(Alignment.TopStart),
-                    index = 20,
-                    board = board,
-                    onFieldClick = { }
+                    index = 20
                 )
                 RowFieldCards(
                     fieldHeight = fieldHeight,
@@ -159,9 +153,7 @@ fun Board(
                 CornerFieldCard(
                     fieldSize = fieldHeight,
                     modifier = Modifier.align(Alignment.TopEnd),
-                    index = 30,
-                    board = board,
-                    onFieldClick = { }
+                    index = 30
                 )
                 RowFieldCards(
                     fieldHeight = fieldHeight,
