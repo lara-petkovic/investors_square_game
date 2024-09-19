@@ -53,7 +53,7 @@ fun PlayerCard(playerViewModel: PlayerViewModel) {
         Card(
             modifier = Modifier.fillMaxSize(),
             shape = RoundedCornerShape(8.dp),
-            colors = CardDefaults.cardColors(containerColor = playerViewModel.color.value.copy(alpha = 0.6f))
+            colors = CardDefaults.cardColors(containerColor = playerViewModel.color.value.copy(alpha = 0.0f))
         ) {
             Box(
                 modifier = Modifier

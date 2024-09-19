@@ -6,17 +6,12 @@ class Board(
     val imageUrl: String,
     val houseImageUrl: String,
     val hotelImageUrl: String,
-    val propertyCommonName: String,
-    val propertyCommonNamePlural: String,
-    val stationCommonName: String,
-    val stationCommonNamePlural: String,
-    val utilityCommonName: String,
-    val utilityCommonNamePlural: String,
     val diceColor: Color,
     val fields: List<Field>,
     val playerColors: List<Color>,
     val chance: Community,
-    val communityChest: Community
+    val communityChest: Community,
+    var ruleBook: RuleBook = RuleBook()
 ){
     fun shuffleCommunityCards(){
         chance.shuffleCards()

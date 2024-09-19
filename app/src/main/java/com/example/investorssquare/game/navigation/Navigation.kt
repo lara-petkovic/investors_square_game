@@ -1,5 +1,6 @@
 package com.example.investorssquare.game.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -9,8 +10,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.presentation.board_screen.BoardScreen
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
-import com.example.investorssquare.util.Constants.STARTER_MONEY_VALUE
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun Navigation(board: Board) {
     val navController = rememberNavController()
@@ -37,7 +38,7 @@ fun Navigation(board: Board) {
                     board.playerColors[4],
                     board.playerColors[5]
                 ),
-                STARTER_MONEY_VALUE
+                board.ruleBook.startingCapital
             )
 
             Box {
