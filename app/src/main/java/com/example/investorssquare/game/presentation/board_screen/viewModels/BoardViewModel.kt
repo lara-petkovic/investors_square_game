@@ -170,7 +170,7 @@ class BoardViewModel @Inject constructor() : ViewModel() {
     }
 
 
-    private fun getEstateByFieldIndex(index: Int): EstateViewModel? {
+    fun getEstateByFieldIndex(index: Int): EstateViewModel? {
         return _estates.value.firstOrNull { it.estate.value.index == index }
     }
 
