@@ -6,7 +6,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -59,13 +65,14 @@ fun PlayerDrawer(
 
             val playerImageRes = imageByColor(player)
             val playerPosition by player.position.collectAsState()
-            val prevPosition by rememberUpdatedState(playerPosition - 1)
+            val isActive by player.isActive.collectAsState()
 
             val animX = remember { Animatable(x.value) }
             val animY = remember { Animatable(y.value) }
+            val animScale = remember { Animatable(1f) }
 
             LaunchedEffect(playerPosition, indexesOfPlayersOnTheField.size) {
-                val durationMillis = 500
+                val durationMillis = 700
                 animX.animateTo(
                     targetValue = x.value,
                     animationSpec = tween(durationMillis = durationMillis)
@@ -76,11 +83,27 @@ fun PlayerDrawer(
                 )
             }
 
+            var previousActiveState by remember { mutableStateOf(false) }
+
+            LaunchedEffect(isActive) {
+                if (isActive && !previousActiveState) {
+                    animScale.animateTo(
+                        targetValue = 1.2f,
+                        animationSpec = tween(durationMillis = 300)
+                    )
+                    animScale.animateTo(
+                        targetValue = 1f,
+                        animationSpec = tween(durationMillis = 300)
+                    )
+                }
+                previousActiveState = isActive
+            }
+
             Image(
                 painter = painterResource(id = playerImageRes),
                 contentDescription = "Player Icon",
                 modifier = Modifier
-                    .size(imageSize)
+                    .size(imageSize * animScale.value)
                     .offset(animX.value.dp, animY.value.dp)
                     .graphicsLayer(rotationZ = playerRotationAngle(playerPosition))
             )

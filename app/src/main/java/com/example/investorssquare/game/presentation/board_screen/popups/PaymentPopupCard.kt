@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,6 +26,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getDrawable
 import com.example.investorssquare.R
@@ -32,7 +34,27 @@ import com.example.investorssquare.game.presentation.board_screen.viewModels.Pay
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
-@SuppressLint("StateFlowValueCalledInComposition")
+@Composable
+@Preview(showBackground = true)
+fun PaymentPopupCardPreview() { // Mocked data for the preview of the popup card
+    val payer = PlayerViewModel().apply {
+        setName("Lara")
+        setColor(Color.Red)
+        setMoney(1500)
+        setIndex(0)
+    }
+
+    val receiver = PlayerViewModel().apply {
+        setName("Menza")
+        setColor(Color.Blue)
+        setMoney(1500)
+        setIndex(1)
+    }
+    val paymentDetails = PaymentDetails(payer, receiver, amount = 62)
+
+    PaymentPopupCard(paymentDetails = paymentDetails, onDismiss = {})
+}
+
 @Composable
 fun PaymentPopupCard(
     paymentDetails: PaymentDetails?, onDismiss: () -> Unit
@@ -49,8 +71,9 @@ fun PaymentPopupCard(
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .padding(16.dp)
-                    .height(120.dp)
-            ) {
+                    .height(120.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.LightGray)
+            ){
                 Row(
                     modifier = Modifier
                         .padding(16.dp)

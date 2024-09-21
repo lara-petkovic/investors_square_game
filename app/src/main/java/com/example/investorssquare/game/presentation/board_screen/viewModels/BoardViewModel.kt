@@ -120,7 +120,7 @@ class BoardViewModel @Inject constructor() : ViewModel() {
             viewModelScope.launch {
                 for (i in 1..diceSum) {
                     player.moveBySteps(1)
-                    if(player.position.value==0){
+                    if(player.position.value == 0){
                         player.receive(board.value?.ruleBook?.salary!!)
                     }
                     delay(150)
