@@ -1,6 +1,5 @@
 package com.example.investorssquare.game.presentation.board_screen.components
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,7 +27,6 @@ import com.example.investorssquare.game.presentation.board_screen.viewModels.Boa
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 import com.example.investorssquare.util.Constants.FIELD_CARD_STRAP_HEIGHT_PERCENTAGE
 
-@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun FieldCard(
     fieldWidth: Dp,
@@ -54,9 +52,11 @@ fun FieldCard(
             ) {
                 Box(modifier = Modifier
                     .fillMaxSize()
-                    .alpha(if(boardViewModel.getEstateByFieldIndex(field.index)!=null && boardViewModel.getEstateByFieldIndex(field.index)?.ownerIndex?.value!=-1) 0.5f else 0.0f)
-                    .background(color = Color.White)
-                ){}
+                    .alpha(
+                        if(boardViewModel.getEstateByFieldIndex(field.index) != null
+                            && boardViewModel.getEstateByFieldIndex(field.index)?.ownerIndex?.value != -1) 0.5f else 0.0f)
+                    .background(color = Color(0xFFDAF7DB))
+                )
                 if (field.type == FieldType.PROPERTY) {
                     Box(
                         modifier = Modifier
@@ -65,10 +65,10 @@ fun FieldCard(
                             .background(property?.setColor ?: Color.Gray)
                             .align(Alignment.TopStart)
                             .drawBehind {
-                                val strokeWidth = 2.dp.toPx() // Set border thickness
+                                val strokeWidth = 1.5.dp.toPx()
                                 val y = size.height - strokeWidth / 2
                                 drawLine(
-                                    color = Color.Black, // Set border color
+                                    color = Color.Black,
                                     start = androidx.compose.ui.geometry.Offset(0f, y),
                                     end = androidx.compose.ui.geometry.Offset(size.width, y),
                                     strokeWidth = strokeWidth

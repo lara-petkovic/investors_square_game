@@ -18,7 +18,6 @@ import com.example.investorssquare.R
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import com.example.investorssquare.util.Constants.NUMBER_OF_FIELDS
-import kotlinx.coroutines.delay
 
 @Composable
 fun PlayerDrawer(
