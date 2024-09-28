@@ -1,6 +1,7 @@
 [versions]
 accompanistDrawablepainter = "0.35.0-alpha"
 agp = "8.5.2"
+coilCompose = "2.0.0"
 gson = "2.11.0"
 hiltAndroid = "2.48"
 hiltAndroidCompiler = "2.44"
@@ -23,6 +24,7 @@ media3Common = "1.4.1"
 accompanist-drawablepainter = { module = "com.google.accompanist:accompanist-drawablepainter", version.ref = "accompanistDrawablepainter" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
