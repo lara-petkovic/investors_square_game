@@ -7,7 +7,10 @@ import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
+import com.example.investorssquare.game.events.Event
+import com.example.investorssquare.game.events.EventBus
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +25,9 @@ import javax.inject.Inject
 @HiltViewModel
 class BoardViewModel @Inject constructor() : ViewModel() {
 
+    init {
+        observeEvents(viewModelScope)
+    }
     private val _board = MutableStateFlow<Board?>(null)
     val board: StateFlow<Board?> get() = _board
 
@@ -59,6 +65,17 @@ class BoardViewModel @Inject constructor() : ViewModel() {
         initialValue = emptyList()
     )
 
+    fun observeEvents(scope: CoroutineScope) {
+        scope.launch {
+            EventBus.events.collect { event ->
+                when (event) {
+                    is Event.DiceThrown -> { handleDiceThrown(event.firstNumber, event.secondNumber) }
+                    is Event.OnFieldClicked ->{ handleCardInformationClick(event.fieldIndex) }
+                    else -> {}
+                }
+            }
+        }
+    }
     fun dismissPopup() {
         _showPopup.value = false
         //_currentField.value = null
@@ -71,7 +88,6 @@ class BoardViewModel @Inject constructor() : ViewModel() {
 
     fun onEvent(event: BoardVMEvent) {
         when (event) {
-            BoardVMEvent.RollDice -> handleDiceRoll()
             is BoardVMEvent.OnFieldClicked -> handleCardInformationClick(event.fieldIndex)
             is BoardVMEvent.BuyEstate -> handleEstateBuy(event.fieldIndex)
         }
@@ -106,12 +122,12 @@ class BoardViewModel @Inject constructor() : ViewModel() {
         _players.value.firstOrNull()?.startMove()
     }
 
-    private fun handleDiceRoll() {
-        diceViewModel.rollDice()
-        if(!diceViewModel.isRolledDouble() || board.value?.ruleBook?.playAgainIfRolledDouble==false){
+    private fun handleDiceThrown(firstNumber: Int, secondNumber: Int) {
+        if(firstNumber!=secondNumber || board.value?.ruleBook?.playAgainIfRolledDouble==false){
             diceViewModel.disableDiceButton()
             _isFinishButtonVisible.value = true
         }
+        moveActivePlayer()
     }
 
     fun moveActivePlayer() {

@@ -54,7 +54,7 @@ fun BoardScreen(
             Box(modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 20.dp)) {
-                DiceButton(boardViewModel = boardViewModel)
+                DiceButton(diceViewModel = boardViewModel.diceViewModel)
             }
 
             Box(modifier = Modifier

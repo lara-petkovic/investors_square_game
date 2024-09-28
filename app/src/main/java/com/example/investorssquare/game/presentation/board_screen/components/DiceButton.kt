@@ -18,15 +18,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.investorssquare.R
+import com.example.investorssquare.game.events.Event
+import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardVMEvent
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.DiceViewModel
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
-fun DiceButton(boardViewModel: BoardViewModel = hiltViewModel()) {
-    val number1 by boardViewModel.diceViewModel.diceNumber1.collectAsState()
-    val number2 by boardViewModel.diceViewModel.diceNumber2.collectAsState()
-    val isDiceButtonEnabled by boardViewModel.diceViewModel.isDiceButtonEnabled.collectAsState()
+fun DiceButton(diceViewModel: DiceViewModel) {
+    val number1 by diceViewModel.diceNumber1.collectAsState()
+    val number2 by diceViewModel.diceNumber2.collectAsState()
+    val isDiceButtonEnabled by diceViewModel.isDiceButtonEnabled.collectAsState()
 
     var currentDice1 by remember { mutableIntStateOf(number1) }
     var currentDice2 by remember { mutableIntStateOf(number2) }
@@ -38,7 +43,6 @@ fun DiceButton(boardViewModel: BoardViewModel = hiltViewModel()) {
     Button(
         onClick = {
             isRolling = true
-            boardViewModel.onEvent(BoardVMEvent.RollDice)
             mediaPlayer.start() // Play sound effect when dice are rolled
         },
         enabled = isDiceButtonEnabled && !isRolling,
@@ -56,7 +60,6 @@ fun DiceButton(boardViewModel: BoardViewModel = hiltViewModel()) {
         }
     }
 
-    // Dice roll animation
     LaunchedEffect(isRolling) {
         if (isRolling) {
             val diceNumbers = (1..6).toList()
@@ -68,12 +71,11 @@ fun DiceButton(boardViewModel: BoardViewModel = hiltViewModel()) {
                 currentDice2 = diceNumbers.random()
                 delay(20)
             }
-
-            currentDice1 = number1
-            currentDice2 = number2
-            boardViewModel.moveActivePlayer()
-
+            diceViewModel.rollDice()
+            currentDice1 = diceViewModel.diceNumber1.value
+            currentDice2 = diceViewModel.diceNumber2.value
             isRolling = false
+            GlobalScope.launch { EventBus.postEvent(Event.DiceThrown(number1, number2)) }
         }
     }
 }
