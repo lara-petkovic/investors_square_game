@@ -3,6 +3,7 @@ package com.example.investorssquare.game.presentation.board_screen.components
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -32,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.game.domain.model.Field
@@ -42,6 +44,7 @@ import com.example.investorssquare.game.presentation.board_screen.popups.Station
 import com.example.investorssquare.game.presentation.board_screen.popups.UtilityDetails
 import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.util.Constants.BLACK_OVERLAY
 import com.example.investorssquare.util.Constants.FIELDS_PER_ROW
 import com.example.investorssquare.util.Constants.NUMBER_OF_FIELDS
 import com.example.investorssquare.util.Constants.RELATIVE_FIELD_HEIGHT
@@ -69,10 +72,32 @@ fun Board(
     ) {
         val boardWidth = constraints.maxWidth
         val boardHeight = constraints.maxHeight
+        val cornerFieldIndices = listOf(0, 10, 20, 30)
+
         centerOfTheBoard = IntOffset(
             x = boardWidth / 2,
             y = boardHeight / 2
         )
+
+        val isCornerField = currentField?.let { field ->
+            cornerFieldIndices.contains(field.index)
+        } ?: false
+
+        // Check if the current field is a property and if it is owned
+        val isPropertyOwned = estates.any { estate ->
+            estate.estate.value.index == currentField?.index && estate.ownerIndex.value != -1
+        }
+
+        // Black background overlay
+        if (showPopup && !isCornerField && currentField is Estate && !isPropertyOwned) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = BLACK_OVERLAY))
+                    .zIndex(1f) // Ensure it's on top
+            )
+        }
+
         Card(
             modifier = Modifier.size(boardSize),
             shape = RectangleShape,
@@ -90,7 +115,7 @@ fun Board(
                         contentScale = ContentScale.Crop
                     )
                 }
-                for(estate in estates){
+                for(estate in estates) {
                     if(estate.ownerIndex.value != -1)
                         BoughtEstateMarker(
                             fieldWidth = fieldWidth,
@@ -102,7 +127,7 @@ fun Board(
                                 )
                             },
                             boardViewModel = boardViewModel,
-                            horizontal = estate.estate.value.index<10 || (estate.estate.value.index in 21..29)
+                            horizontal = estate.estate.value.index < 10 || (estate.estate.value.index in 21..29)
                         )
                 }
                 CornerFieldCard(

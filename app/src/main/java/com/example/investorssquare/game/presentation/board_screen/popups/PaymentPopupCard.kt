@@ -32,6 +32,7 @@ import androidx.core.content.ContextCompat.getDrawable
 import com.example.investorssquare.R
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PaymentDetails
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.util.Constants.BLACK_OVERLAY
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
 @Composable
@@ -63,7 +64,7 @@ fun PaymentPopupCard(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.2f))
+            .background(Color.Black.copy(alpha = BLACK_OVERLAY))
             .clickable { onDismiss() }
     ) {
         if (paymentDetails != null) {
