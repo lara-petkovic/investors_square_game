@@ -30,9 +30,12 @@ import androidx.compose.ui.window.PopupProperties
 import com.example.investorssquare.R
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.Utility
-import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardVMEvent
-import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.game.events.Event
+import com.example.investorssquare.game.events.EventBus
+import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.util.Constants.BUY
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @SuppressLint("DiscouragedApi")
 @Composable
@@ -42,7 +45,6 @@ fun UtilityDetails(
     offset : IntOffset,
     popupWidth: Dp,
     popupHeight: Dp,
-    boardViewModel: BoardViewModel,
     buyButtonVisibility: Boolean
 ) {
     val utility = field as? Utility
@@ -150,7 +152,7 @@ fun UtilityDetails(
                     Spacer(modifier = Modifier.height(1.dp))
                     Button(
                         onClick = {
-                            utility?.index?.let { boardViewModel.onEvent(BoardVMEvent.BuyEstate(it)) }
+                            utility?.index?.let { GlobalScope.launch { EventBus.postEvent(Event.BuyingEstate(field.index)) } }
                         },
                         modifier = Modifier
                             .size((popupWidth.value * 0.5).dp, (popupHeight.value * 0.07).dp)

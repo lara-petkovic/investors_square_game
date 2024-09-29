@@ -1,6 +1,5 @@
 package com.example.investorssquare.game.events
 
-import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardVMEvent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collect
@@ -19,6 +18,11 @@ object EventBus {
 
 sealed class Event {
     data class DiceThrown(val firstNumber: Int, val secondNumber: Int) : Event()
-    object PlayerCrossedStart : Event()
+    data object PlayerCrossedStart : Event()
+    data object PlayerLanded : Event()
+    data object PlayerLandedOnBoughtEstate : Event()
+    data object PlayerLandedOnFreeEstate : Event()
     data class OnFieldClicked(val fieldIndex: Int): Event()
+    data class BuyingEstate(val fieldIndex: Int): Event()
+    data class EstateBought(val fieldIndex: Int): Event()
 }

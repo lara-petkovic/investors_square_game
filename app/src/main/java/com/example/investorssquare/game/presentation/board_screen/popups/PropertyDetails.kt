@@ -37,9 +37,12 @@ import androidx.compose.ui.window.PopupProperties
 import com.example.investorssquare.R
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.Property
-import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardVMEvent
-import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.game.events.Event
+import com.example.investorssquare.game.events.EventBus
+import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.util.Constants.BUY
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -49,7 +52,6 @@ fun PropertyDetails(
     offset : IntOffset,
     popupWidth: Dp,
     popupHeight: Dp,
-    boardViewModel: BoardViewModel,
     buyButtonVisibility: Boolean
 ) {
     val property = field as? Property
@@ -146,7 +148,7 @@ fun PropertyDetails(
                                         )
                                         Box(modifier = Modifier.size(16.dp)) {
                                             Image(
-                                                painter = painterResource(context.resources.getIdentifier(boardViewModel.board.value?.houseImageUrl, "drawable", context.packageName)),
+                                                painter = painterResource(context.resources.getIdentifier(Game.board.value?.houseImageUrl, "drawable", context.packageName)),
                                                 contentDescription = null,
                                                 modifier = Modifier.fillMaxSize()
                                             )
@@ -193,7 +195,7 @@ fun PropertyDetails(
                             ) {
                                 Box(modifier = Modifier.size(16.dp)) {
                                     Image(
-                                        painter = painterResource(context.resources.getIdentifier(boardViewModel.board.value?.hotelImageUrl, "drawable", context.packageName)),
+                                        painter = painterResource(context.resources.getIdentifier(Game.board.value?.hotelImageUrl, "drawable", context.packageName)),
                                         contentDescription = null,
                                         modifier = Modifier.fillMaxSize()
                                     )
@@ -292,7 +294,7 @@ fun PropertyDetails(
                     Spacer(modifier = Modifier.height(2.dp))
                     Button(
                         onClick = {
-                            property?.index?.let { boardViewModel.onEvent(BoardVMEvent.BuyEstate(it)) }
+                            property?.index?.let { GlobalScope.launch { EventBus.postEvent(Event.BuyingEstate(field.index)) } }
                         },
                         modifier = Modifier
                             .size((popupWidth.value * 0.5).dp, (popupHeight.value * 0.07).dp)

@@ -33,7 +33,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import kotlinx.coroutines.delay
 import com.example.investorssquare.R
-import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -43,14 +43,13 @@ fun CommunityCardPopup(
     offset : IntOffset,
     popupWidth: Dp,
     popupHeight: Dp,
-    boardViewModel: BoardViewModel
 ) {
     var isFlipped by remember { mutableStateOf(false) }
     var isClosing by remember { mutableStateOf(false) }
 
     val card = remember {
-        if (isChance) boardViewModel.board.value?.chance?.drawCard()
-        else boardViewModel.board.value?.communityChest?.drawCard()
+        if (isChance) Game.board.value?.chance?.drawCard()
+        else Game.board.value?.communityChest?.drawCard()
     }
 
     val rotation by animateFloatAsState(
@@ -85,15 +84,15 @@ fun CommunityCardPopup(
                 .clip(RoundedCornerShape(5.dp))
                 .border(
                     width = 3.dp,
-                    color = (if (isChance) boardViewModel.board.value?.chance?.primaryColor
-                            else boardViewModel.board.value?.communityChest?.primaryColor)!!,
+                    color = (if (isChance) Game.board.value?.chance?.primaryColor
+                            else Game.board.value?.communityChest?.primaryColor)!!,
                     shape = RoundedCornerShape(5.dp)
                 )
                 .background(
                     color = (if (isChance)
-                        boardViewModel.board.value?.chance?.primaryColor?.copy(alpha = 0.1f)
+                        Game.board.value?.chance?.primaryColor?.copy(alpha = 0.1f)
                     else
-                        boardViewModel.board.value?.communityChest?.primaryColor?.copy(alpha = 0.1f))!!
+                        Game.board.value?.communityChest?.primaryColor?.copy(alpha = 0.1f))!!
                 )
         ) {
             if (rotation <= 90f) {
@@ -113,12 +112,12 @@ fun CommunityCardPopup(
                 ) {
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = (if (isChance) boardViewModel.board.value?.chance?.commonName?.uppercase()
-                                else boardViewModel.board.value?.communityChest?.commonName?.uppercase())!!,
+                        text = (if (isChance) Game.board.value?.chance?.commonName?.uppercase()
+                                else Game.board.value?.communityChest?.commonName?.uppercase())!!,
                         style = MaterialTheme.typography.titleLarge,
                         fontSize = 18.sp,
-                        color = (if (isChance) boardViewModel.board.value?.chance?.primaryColor
-                                else boardViewModel.board.value?.communityChest?.primaryColor)!!,
+                        color = (if (isChance) Game.board.value?.chance?.primaryColor
+                                else Game.board.value?.communityChest?.primaryColor)!!,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(6.dp))

@@ -40,7 +40,7 @@ import com.example.investorssquare.game.presentation.board_screen.popups.Communi
 import com.example.investorssquare.game.presentation.board_screen.popups.PropertyDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.StationDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.UtilityDetails
-import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import com.example.investorssquare.util.Constants.FIELDS_PER_ROW
 import com.example.investorssquare.util.Constants.NUMBER_OF_FIELDS
@@ -52,17 +52,16 @@ import kotlin.math.roundToInt
 fun Board(
     screenWidthDp: Dp,
     sideMargin: Dp,
-    board: Board,
-    boardViewModel: BoardViewModel
 ) {
-    val showPopup by boardViewModel.showPopup.collectAsState()
-    val estates by boardViewModel.estates.collectAsState()
-    val currentField by boardViewModel.currentField.collectAsState()
+    val showPopup by Game.showPopup.collectAsState()
+    val estates by Game.estates.collectAsState()
+    val currentField by Game.currentField.collectAsState()
     val boardSize = (screenWidthDp.value - sideMargin.value * 2).dp
     val fieldHeight = (boardSize.value * RELATIVE_FIELD_HEIGHT).dp
     val fieldWidth = ((boardSize.value - 2 * fieldHeight.value) / FIELDS_PER_ROW).dp
     var centerOfTheBoard by remember { mutableStateOf(IntOffset.Zero) }
     val context = LocalContext.current
+    val board = Game.board.value!!
 
     BoxWithConstraints(
         modifier = Modifier.size(boardSize)
@@ -101,7 +100,6 @@ fun Board(
                                     y = calculateYOffsetForBoughtEstateMarker(estate.estate.value.index, fieldHeight, fieldWidth, boardSize).roundToPx()
                                 )
                             },
-                            boardViewModel = boardViewModel,
                             horizontal = estate.estate.value.index<10 || (estate.estate.value.index in 21..29)
                         )
                 }
@@ -188,59 +186,55 @@ fun Board(
         currentField?.let { currentField ->
             if (showPopup) {
                 currentField.let { field ->
-                    val activePlayer = boardViewModel.getActivePlayer()
+                    val activePlayer = Game.getActivePlayer()
                     val buyButtonVisibility = activePlayer?.let { canBuyEstate(it, field) } ?: false
 
                     when (field.type) {
                         FieldType.PROPERTY -> PropertyDetails(
                             field = field,
-                            onDismissRequest = { boardViewModel.dismissPopup() },
+                            onDismissRequest = { Game.dismissPopup() },
                             offset = IntOffset(
                                 (with(LocalDensity.current) { fieldHeight.toPx() } + 1.75 * with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),
                                 (with(LocalDensity.current) { fieldHeight.toPx() } + (0.02f * 9 * with(LocalDensity.current) { fieldWidth.toPx() })).toInt()
                             ),
                             popupWidth = (5.5 * fieldWidth.value).dp,
                             popupHeight = (0.96 * 9 * fieldWidth.value).dp,
-                            boardViewModel = boardViewModel,
                             buyButtonVisibility = buyButtonVisibility
                         )
 
                         FieldType.STATION -> StationDetails(
                             field = field,
-                            onDismissRequest = { boardViewModel.dismissPopup() },
+                            onDismissRequest = { Game.dismissPopup() },
                             offset = IntOffset(
                                 (with(LocalDensity.current) { fieldHeight.toPx() } + 1.75 * with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),
                                 (with(LocalDensity.current) { fieldHeight.toPx() } + (0.02f * 9 * with(LocalDensity.current) { fieldWidth.toPx() })).toInt()
                             ),
                             popupWidth = (5.5 * fieldWidth.value).dp,
                             popupHeight = (0.96 * 9 * fieldWidth.value).dp,
-                            boardViewModel = boardViewModel,
                             buyButtonVisibility = buyButtonVisibility
                         )
 
                         FieldType.UTILITY -> UtilityDetails(
                             field = field,
-                            onDismissRequest = { boardViewModel.dismissPopup() },
+                            onDismissRequest = { Game.dismissPopup() },
                             offset = IntOffset(
                                 (with(LocalDensity.current) { fieldHeight.toPx() } + 1.75 * with(LocalDensity.current) { fieldWidth.toPx() }).toInt(),
                                 (with(LocalDensity.current) { fieldHeight.toPx() } + (0.02f * 9 * with(LocalDensity.current) { fieldWidth.toPx() })).toInt()
                             ),
                             popupWidth = (5.5 * fieldWidth.value).dp,
                             popupHeight = (0.96 * 9 * fieldWidth.value).dp,
-                            boardViewModel = boardViewModel,
                             buyButtonVisibility = buyButtonVisibility
                         )
 
                         FieldType.CHANCE, FieldType.COMMUNITY_CHEST -> CommunityCardPopup(
                             isChance = field.type == FieldType.CHANCE,
-                            onDismissRequest = { boardViewModel.dismissPopup() },
+                            onDismissRequest = { Game.dismissPopup() },
                             offset = IntOffset(
                                 (with(LocalDensity.current) { fieldHeight.toPx() } + (0.05f * 9 * with(LocalDensity.current) { fieldWidth.toPx() })).toInt(),
                                 (with(LocalDensity.current) { fieldHeight.toPx() } + 1.5 * with(LocalDensity.current) { fieldWidth.toPx() }).toInt()
                             ),
                             popupWidth = (0.9 * 9 * fieldWidth.value).dp,
                             popupHeight = (6 * fieldWidth.value).dp,
-                            boardViewModel = boardViewModel
                         )
 
                         FieldType.JAIL -> {}

@@ -21,24 +21,18 @@ import com.example.investorssquare.game.presentation.board_screen.components.Dic
 import com.example.investorssquare.game.presentation.board_screen.components.FinishButton
 import com.example.investorssquare.game.presentation.board_screen.components.PlayerCardColumns
 import com.example.investorssquare.game.presentation.board_screen.popups.PaymentPopupCard
-import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.util.Constants.SIDE_BOARD_MARGIN
 import com.example.investorssquare.util.Constants.TOP_BOARD_MARGIN
 
 @Composable
-fun BoardScreen(
-    boardViewModel: BoardViewModel,
-    board: Board
-) {
-    LaunchedEffect(Unit) {
-        boardViewModel.setBoard(board)
-    }
+fun BoardScreen() {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp.dp
     val sideMargin = (screenWidthDp.value * SIDE_BOARD_MARGIN).dp
     val topMargin = (screenWidthDp.value * TOP_BOARD_MARGIN).dp
 
-    val showPaymentPopup by boardViewModel.showPaymentPopup.collectAsState()
-    val paymentDetails by boardViewModel.paymentDetails.collectAsState()
+    val showPaymentPopup by Game.showPaymentPopup.collectAsState()
+    val paymentDetails by Game.paymentDetails.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -47,20 +41,20 @@ fun BoardScreen(
                 .padding(start = sideMargin, end = sideMargin, top = topMargin),
             verticalArrangement = Arrangement.Top
         ) {
-            Board(screenWidthDp, sideMargin, board, boardViewModel)
+            Board(screenWidthDp, sideMargin)
 
-            PlayerCardColumns(boardVM = boardViewModel)
+            PlayerCardColumns()
 
             Box(modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 20.dp)) {
-                DiceButton(diceViewModel = boardViewModel.diceViewModel)
+                DiceButton()
             }
 
             Box(modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 10.dp)) {
-                FinishButton(boardViewModel = boardViewModel)
+                FinishButton()
             }
         }
 
@@ -73,7 +67,7 @@ fun BoardScreen(
             ) {
                 PaymentPopupCard(
                     paymentDetails = paymentDetails,
-                    onDismiss = { boardViewModel.dismissPaymentPopup() }
+                    onDismiss = { Game.dismissPaymentPopup() }
                 )
             }
         }

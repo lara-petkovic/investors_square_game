@@ -11,17 +11,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.investorssquare.game.domain.model.Field
-import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 
 @Composable
 fun BoughtEstateMarker(
     fieldWidth: Dp,
     field: Field,
     modifier: Modifier,
-    boardViewModel: BoardViewModel,
     horizontal: Boolean = true
 ) {
-    val playerVM = boardViewModel.getOwnerOfEstate(field.index)
+    val playerVM = Game.getOwnerOfEstate(field.index)
     val playerColor = playerVM?.color?.collectAsState()?.value ?: Color.Gray
 
     val width = if (horizontal) fieldWidth / 2 else fieldWidth / 3.7f
