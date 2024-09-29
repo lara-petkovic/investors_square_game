@@ -151,7 +151,7 @@ fun UtilityDetails(
                     Spacer(modifier = Modifier.height(1.dp))
                     Button(
                         onClick = {
-                            utility?.index?.let { GlobalScope.launch { EventBus.postEvent(Event.ON_BUYING_ESTATE(field.index)) } }
+                            utility?.index?.let { GlobalScope.launch { EventBus.postEvent(Event.ON_ESTATE_BOUGHT(field.index)) } }
                         },
                         modifier = Modifier
                             .size((popupWidth.value * 0.5).dp, (popupHeight.value * 0.07).dp)

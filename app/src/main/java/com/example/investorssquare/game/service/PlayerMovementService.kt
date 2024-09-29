@@ -13,21 +13,7 @@ import kotlinx.coroutines.launch
 
 object PlayerMovementService {
     private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-    init {
-        observeEvents()
-    }
-    private fun observeEvents() {
-        serviceScope.launch {
-            EventBus.events.collect { event ->
-                when (event) {
-                    is Event.ON_DICE_THROWN -> moveActivePlayer()
-                    is Event.ON_GO_TO_JAIL -> goToJail()
-                    else -> { }
-                }
-            }
-        }
-    }
-    private fun moveActivePlayer() {
+    fun moveActivePlayer() {
         Game.getActivePlayer()?.let { player ->
             val diceSum = Game.diceViewModel.getDiceSum()
             serviceScope.launch {
@@ -42,11 +28,26 @@ object PlayerMovementService {
             }
         }
     }
-    private fun goToJail(){
+    fun moveToField(fieldIndex: Int){
+        Game.getActivePlayer()?.let { player ->
+            serviceScope.launch {
+                while (player.position.value!=fieldIndex) {
+                    player.moveBySteps(1)
+                    if (player.position.value == 0) {
+                        serviceScope.launch { EventBus.postEvent(Event.ON_PLAYER_CROSSED_START) }
+                    }
+                    delay(200)
+                }
+                handlePlayerLanding()
+            }
+        }
+    }
+    fun goToJail(){
         val player = Game.getActivePlayer()!!
+        val jailPosition = Game.board.value?.fields?.find { field-> field.type==FieldType.JAIL }?.index!!
         serviceScope.launch {
-            while (player.position.value!=10) {
-                if(player.position.value>10)
+            while (player.position.value!=jailPosition) {
+                if(player.position.value>jailPosition)
                     player.moveByStepsBackwards(1)
                 else
                     player.moveBySteps(1)

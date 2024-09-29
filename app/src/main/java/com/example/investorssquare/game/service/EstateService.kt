@@ -9,32 +9,16 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 object EstateService {
-    private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-    init {
-        observeEvents()
-    }
-    private fun observeEvents() {
-        serviceScope.launch {
-            EventBus.events.collect { event ->
-                when (event) {
-                    is Event.ON_PLAYER_LANDED_ON_FREE_ESTATE -> showPopupForEstate()
-                    is Event.ON_FIELD_CLICKED -> handleCardInformationClick(event.fieldIndex)
-                    is Event.ON_ESTATE_BOUGHT -> handleEstateBought(event.fieldIndex)
-                    else -> { }
-                }
-            }
-        }
-    }
-    private fun showPopupForEstate(){
+    fun showPopupForEstate(){
         Game.showPopupForField(Game.getActivePlayer()?.position?.value!!)
     }
-    private fun handleCardInformationClick(fieldIndex: Int) {
+    fun handleCardInformationClick(fieldIndex: Int) {
         val field = Game.getEstateByFieldIndex(fieldIndex)
         if (field != null) {
             Game.showPopupForField(fieldIndex)
         }
     }
-    private fun handleEstateBought(index: Int){
+    fun handleEstateBought(index: Int){
         val player = Game.getActivePlayer()!!
         val estate = Game.getEstateByFieldIndex(index)!!
         player.buyNewEstate(estate)

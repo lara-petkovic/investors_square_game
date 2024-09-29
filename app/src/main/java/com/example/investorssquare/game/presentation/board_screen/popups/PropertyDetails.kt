@@ -104,7 +104,7 @@ fun PropertyDetails(
                 PropertyDetailsContent(property, scrollState, popupHeight)
                 if (buyButtonVisibility) {
                     BuyButton(popupWidth, popupHeight) {
-                        GlobalScope.launch { EventBus.postEvent(Event.ON_BUYING_ESTATE(field.index)) }
+                        GlobalScope.launch { EventBus.postEvent(Event.ON_ESTATE_BOUGHT(field.index)) }
                     }
                 }
             }

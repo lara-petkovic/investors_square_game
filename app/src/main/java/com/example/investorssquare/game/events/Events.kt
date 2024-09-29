@@ -24,6 +24,5 @@ sealed class Event {
     data object ON_PLAYER_LANDED_ON_BOUGHT_ESTATE : Event()
     data object ON_PLAYER_LANDED_ON_FREE_ESTATE : Event()
     data class ON_FIELD_CLICKED(val fieldIndex: Int): Event()
-    data class ON_BUYING_ESTATE(val fieldIndex: Int): Event()
     data class ON_ESTATE_BOUGHT(val fieldIndex: Int): Event()
 }

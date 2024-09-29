@@ -2,6 +2,7 @@ package com.example.investorssquare.game.presentation.board_screen.viewModels
 
 import androidx.lifecycle.ViewModel
 import com.example.investorssquare.game.domain.model.Estate
+import com.example.investorssquare.game.domain.model.FieldType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
@@ -9,6 +10,13 @@ import javax.inject.Inject
 class EstateViewModel @Inject constructor(estate: Estate) : ViewModel() {
     private val _estate = MutableStateFlow(estate)
     val estate: StateFlow<Estate> get() = _estate
+
+    val isUtility: Boolean = estate.type==FieldType.UTILITY
+    val isStation: Boolean = estate.type==FieldType.STATION
+    val isProperty: Boolean = estate.type==FieldType.PROPERTY
+
+    private val _numberOfBuildings = MutableStateFlow<Int>(0)
+    val numberOfBuildings : StateFlow<Int> get() = _numberOfBuildings
 
     private val _ownerIndex = MutableStateFlow(-1)
     val ownerIndex: StateFlow<Int> get() = _ownerIndex
