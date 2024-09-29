@@ -38,6 +38,9 @@ object Game {
     private val _isFinishButtonVisible = MutableStateFlow(false)
     val isFinishButtonVisible: StateFlow<Boolean> get() = _isFinishButtonVisible
 
+    private val _gatheredTaxes = MutableStateFlow(0)
+    val gatheredTaxes: StateFlow<Int> get() = _gatheredTaxes
+
     private val _showPopup = MutableStateFlow(false)
     val showPopup: StateFlow<Boolean> get() = _showPopup
 
@@ -67,6 +70,14 @@ object Game {
 
     fun dismissPaymentPopup() {
         _showPaymentPopup.value = false
+    }
+
+    fun resetGatheredTaxes(){
+        _gatheredTaxes.value = 0
+    }
+
+    fun addToGatheredTaxes(amount: Int){
+        _gatheredTaxes.value += amount
     }
 
     fun showPopupForField(fieldIndex: Int) {

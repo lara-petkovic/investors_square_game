@@ -3,8 +3,8 @@ package com.example.investorssquare.game.domain.model
 class RuleBook(
     var playAgainIfRolledDouble: Boolean = true,
     var auctionsEnabled: Boolean = true,
-    var gatheringTaxesEnabled: Boolean = false,
-    var collectTaxesOnFreeParkingEnabled: Boolean = false,
+    var gatheringTaxesEnabled: Boolean = true,
+    var collectTaxesOnFreeParkingEnabled: Boolean = true,
     var playAgainOnFreeParkingEnabled: Boolean = false,
     var rollADoubleToEscapeJailEnabled: Boolean = true,
     var payToEscapeJailEnabled: Boolean = true,

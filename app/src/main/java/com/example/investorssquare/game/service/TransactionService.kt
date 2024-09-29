@@ -37,10 +37,20 @@ object TransactionService {
             }
         }
     }
+    fun collectGatheredTaxes(){
+        if(Game.gatheredTaxes.value>0){
+            val player = Game.getActivePlayer()!!
+            player.receive(Game.gatheredTaxes.value)
+            Game.resetGatheredTaxes()
+        }
+    }
     fun payTax(){
         val player = Game.getActivePlayer()!!
         val field : Tax = Game.board.value?.fields?.get(player.position.value)!! as Tax
-        player.pay(field.tax)
+        val tax = if(Game.ruleBook.payingTaxesViaPercentagesEnabled) minOf(field.tax, player.money.value * field.taxPercentage / 100) else field.tax
+        player.pay(tax)
+        if(Game.ruleBook.gatheringTaxesEnabled)
+            Game.addToGatheredTaxes(tax)
     }
     private fun calculatePrice(estate: EstateViewModel): Int{
         if(estate.isProperty){

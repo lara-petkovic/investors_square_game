@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 
 object PlayerMovementService {
     private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+
     fun moveActivePlayer() {
         Game.getActivePlayer()?.let { player ->
             if(player.doublesRolledCounter==Game.ruleBook.doublesRolledLimit){
@@ -41,6 +42,7 @@ object PlayerMovementService {
             moveStepByStepForward(fieldIndex - player.position.value, player)
         }
     }
+
     fun goToJail(){
         val player = Game.getActivePlayer()!!
         val jailPosition = Game.board.value?.fields?.find { field-> field.type==FieldType.JAIL }?.index!!

@@ -16,4 +16,10 @@ object MoveService {
         val nextPlayersIndex = (activePlayer.index.value + 1) % players.size
         players[nextPlayersIndex].startMove()
     }
+    fun handleMoveTimerElapsed(){
+        if(Game.isFinishButtonVisible.value)
+            handleDiceToTheNextPlayer()
+        else
+            DiceService.rollDice()
+    }
 }

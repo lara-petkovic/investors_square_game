@@ -2,16 +2,20 @@ package com.example.investorssquare.game.service
 
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
+import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.service.CommunityCardService.executeCardAction
 import com.example.investorssquare.game.service.CommunityCardService.openCardPopup
 import com.example.investorssquare.game.service.DiceService.disableDice
+import com.example.investorssquare.game.service.DiceService.enableDice
 import com.example.investorssquare.game.service.DiceService.handleDiceThrown
 import com.example.investorssquare.game.service.EstateService.handleCardInformationClick
 import com.example.investorssquare.game.service.EstateService.handleEstateBought
 import com.example.investorssquare.game.service.EstateService.showPopupForEstate
 import com.example.investorssquare.game.service.MoveService.handleDiceToTheNextPlayer
+import com.example.investorssquare.game.service.MoveService.handleMoveTimerElapsed
 import com.example.investorssquare.game.service.PlayerMovementService.goToJail
 import com.example.investorssquare.game.service.PlayerMovementService.moveActivePlayer
+import com.example.investorssquare.game.service.TransactionService.collectGatheredTaxes
 import com.example.investorssquare.game.service.TransactionService.payPriceForEstate
 import com.example.investorssquare.game.service.TransactionService.collectSalary
 import com.example.investorssquare.game.service.TransactionService.payRent
@@ -40,7 +44,7 @@ object EventService {
                         disableDice()
                         goToJail()
                     }
-                    is Event.ON_MOVE_TIMER_ELAPSED -> {}
+                    is Event.ON_MOVE_TIMER_ELAPSED -> handleMoveTimerElapsed()
                     is Event.ON_PLAYER_LANDED_ON_FREE_ESTATE -> showPopupForEstate()
                     is Event.ON_FIELD_CLICKED -> handleCardInformationClick(event.fieldIndex)
                     is Event.ON_ESTATE_BOUGHT -> {
@@ -51,6 +55,12 @@ object EventService {
                     is Event.ON_PLAYER_LANDED_ON_BOUGHT_ESTATE -> payRent()
                     is Event.ON_PLAYER_CROSSED_START -> collectSalary()
                     is Event.ON_PLAYER_LANDED_ON_TAX -> payTax()
+                    is Event.ON_PLAYER_LANDED_ON_FREE_PARKING -> {
+                        if(Game.ruleBook.collectTaxesOnFreeParkingEnabled)
+                            collectGatheredTaxes()
+                        else if(Game.ruleBook.playAgainOnFreeParkingEnabled)
+                            enableDice()
+                    }
                     else -> { }
                 }
             }

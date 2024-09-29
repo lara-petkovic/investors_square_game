@@ -30,4 +30,8 @@ object DiceService {
         diceViewModel.disableDiceButton()
         Game.showFinishButton()
     }
+    fun enableDice(){
+        diceViewModel.enableDiceButton()
+        Game.hideFinishButton()
+    }
 }
