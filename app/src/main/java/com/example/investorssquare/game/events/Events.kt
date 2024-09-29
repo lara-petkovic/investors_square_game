@@ -19,6 +19,6 @@ object EventBus {
 
 sealed class Event {
     data class DiceThrown(val firstNumber: Int, val secondNumber: Int) : Event()
-    data class PlayerCrossedStart() : Event()
+    object PlayerCrossedStart : Event()
     data class OnFieldClicked(val fieldIndex: Int): Event()
 }
