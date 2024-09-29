@@ -43,7 +43,7 @@ fun Navigation(board: Board) {
                     board.playerColors[4],
                     board.playerColors[5]
                 ),
-                board.ruleBook.startingCapital
+                Game.ruleBook.startingCapital
             )
             Game.setBoard(board)
             EventBus

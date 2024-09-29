@@ -4,6 +4,8 @@ import androidx.compose.ui.graphics.Color
 import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.game.domain.model.Field
+import com.example.investorssquare.game.domain.model.Property
+import com.example.investorssquare.game.domain.model.RuleBook
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,6 +21,8 @@ import kotlinx.coroutines.launch
 
 object Game {
     private val gameScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
+    var ruleBook: RuleBook = RuleBook()
 
     private val _board = MutableStateFlow<Board?>(null)
     val board: StateFlow<Board?> get() = _board
@@ -68,6 +72,14 @@ object Game {
     fun showPopupForField(fieldIndex: Int) {
         _currentField.value = _board.value?.fields?.get(fieldIndex)
         _showPopup.value = true
+    }
+
+    private fun getAllPropertiesBySet(set: Color): List<EstateViewModel>{
+        return Game.estates.value.filter{e -> e.isProperty && (e.estate as Property).setColor == set }
+    }
+
+    fun doesPlayerOwnASet(ownerIndex: Int, set: Color): Boolean{
+        return getAllPropertiesBySet(set).all{e -> e.ownerIndex.value == ownerIndex}
     }
 
     fun setPlayers(playerNames: List<String>, playerColors: List<Color>, money: Int) {

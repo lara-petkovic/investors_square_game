@@ -11,7 +11,6 @@ class Board(
     val playerColors: List<Color>,
     val chance: Community,
     val communityChest: Community,
-    var ruleBook: RuleBook = RuleBook()
 ){
     fun shuffleCommunityCards(){
         chance.shuffleCards()

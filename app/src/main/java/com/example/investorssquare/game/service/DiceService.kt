@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 object DiceService {
     fun handleDiceThrown(firstNumber: Int, secondNumber: Int) {
-        if(firstNumber!=secondNumber || Game.board.value?.ruleBook?.playAgainIfRolledDouble==false){
+        if(firstNumber!=secondNumber || !Game.ruleBook.playAgainIfRolledDouble){
             disableDice()
         }
     }

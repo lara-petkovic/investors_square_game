@@ -1,5 +1,6 @@
 package com.example.investorssquare.game.service
 
+import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.domain.model.Tax
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 object TransactionService {
     fun collectSalary() {
         val player = Game.getActivePlayer()!!
-        player.receive(Game.board.value?.ruleBook?.salary!!)
+        player.receive(Game.ruleBook.salary)
     }
     fun payPriceForEstate(index: Int) : Boolean{
         val player = Game.getActivePlayer()!!
@@ -30,10 +31,7 @@ object TransactionService {
         val receiver = Game.getOwnerOfEstate(estate.estate.index)!!
         if(payer!=receiver){
             val moneyToTransfer = calculatePrice(estate)
-            payer.pay(moneyToTransfer)
-            receiver.receive(moneyToTransfer)
             Game.showPaymentPopup(payer, receiver, moneyToTransfer) {
-                // Trigger the payment AFTER the popup is dismissed
                 payer.pay(moneyToTransfer)
                 receiver.receive(moneyToTransfer)
             }
@@ -46,6 +44,12 @@ object TransactionService {
     }
     private fun calculatePrice(estate: EstateViewModel): Int{
         if(estate.isProperty){
+            if(Game.ruleBook.doubleRentOnCollectedSetsEnabled
+                && estate.numberOfBuildings.value==0
+                && Game.doesPlayerOwnASet(estate.ownerIndex.value,(estate.estate as Property).setColor)
+                ){
+                return estate.estate.rent[0] * 2
+            }
             return estate.estate.rent[estate.numberOfBuildings.value]
         }
         if(estate.isUtility){
