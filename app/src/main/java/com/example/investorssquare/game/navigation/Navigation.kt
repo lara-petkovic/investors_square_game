@@ -14,6 +14,7 @@ import com.example.investorssquare.game.presentation.board_screen.viewModels.Gam
 import com.example.investorssquare.game.service.CommunityCardService
 import com.example.investorssquare.game.service.DiceService
 import com.example.investorssquare.game.service.EstateService
+import com.example.investorssquare.game.service.EventService
 import com.example.investorssquare.game.service.MoveService
 import com.example.investorssquare.game.service.PlayerMovementService
 import com.example.investorssquare.game.service.TransactionService
@@ -46,12 +47,7 @@ fun Navigation(board: Board) {
             )
             Game.setBoard(board)
             EventBus
-            PlayerMovementService
-            DiceService
-            EstateService
-            TransactionService
-            MoveService
-            CommunityCardService
+            EventService
             Box {
                 BoardScreen()
             }

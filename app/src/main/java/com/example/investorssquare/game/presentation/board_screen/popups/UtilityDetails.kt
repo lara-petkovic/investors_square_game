@@ -66,9 +66,10 @@ fun UtilityDetails(
                 Spacer(modifier = Modifier.width(16.dp))
                 BuyButton(popupWidth, popupHeight) {
                     coroutineScope.launch {
-                        EventBus.postEvent(Event.ON_BUYING_ESTATE(field.index))
+                        EventBus.postEvent(Event.ON_ESTATE_BOUGHT(field.index))
                     }
                 }
+
             }
         }
     }

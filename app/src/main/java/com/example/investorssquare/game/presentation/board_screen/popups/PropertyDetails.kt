@@ -121,7 +121,8 @@ fun PropertyDetails(
 
                 BuyButton(popupWidth, popupHeight) {
                     coroutineScope.launch {
-                        EventBus.postEvent(Event.ON_BUYING_ESTATE(field.index))
+                        EventBus.postEvent(Event.ON_ESTATE_BOUGHT(field.index))
+
                     }
                 }
             }

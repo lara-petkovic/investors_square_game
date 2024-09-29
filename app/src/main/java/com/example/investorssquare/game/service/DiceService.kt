@@ -10,27 +10,12 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 object DiceService {
-    private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-    init {
-        observeEvents()
-    }
-    private fun observeEvents() {
-        serviceScope.launch {
-            EventBus.events.collect { event ->
-                when (event) {
-                    is Event.ON_DICE_THROWN -> handleDiceThrown(event.firstNumber, event.secondNumber)
-                    is Event.ON_GO_TO_JAIL -> disableDice()
-                    else -> { }
-                }
-            }
-        }
-    }
-    private fun handleDiceThrown(firstNumber: Int, secondNumber: Int) {
+    fun handleDiceThrown(firstNumber: Int, secondNumber: Int) {
         if(firstNumber!=secondNumber || Game.board.value?.ruleBook?.playAgainIfRolledDouble==false){
             disableDice()
         }
     }
-    private fun disableDice(){
+    fun disableDice(){
         diceViewModel.disableDiceButton()
         Game.showFinishButton()
     }
