@@ -7,7 +7,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -16,11 +15,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,11 +49,12 @@ import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
+import com.example.investorssquare.game.presentation.board_screen.components.BuyButton
+import com.example.investorssquare.game.presentation.board_screen.components.CoinIcon
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
-import com.example.investorssquare.util.Constants.BUY
 import kotlinx.coroutines.launch
 
-val row_height = 20.dp
+private val row_height = 20.dp
 
 @SuppressLint("StateFlowValueCalledInComposition", "DiscouragedApi")
 @Composable
@@ -77,38 +76,53 @@ fun PropertyDetails(
         properties = PopupProperties(focusable = true),
         offset = offset
     ) {
-        Box(
-            modifier = Modifier
-                .size(popupWidth, popupHeight)
-                .background(Color.White, shape = RoundedCornerShape(8.dp))
-                .clip(RoundedCornerShape(8.dp))
-                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
-            if (property.imageUrl.isNotEmpty()) {
-                Image(
-                    painter = painterResource(context.resources.getIdentifier(property.imageUrl, "drawable", context.packageName)),
-                    contentDescription = null,
+            Box(
+                modifier = Modifier
+                    .size(popupWidth, popupHeight)
+                    .background(Color.White, shape = RoundedCornerShape(8.dp))
+                    .clip(RoundedCornerShape(8.dp))
+                    .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp))
+            ) {
+                if (property.imageUrl.isNotEmpty()) {
+                    Image(
+                        painter = painterResource(
+                            context.resources.getIdentifier(
+                                property.imageUrl,
+                                "drawable",
+                                context.packageName
+                            )
+                        ),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(8.dp))
+                            .graphicsLayer(alpha = 0.2f),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
+                Column(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(8.dp))
-                        .graphicsLayer(alpha = 0.2f),
-                    contentScale = ContentScale.Crop
-                )
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    PropertyHeader(property)
+                    PropertyDetailsContent(property, scrollState)
+                }
             }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                PropertyHeader(property)
-                PropertyDetailsContent(property, scrollState, popupHeight)
-                if (buyButtonVisibility) {
-                    BuyButton(popupWidth, popupHeight) {
-                        coroutineScope.launch {
-                            EventBus.postEvent(Event.BuyingEstate(field.index))
-                        }
+            if (buyButtonVisibility) {
+                Spacer(modifier = Modifier.width(16.dp))
+
+                BuyButton(popupWidth, popupHeight) {
+                    coroutineScope.launch {
+                        EventBus.postEvent(Event.BuyingEstate(field.index))
                     }
                 }
             }
@@ -157,14 +171,12 @@ private fun PropertyRentRow(rent: Int) {
 private fun PropertyDetailsContent(
     property: Property,
     scrollState: androidx.compose.foundation.ScrollState,
-    popupHeight: Dp
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height((popupHeight.value * 0.72).dp)
             .verticalScroll(scrollState)
-            .padding(4.dp)
+            .padding(5.dp)
             .border(1.dp, Color.Black),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -283,14 +295,7 @@ private fun PropertyCostRow(label: String, cost: Int) {
     }
 }
 
-@Composable
-private fun CoinIcon(size: Dp) {
-    Image(
-        painter = painterResource(R.drawable.coin),
-        contentDescription = null,
-        modifier = Modifier.size(size)
-    )
-}
+
 
 @Composable
 private fun DotSeparator(price: Int) {
@@ -321,20 +326,4 @@ private fun DotSeparator(price: Int) {
         )
         CoinIcon(size = 16.dp)
     }
-}
-
-@Composable
-private fun BuyButton(popupWidth: Dp, popupHeight: Dp, onClick: () -> Unit) {
-    Spacer(modifier = Modifier.height(2.dp))
-    Button(
-        onClick = onClick,
-        modifier = Modifier
-            .size((popupWidth.value * 0.5).dp, (popupHeight.value * 0.07).dp)
-            .padding(0.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
-        contentPadding = PaddingValues(0.dp)
-    ) {
-        Text(BUY, color = Color.White, style = MaterialTheme.typography.labelSmall)
-    }
-    Spacer(modifier = Modifier.height(3.dp))
 }

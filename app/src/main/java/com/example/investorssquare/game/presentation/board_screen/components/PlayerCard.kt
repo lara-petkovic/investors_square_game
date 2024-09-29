@@ -143,11 +143,7 @@ private fun MoneySection(
                 color = Color.Black
             )
 
-            Image(
-                painter = painterResource(R.drawable.coin),
-                contentDescription = "Coin Icon",
-                modifier = Modifier.size((cardWidth * 0.13f).dp)
-            )
+            CoinIcon(size = (cardWidth * 0.13f).dp)
         }
 
         if (showPaymentGif && gifPainter != null) {
