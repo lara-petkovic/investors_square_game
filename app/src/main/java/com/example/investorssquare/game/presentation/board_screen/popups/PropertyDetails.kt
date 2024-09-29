@@ -176,7 +176,7 @@ private fun PropertyDetailsContent(
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(scrollState)
-            .padding(5.dp)
+            .padding(horizontal = 6.dp, vertical = 4.dp)
             .border(1.dp, Color.Black),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
