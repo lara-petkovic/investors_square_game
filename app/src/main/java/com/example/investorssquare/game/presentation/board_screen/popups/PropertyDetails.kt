@@ -1,7 +1,6 @@
 package com.example.investorssquare.game.presentation.board_screen.popups
 
 import android.annotation.SuppressLint
-import android.provider.Settings.Global
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,9 +53,9 @@ import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.util.Constants.BUY
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+val row_height = 20.dp
 
 @SuppressLint("StateFlowValueCalledInComposition", "DiscouragedApi")
 @Composable
@@ -70,6 +70,7 @@ fun PropertyDetails(
     val property = field as? Property ?: return
     val scrollState = rememberScrollState()
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     Popup(
         onDismissRequest = { onDismissRequest() },
@@ -105,7 +106,9 @@ fun PropertyDetails(
                 PropertyDetailsContent(property, scrollState, popupHeight)
                 if (buyButtonVisibility) {
                     BuyButton(popupWidth, popupHeight) {
-                        GlobalScope.launch { EventBus.postEvent(Event.BuyingEstate(field.index)) }
+                        coroutineScope.launch {
+                            EventBus.postEvent(Event.BuyingEstate(field.index))
+                        }
                     }
                 }
             }
@@ -174,6 +177,7 @@ private fun PropertyDetailsContent(
     }
 }
 
+@SuppressLint("DiscouragedApi")
 @Composable
 private fun RentWithHousesRow(index: Int, rent: Int) {
     val context = LocalContext.current
@@ -181,7 +185,7 @@ private fun RentWithHousesRow(index: Int, rent: Int) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp)
-            .height(30.dp), // Fixed height for the row
+            .height(row_height),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
@@ -228,7 +232,7 @@ private fun RentWithHotelRow(rent: Int) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp)
-            .height(30.dp),
+            .height(row_height),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Image(
