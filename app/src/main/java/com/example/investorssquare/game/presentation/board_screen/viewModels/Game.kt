@@ -131,15 +131,6 @@ object Game {
         }
     }
 
-    //ovo staviti u service
-    private fun switchToNextPlayer() {
-        val currentIndex = _players.value.indexOfFirst { it.isActive.value }
-        if (currentIndex != -1) {
-            _players.value[currentIndex].finishMove()
-            val nextIndex = (currentIndex + 1) % _players.value.size
-            _players.value[nextIndex].startMove()
-        }
-    }
     fun getActivePlayer(): PlayerViewModel? {
         return _players.value.firstOrNull { it.isActive.value }
     }

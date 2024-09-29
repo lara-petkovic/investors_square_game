@@ -30,6 +30,8 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     private val _estates = MutableStateFlow<List<EstateViewModel>>(emptyList())
     val estates: StateFlow<List<EstateViewModel>> get() = _estates
 
+    var doublesRolledCounter: Int = 0
+
     fun buyNewEstate(estate: EstateViewModel) {
         estate.setOwnerIndex(index.value)
         _estates.value += estate
@@ -56,6 +58,7 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     }
 
     fun finishMove() {
+        doublesRolledCounter = 0
         _isActive.value = false
     }
 

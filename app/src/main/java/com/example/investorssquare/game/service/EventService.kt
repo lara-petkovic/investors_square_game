@@ -40,6 +40,7 @@ object EventService {
                         disableDice()
                         goToJail()
                     }
+                    is Event.ON_MOVE_TIMER_ELAPSED -> {}
                     is Event.ON_PLAYER_LANDED_ON_FREE_ESTATE -> showPopupForEstate()
                     is Event.ON_FIELD_CLICKED -> handleCardInformationClick(event.fieldIndex)
                     is Event.ON_ESTATE_BOUGHT -> {

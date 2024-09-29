@@ -20,6 +20,7 @@ import com.example.investorssquare.R
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.service.DiceService
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -70,11 +71,10 @@ fun DiceButton() {
                 currentDice2 = diceNumbers.random()
                 delay(20)
             }
-            Game.diceViewModel.rollDice()
+            DiceService.rollDice()
             currentDice1 = Game.diceViewModel.diceNumber1.value
             currentDice2 = Game.diceViewModel.diceNumber2.value
             isRolling = false
-            GlobalScope.launch { EventBus.postEvent(Event.ON_DICE_THROWN(currentDice1, currentDice2)) }
         }
     }
 }

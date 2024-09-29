@@ -5,6 +5,7 @@ import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -15,31 +16,29 @@ object PlayerMovementService {
     private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     fun moveActivePlayer() {
         Game.getActivePlayer()?.let { player ->
-            val diceSum = Game.diceViewModel.getDiceSum()
-            serviceScope.launch {
-                for (i in 1..diceSum) {
-                    player.moveBySteps(1)
-                    if (player.position.value == 0) {
-                        serviceScope.launch { EventBus.postEvent(Event.ON_PLAYER_CROSSED_START) }
-                    }
-                    delay(200)
-                }
-                handlePlayerLanding()
+            if(player.doublesRolledCounter==Game.ruleBook.doublesRolledLimit){
+                serviceScope.launch { EventBus.postEvent(Event.ON_GO_TO_JAIL) }
+                return
             }
+            val diceSum = Game.diceViewModel.getDiceSum()
+            moveStepByStepForward(diceSum, player)
         }
     }
+
+    private fun moveStepByStepForward(steps: Int, player: PlayerViewModel) = serviceScope.launch {
+        for (i in 1..steps) {
+            player.moveBySteps(1)
+            if (player.position.value == 0) {
+                serviceScope.launch { EventBus.postEvent(Event.ON_PLAYER_CROSSED_START) }
+            }
+            delay(200)
+        }
+        handlePlayerLanding()
+    }
+
     fun moveToField(fieldIndex: Int){
         Game.getActivePlayer()?.let { player ->
-            serviceScope.launch {
-                while (player.position.value!=fieldIndex) {
-                    player.moveBySteps(1)
-                    if (player.position.value == 0) {
-                        serviceScope.launch { EventBus.postEvent(Event.ON_PLAYER_CROSSED_START) }
-                    }
-                    delay(200)
-                }
-                handlePlayerLanding()
-            }
+            moveStepByStepForward(fieldIndex - player.position.value, player)
         }
     }
     fun goToJail(){
