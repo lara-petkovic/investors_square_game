@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-object Game{
+object Game {
     private val gameScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     private val _board = MutableStateFlow<Board?>(null)
@@ -56,16 +56,20 @@ object Game{
         started = SharingStarted.Eagerly,
         initialValue = emptyList()
     )
+
     fun dismissPopup() {
         _showPopup.value = false
     }
+
     fun dismissPaymentPopup() {
         _showPaymentPopup.value = false
     }
+
     fun showPopupForField(fieldIndex: Int) {
         _currentField.value = _board.value?.fields?.get(fieldIndex)
         _showPopup.value = true
     }
+
     fun setPlayers(playerNames: List<String>, playerColors: List<Color>, money: Int) {
         _players.value = playerNames.mapIndexed { index, name ->
             PlayerViewModel().apply {
@@ -77,9 +81,11 @@ object Game{
         }
         _players.value.firstOrNull()?.startMove()
     }
+
     fun showFinishButton(){
         _isFinishButtonVisible.value = true
     }
+
     fun hideFinishButton(){
         _isFinishButtonVisible.value = false
     }
@@ -87,19 +93,29 @@ object Game{
         _board.value = board
         _estates.value = board.fields.filterIsInstance<Estate>().map { EstateViewModel(it) }
     }
+
     fun getOwnerOfEstate(fieldIndex: Int): PlayerViewModel? {
         val ownerIndex = getEstateByFieldIndex(fieldIndex)?.ownerIndex?.value
         return players.value.getOrNull(ownerIndex ?: -1).takeIf { ownerIndex != -1 }
     }
+
     fun getEstateByFieldIndex(index: Int): EstateViewModel? {
         return _estates.value.firstOrNull { it.estate.value.index == index }
     }
-    fun showPaymentPopup(payer: PlayerViewModel, receiver: PlayerViewModel, amount: Int) {
+
+    fun showPaymentPopup(
+        payer: PlayerViewModel,
+        receiver: PlayerViewModel,
+        amount: Int,
+        onDismissAction: () -> Unit
+    ) {
         _paymentDetails.value = PaymentDetails(payer, receiver, amount)
         _showPaymentPopup.value = true
+
         gameScope.launch {
-            delay(2500)
+            delay(1000)
             dismissPaymentPopup()
+            onDismissAction() // Execute the payment logic after popup is dismissed
         }
     }
 

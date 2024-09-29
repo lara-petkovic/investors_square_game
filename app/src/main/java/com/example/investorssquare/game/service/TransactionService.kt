@@ -27,11 +27,11 @@ object TransactionService {
             }
         }
     }
-    private fun collectSalary(){
+    private fun collectSalary() {
         val player = Game.getActivePlayer()!!
         player.receive(Game.board.value?.ruleBook?.salary!!)
     }
-    private fun buyEstate(index: Int){
+    private fun buyEstate(index: Int) {
         val player = Game.getActivePlayer()!!
         val estate = Game.getEstateByFieldIndex(index)!!
         if(player.money.value>=estate.estate.value.price){
@@ -43,11 +43,15 @@ object TransactionService {
         val payer = Game.getActivePlayer()!!
         val estate = Game.getEstateByFieldIndex(payer.position.value)!!
         val receiver = Game.getOwnerOfEstate(estate.estate.value.index)!!
-        if(payer!=receiver){
+        if (payer != receiver) {
             val moneyToTransfer = estate.estate.value.rent[0]
-            payer.pay(moneyToTransfer)
-            receiver.receive(moneyToTransfer)
-            Game.showPaymentPopup(payer, receiver, moneyToTransfer)
+
+            // Show the payment popup first
+            Game.showPaymentPopup(payer, receiver, moneyToTransfer) {
+                // Trigger the payment AFTER the popup is dismissed
+                payer.pay(moneyToTransfer)
+                receiver.receive(moneyToTransfer)
+            }
         }
     }
     private fun payTax(){
