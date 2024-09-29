@@ -1,10 +1,15 @@
 package com.example.investorssquare.game.presentation.board_screen.viewModels
 
+import android.os.CountDownTimer
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import com.example.investorssquare.game.service.MoveService
 import com.example.investorssquare.util.Constants.NUMBER_OF_FIELDS
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class PlayerViewModel @Inject constructor() : ViewModel() {
@@ -29,6 +34,13 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
 
     private val _estates = MutableStateFlow<List<EstateViewModel>>(emptyList())
     val estates: StateFlow<List<EstateViewModel>> get() = _estates
+
+    val timeSeconds = 20 // IZBACITI
+
+    private val _remainingTime = MutableStateFlow(timeSeconds)
+    val remainingTime: StateFlow<Int> get() = _remainingTime
+
+    private var turnTimer: CountDownTimer? = null
 
     fun buyNewEstate(estate: EstateViewModel) {
         estate.setOwnerIndex(index.value)
@@ -57,10 +69,12 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
 
     fun finishMove() {
         _isActive.value = false
+        stopTurnTimer()
     }
 
     fun startMove() {
         _isActive.value = true
+        startTurnTimerOnMainThread()
     }
 
     fun setMoney(money: Int) {
@@ -81,5 +95,32 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
 
     fun setName(name: String) {
         _name.value = name
+    }
+
+    private fun startTurnTimerOnMainThread() {
+        CoroutineScope(Dispatchers.Main).launch {
+            startTurnTimer()
+        }
+    }
+
+    private fun startTurnTimer() {
+        turnTimer = object : CountDownTimer((timeSeconds * 1000).toLong(), 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                _remainingTime.value = (millisUntilFinished / 1000).toInt()
+            }
+
+            override fun onFinish() {
+
+                finishMove()
+                MoveService.handleDiceToTheNextPlayer()
+                _remainingTime.value = 0
+            }
+        }.start()
+    }
+
+
+    private fun stopTurnTimer() {
+        turnTimer?.cancel()
+        _remainingTime.value = timeSeconds
     }
 }

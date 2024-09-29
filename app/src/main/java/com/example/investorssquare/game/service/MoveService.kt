@@ -6,9 +6,14 @@ object MoveService {
     fun handleDiceToTheNextPlayer() {
         Game.diceViewModel.enableDiceButton()
         Game.hideFinishButton()
-        val activePlayer = Game.getActivePlayer()!!
+
+        val activePlayer = Game.getActivePlayer() ?: return
         activePlayer.finishMove()
-        val nextPlayersIndex = (activePlayer.index.value+1) % Game.players.value.size
-        Game.players.value[nextPlayersIndex].startMove()
+
+        val players = Game.players.value
+        if (players.isEmpty()) return
+
+        val nextPlayersIndex = (activePlayer.index.value + 1) % players.size
+        players[nextPlayersIndex].startMove()
     }
 }

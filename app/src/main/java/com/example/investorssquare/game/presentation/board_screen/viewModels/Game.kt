@@ -74,11 +74,11 @@ object Game {
         _showPopup.value = true
     }
 
-    private fun getAllPropertiesBySet(set: Color): List<EstateViewModel>{
-        return Game.estates.value.filter{e -> e.isProperty && (e.estate as Property).setColor == set }
+    private fun getAllPropertiesBySet(set: Color): List<EstateViewModel> {
+        return estates.value.filter{e -> e.isProperty && (e.estate as Property).setColor == set }
     }
 
-    fun doesPlayerOwnASet(ownerIndex: Int, set: Color): Boolean{
+    fun doesPlayerOwnASet(ownerIndex: Int, set: Color): Boolean {
         return getAllPropertiesBySet(set).all{e -> e.ownerIndex.value == ownerIndex}
     }
 
@@ -94,11 +94,11 @@ object Game {
         _players.value.firstOrNull()?.startMove()
     }
 
-    fun showFinishButton(){
+    fun showFinishButton() {
         _isFinishButtonVisible.value = true
     }
 
-    fun hideFinishButton(){
+    fun hideFinishButton() {
         _isFinishButtonVisible.value = false
     }
     fun setBoard(board: Board) {
@@ -127,19 +127,10 @@ object Game {
         gameScope.launch {
             delay(1000)
             dismissPaymentPopup()
-            onDismissAction() // Execute the payment logic after popup is dismissed
+            onDismissAction()
         }
     }
 
-    //ovo staviti u service
-    private fun switchToNextPlayer() {
-        val currentIndex = _players.value.indexOfFirst { it.isActive.value }
-        if (currentIndex != -1) {
-            _players.value[currentIndex].finishMove()
-            val nextIndex = (currentIndex + 1) % _players.value.size
-            _players.value[nextIndex].startMove()
-        }
-    }
     fun getActivePlayer(): PlayerViewModel? {
         return _players.value.firstOrNull { it.isActive.value }
     }
