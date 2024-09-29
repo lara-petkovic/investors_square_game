@@ -30,15 +30,9 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     private val _estates = MutableStateFlow<List<EstateViewModel>>(emptyList())
     val estates: StateFlow<List<EstateViewModel>> get() = _estates
 
-    fun buyNewEstate(estate: EstateViewModel): Boolean {
-        return if (isActive.value && money.value >= estate.estate.value.price) {
-            pay(estate.estate.value.price)
-            estate.setOwnerIndex(index.value)
-            _estates.value += estate
-            true
-        } else {
-            false
-        }
+    fun buyNewEstate(estate: EstateViewModel) {
+        estate.setOwnerIndex(index.value)
+        _estates.value += estate
     }
 
     fun moveBySteps(steps: Int) {

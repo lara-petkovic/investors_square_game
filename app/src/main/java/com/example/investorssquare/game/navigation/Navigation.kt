@@ -8,8 +8,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.investorssquare.game.domain.model.Board
+import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.BoardScreen
-import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.service.DiceService
+import com.example.investorssquare.game.service.EstateService
+import com.example.investorssquare.game.service.PlayerMovementService
+import com.example.investorssquare.game.service.TransactionService
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -18,10 +23,7 @@ fun Navigation(board: Board) {
 
     NavHost(navController = navController, startDestination = Screen.BoardScreen.route) {
         composable(route = Screen.BoardScreen.route) {
-
-            val boardViewModel: BoardViewModel = hiltViewModel()
-
-            boardViewModel.setPlayers(
+            Game.setPlayers(
                 listOf(
                     "Lara",
                     "Dusan",
@@ -40,9 +42,14 @@ fun Navigation(board: Board) {
                 ),
                 board.ruleBook.startingCapital
             )
-
+            Game.setBoard(board)
+            EventBus
+            PlayerMovementService
+            DiceService
+            EstateService
+            TransactionService
             Box {
-                BoardScreen(boardViewModel = boardViewModel, board = board)
+                BoardScreen()
             }
         }
     }

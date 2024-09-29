@@ -23,9 +23,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.domain.model.Property
-import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardVMEvent
-import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.game.events.Event
+import com.example.investorssquare.game.events.EventBus
+import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.util.Constants.FIELD_CARD_STRAP_HEIGHT_PERCENTAGE
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun FieldCard(
@@ -33,11 +36,10 @@ fun FieldCard(
     fieldHeight: Dp,
     field: Field,
     modifier: Modifier = Modifier,
-    boardViewModel: BoardViewModel = hiltViewModel()
 ) {
     Box(
         modifier = modifier
-            .clickable { boardViewModel.onEvent(BoardVMEvent.OnFieldClicked(field.index)) }
+            .clickable { GlobalScope.launch { EventBus.postEvent(Event.OnFieldClicked(field.index)) } }
     ) {
         Card(
             modifier = Modifier.size(fieldWidth, fieldHeight),
@@ -53,8 +55,8 @@ fun FieldCard(
                 Box(modifier = Modifier
                     .fillMaxSize()
                     .alpha(
-                        if(boardViewModel.getEstateByFieldIndex(field.index) != null
-                            && boardViewModel.getEstateByFieldIndex(field.index)?.ownerIndex?.value != -1) 0.5f else 0.0f)
+                        if(Game.getEstateByFieldIndex(field.index) != null
+                            && Game.getEstateByFieldIndex(field.index)?.ownerIndex?.value != -1) 0.5f else 0.0f)
                     .background(color = Color(0xFFDAF7DB))
                 )
                 if (field.type == FieldType.PROPERTY) {
@@ -80,7 +82,6 @@ fun FieldCard(
                 PlayerDrawer(
                     canvasHeight = fieldHeight * (1 + FIELD_CARD_STRAP_HEIGHT_PERCENTAGE),
                     canvasWidth = fieldWidth,
-                    boardVM = boardViewModel,
                     fieldIndex = field.index
                 )
             }

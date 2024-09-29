@@ -11,14 +11,13 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 
 @Composable
 fun CornerFieldCard(
     fieldSize: Dp,
     modifier: Modifier = Modifier,
     index: Int,
-    playerVM: BoardViewModel = hiltViewModel()
 ) {
     Card(
         modifier = modifier
@@ -30,7 +29,6 @@ fun CornerFieldCard(
         PlayerDrawer(
             canvasHeight = fieldSize,
             canvasWidth = fieldSize,
-            boardVM = playerVM,
             fieldIndex = index
         )
     }

@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.example.investorssquare.R
-import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import com.example.investorssquare.util.Constants.NUMBER_OF_FIELDS
 
@@ -29,13 +29,12 @@ import com.example.investorssquare.util.Constants.NUMBER_OF_FIELDS
 fun PlayerDrawer(
     canvasWidth: Dp,
     canvasHeight: Dp,
-    boardVM: BoardViewModel,
     fieldIndex: Int,
     imageSize: Dp = 16.dp,
     spacing: Dp = (-5).dp
 ) {
-    val players = boardVM.players.collectAsState().value
-    val playerPositions = boardVM.playersPositions.collectAsState().value
+    val players = Game.players.collectAsState().value
+    val playerPositions = Game.playersPositions.collectAsState().value
 
     val indexesOfPlayersOnTheField = players.filterIndexed { playerIndex, _ ->
         playerIndex < playerPositions.size && playerPositions[playerIndex] == fieldIndex

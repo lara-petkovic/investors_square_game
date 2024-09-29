@@ -1,6 +1,7 @@
 package com.example.investorssquare.game.presentation.board_screen.popups
 
 import android.annotation.SuppressLint
+import android.provider.Settings.Global
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -48,9 +49,12 @@ import androidx.compose.ui.window.PopupProperties
 import com.example.investorssquare.R
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.Property
-import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardVMEvent
-import com.example.investorssquare.game.presentation.board_screen.viewModels.BoardViewModel
+import com.example.investorssquare.game.events.Event
+import com.example.investorssquare.game.events.EventBus
+import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.util.Constants.BUY
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 @SuppressLint("StateFlowValueCalledInComposition", "DiscouragedApi")
@@ -61,7 +65,6 @@ fun PropertyDetails(
     offset: IntOffset,
     popupWidth: Dp,
     popupHeight: Dp,
-    boardViewModel: BoardViewModel,
     buyButtonVisibility: Boolean
 ) {
     val property = field as? Property ?: return
@@ -99,10 +102,10 @@ fun PropertyDetails(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 PropertyHeader(property)
-                PropertyDetailsContent(property, scrollState, boardViewModel, popupHeight)
+                PropertyDetailsContent(property, scrollState, popupHeight)
                 if (buyButtonVisibility) {
                     BuyButton(popupWidth, popupHeight) {
-                        boardViewModel.onEvent(BoardVMEvent.BuyEstate(property.index))
+                        GlobalScope.launch { EventBus.postEvent(Event.BuyingEstate(field.index)) }
                     }
                 }
             }
@@ -151,7 +154,6 @@ private fun PropertyRentRow(rent: Int) {
 private fun PropertyDetailsContent(
     property: Property,
     scrollState: androidx.compose.foundation.ScrollState,
-    boardViewModel: BoardViewModel,
     popupHeight: Dp
 ) {
     Column(
@@ -165,15 +167,15 @@ private fun PropertyDetailsContent(
     ) {
         PropertyRentRow(property.rent[0])
         for (i in 1 until (property.rent.size - 1)) {
-            RentWithHousesRow(i, property.rent[i], boardViewModel)
+            RentWithHousesRow(i, property.rent[i])
         }
-        RentWithHotelRow(property.rent.last(), boardViewModel)
+        RentWithHotelRow(property.rent.last())
         PropertyCostRows(property)
     }
 }
 
 @Composable
-private fun RentWithHousesRow(index: Int, rent: Int, boardViewModel: BoardViewModel) {
+private fun RentWithHousesRow(index: Int, rent: Int) {
     val context = LocalContext.current
     Row(
         modifier = Modifier
@@ -195,7 +197,7 @@ private fun RentWithHousesRow(index: Int, rent: Int, boardViewModel: BoardViewMo
             Image(
                 painter = painterResource(
                     context.resources.getIdentifier(
-                        boardViewModel.board.value?.houseImageUrl, "drawable", context.packageName
+                        Game.board.value?.houseImageUrl, "drawable", context.packageName
                     )
                 ),
                 contentDescription = null,
@@ -220,7 +222,7 @@ private fun RentWithHousesRow(index: Int, rent: Int, boardViewModel: BoardViewMo
 
 @SuppressLint("DiscouragedApi")
 @Composable
-private fun RentWithHotelRow(rent: Int, boardViewModel: BoardViewModel) {
+private fun RentWithHotelRow(rent: Int) {
     val context = LocalContext.current
     Row(
         modifier = Modifier
@@ -232,7 +234,7 @@ private fun RentWithHotelRow(rent: Int, boardViewModel: BoardViewModel) {
         Image(
             painter = painterResource(
                 context.resources.getIdentifier(
-                    boardViewModel.board.value?.hotelImageUrl, "drawable", context.packageName
+                    Game.board.value?.hotelImageUrl, "drawable", context.packageName
                 )
             ),
             contentDescription = null,

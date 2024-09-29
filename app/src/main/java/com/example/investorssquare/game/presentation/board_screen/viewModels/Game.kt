@@ -1,17 +1,13 @@
 package com.example.investorssquare.game.presentation.board_screen.viewModels
 
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.game.domain.model.Field
-import com.example.investorssquare.game.domain.model.FieldType
-import com.example.investorssquare.game.events.Event
-import com.example.investorssquare.game.events.EventBus
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,14 +16,10 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class BoardViewModel @Inject constructor() : ViewModel() {
+object Game{
+    private val gameScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
-    init {
-        observeEvents(viewModelScope)
-    }
     private val _board = MutableStateFlow<Board?>(null)
     val board: StateFlow<Board?> get() = _board
 
@@ -60,56 +52,20 @@ class BoardViewModel @Inject constructor() : ViewModel() {
             positions.toList()
         }
     }.stateIn(
-        scope = viewModelScope,
+        scope = CoroutineScope(Dispatchers.Main + SupervisorJob()),
         started = SharingStarted.Eagerly,
         initialValue = emptyList()
     )
-
-    fun observeEvents(scope: CoroutineScope) {
-        scope.launch {
-            EventBus.events.collect { event ->
-                when (event) {
-                    is Event.DiceThrown -> { handleDiceThrown(event.firstNumber, event.secondNumber) }
-                    is Event.OnFieldClicked ->{ handleCardInformationClick(event.fieldIndex) }
-                    else -> {}
-                }
-            }
-        }
-    }
     fun dismissPopup() {
         _showPopup.value = false
-        //_currentField.value = null
     }
-
     fun dismissPaymentPopup() {
         _showPaymentPopup.value = false
-        //_paymentDetails.value = null
     }
-
-    fun onEvent(event: BoardVMEvent) {
-        when (event) {
-            is BoardVMEvent.OnFieldClicked -> handleCardInformationClick(event.fieldIndex)
-            is BoardVMEvent.BuyEstate -> handleEstateBuy(event.fieldIndex)
-        }
-    }
-
-    private fun handleCardInformationClick(fieldIndex: Int) {
-        val field = _board.value?.fields?.getOrNull(fieldIndex)
-
-        if (field != null && canUserOpen(field)) {
-            showPopupForField(fieldIndex)
-        }
-    }
-
-    private fun showPopupForField(fieldIndex: Int) {
+    fun showPopupForField(fieldIndex: Int) {
         _currentField.value = _board.value?.fields?.get(fieldIndex)
         _showPopup.value = true
     }
-
-    private fun canUserOpen(field: Field) =
-        field.type !in listOf(FieldType.CHANCE, FieldType.COMMUNITY_CHEST, FieldType.TAX)
-
-
     fun setPlayers(playerNames: List<String>, playerColors: List<Color>, money: Int) {
         _players.value = playerNames.mapIndexed { index, name ->
             PlayerViewModel().apply {
@@ -121,59 +77,14 @@ class BoardViewModel @Inject constructor() : ViewModel() {
         }
         _players.value.firstOrNull()?.startMove()
     }
-
-    private fun handleDiceThrown(firstNumber: Int, secondNumber: Int) {
-        if(firstNumber!=secondNumber || board.value?.ruleBook?.playAgainIfRolledDouble==false){
-            diceViewModel.disableDiceButton()
-            _isFinishButtonVisible.value = true
-        }
-        moveActivePlayer()
+    fun showFinishButton(){
+        _isFinishButtonVisible.value = true
+    }
+    fun hideFinishButton(){
+        _isFinishButtonVisible.value = false
     }
 
-    fun moveActivePlayer() {
-        getActivePlayer()?.let { player ->
-            val diceSum = diceViewModel.getDiceSum()
-            viewModelScope.launch {
-                for (i in 1..diceSum) {
-                    player.moveBySteps(1)
-                    if(player.position.value == 0){
-                        player.receive(board.value?.ruleBook?.salary!!)
-                    }
-                    delay(150)
-                }
-
-                val finalPosition = player.position.value
-                handleLandingPosition(player, finalPosition)
-            }
-        }
-    }
-
-    private fun handleLandingPosition(player: PlayerViewModel, position: Int) {
-        getEstateByFieldIndex(position)?.let { estate ->
-            val ownerIndex = estate.ownerIndex.value
-            if (ownerIndex != -1) {
-                val moneyToTransfer = estate.estate.value.rent[0]
-                player.pay(moneyToTransfer)
-                players.value.getOrNull(ownerIndex)?.let { receiver ->
-                    receiver.receive(moneyToTransfer)
-                    showPaymentPopup(player, receiver, moneyToTransfer)
-                }
-            } else {
-                showPopupForField(position)
-            }
-        } ?: showPopupForField(position)
-    }
-
-
-    private fun handleEstateBuy(estateFieldIndex: Int) {
-        val estate = getEstateByFieldIndex(estateFieldIndex)
-        estate?.let {
-            getActivePlayer()?.buyNewEstate(it)
-            dismissPopup()
-        }
-    }
-
-
+    //ovo izbaciti
     fun finishTurn() {
         diceViewModel.enableDiceButton()
         _isFinishButtonVisible.value = false
@@ -184,26 +95,23 @@ class BoardViewModel @Inject constructor() : ViewModel() {
         _board.value = board
         _estates.value = board.fields.filterIsInstance<Estate>().map { EstateViewModel(it) }
     }
-
     fun getOwnerOfEstate(fieldIndex: Int): PlayerViewModel? {
         val ownerIndex = getEstateByFieldIndex(fieldIndex)?.ownerIndex?.value
         return players.value.getOrNull(ownerIndex ?: -1).takeIf { ownerIndex != -1 }
     }
-
-
     fun getEstateByFieldIndex(index: Int): EstateViewModel? {
         return _estates.value.firstOrNull { it.estate.value.index == index }
     }
-
-    private fun showPaymentPopup(payer: PlayerViewModel, receiver: PlayerViewModel, amount: Int) {
+    fun showPaymentPopup(payer: PlayerViewModel, receiver: PlayerViewModel, amount: Int) {
         _paymentDetails.value = PaymentDetails(payer, receiver, amount)
         _showPaymentPopup.value = true
-        viewModelScope.launch {
-            delay(3000)
+        gameScope.launch {
+            delay(2500)
             dismissPaymentPopup()
         }
     }
 
+    //ovo staviti u service
     private fun switchToNextPlayer() {
         val currentIndex = _players.value.indexOfFirst { it.isActive.value }
         if (currentIndex != -1) {
@@ -212,7 +120,6 @@ class BoardViewModel @Inject constructor() : ViewModel() {
             _players.value[nextIndex].startMove()
         }
     }
-
     fun getActivePlayer(): PlayerViewModel? {
         return _players.value.firstOrNull { it.isActive.value }
     }
