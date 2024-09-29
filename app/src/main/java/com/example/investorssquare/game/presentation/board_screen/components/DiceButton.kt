@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import com.example.investorssquare.R
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
-import com.example.investorssquare.game.presentation.board_screen.viewModels.DiceViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -75,7 +74,7 @@ fun DiceButton() {
             currentDice1 = Game.diceViewModel.diceNumber1.value
             currentDice2 = Game.diceViewModel.diceNumber2.value
             isRolling = false
-            GlobalScope.launch { EventBus.postEvent(Event.DiceThrown(number1, number2)) }
+            GlobalScope.launch { EventBus.postEvent(Event.ON_DICE_THROWN(number1, number2)) }
         }
     }
 }

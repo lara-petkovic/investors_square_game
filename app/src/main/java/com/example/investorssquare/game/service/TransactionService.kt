@@ -1,5 +1,6 @@
 package com.example.investorssquare.game.service
 
+import com.example.investorssquare.game.domain.model.Tax
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
@@ -17,9 +18,10 @@ object TransactionService {
         serviceScope.launch {
             EventBus.events.collect { event ->
                 when (event) {
-                    is Event.PlayerLandedOnBoughtEstate -> payRent()
-                    is Event.BuyingEstate -> buyEstate(event.fieldIndex)
-                    is Event.PlayerCrossedStart -> collectSalary()
+                    is Event.ON_PLAYER_LANDED_ON_BOUGHT_ESTATE -> payRent()
+                    is Event.ON_BUYING_ESTATE -> buyEstate(event.fieldIndex)
+                    is Event.ON_PLAYER_CROSSED_START -> collectSalary()
+                    is Event.ON_PLAYER_LANDED_ON_TAX -> payTax()
                     else -> { }
                 }
             }
@@ -34,7 +36,7 @@ object TransactionService {
         val estate = Game.getEstateByFieldIndex(index)!!
         if(player.money.value>=estate.estate.value.price){
             player.pay(estate.estate.value.price)
-            serviceScope.launch {EventBus.postEvent(Event.EstateBought(index))}
+            serviceScope.launch {EventBus.postEvent(Event.ON_ESTATE_BOUGHT(index))}
         }
     }
     private fun payRent() {
@@ -48,5 +50,9 @@ object TransactionService {
             Game.showPaymentPopup(payer, receiver, moneyToTransfer)
         }
     }
-
+    private fun payTax(){
+        val player = Game.getActivePlayer()!!
+        val field : Tax = Game.board.value?.fields?.get(player.position.value)!! as Tax
+        player.pay(field.tax)
+    }
 }

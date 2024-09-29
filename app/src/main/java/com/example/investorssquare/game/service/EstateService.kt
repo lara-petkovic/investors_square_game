@@ -17,9 +17,9 @@ object EstateService {
         serviceScope.launch {
             EventBus.events.collect { event ->
                 when (event) {
-                    is Event.PlayerLandedOnFreeEstate -> showPopupForEstate()
-                    is Event.OnFieldClicked -> handleCardInformationClick(event.fieldIndex)
-                    is Event.EstateBought -> handleEstateBought(event.fieldIndex)
+                    is Event.ON_PLAYER_LANDED_ON_FREE_ESTATE -> showPopupForEstate()
+                    is Event.ON_FIELD_CLICKED -> handleCardInformationClick(event.fieldIndex)
+                    is Event.ON_ESTATE_BOUGHT -> handleEstateBought(event.fieldIndex)
                     else -> { }
                 }
             }

@@ -19,7 +19,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.domain.model.Property
@@ -39,7 +38,7 @@ fun FieldCard(
 ) {
     Box(
         modifier = modifier
-            .clickable { GlobalScope.launch { EventBus.postEvent(Event.OnFieldClicked(field.index)) } }
+            .clickable { GlobalScope.launch { EventBus.postEvent(Event.ON_FIELD_CLICKED(field.index)) } }
     ) {
         Card(
             modifier = Modifier.size(fieldWidth, fieldHeight),

@@ -34,10 +34,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
+import com.example.investorssquare.game.events.Event
+import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.popups.CommunityCardPopup
 import com.example.investorssquare.game.presentation.board_screen.popups.PropertyDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.StationDetails
@@ -48,6 +49,8 @@ import com.example.investorssquare.util.Constants.BLACK_OVERLAY
 import com.example.investorssquare.util.Constants.FIELDS_PER_ROW
 import com.example.investorssquare.util.Constants.NUMBER_OF_FIELDS
 import com.example.investorssquare.util.Constants.RELATIVE_FIELD_HEIGHT
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @SuppressLint("StateFlowValueCalledInComposition", "DiscouragedApi")
@@ -253,7 +256,7 @@ fun Board(
 
                         FieldType.CHANCE, FieldType.COMMUNITY_CHEST -> CommunityCardPopup(
                             isChance = field.type == FieldType.CHANCE,
-                            onDismissRequest = { Game.dismissPopup() },
+                            onDismissRequest = { GlobalScope.launch{EventBus.postEvent(Event.ON_COMMUNITY_CARD_CLOSED)} },
                             offset = IntOffset(
                                 (with(LocalDensity.current) { fieldHeight.toPx() } + (0.05f * 9 * with(LocalDensity.current) { fieldWidth.toPx() })).toInt(),
                                 (with(LocalDensity.current) { fieldHeight.toPx() } + 1.5 * with(LocalDensity.current) { fieldWidth.toPx() }).toInt()
@@ -261,12 +264,7 @@ fun Board(
                             popupWidth = (0.9 * 9 * fieldWidth.value).dp,
                             popupHeight = (6 * fieldWidth.value).dp,
                         )
-
-                        FieldType.JAIL -> {}
-                        FieldType.GO_TO_JAIL -> {}
-                        FieldType.PARKING -> {}
-                        FieldType.GO -> {}
-                        FieldType.TAX -> {}
+                        else -> {}
                     }
                 }
             }

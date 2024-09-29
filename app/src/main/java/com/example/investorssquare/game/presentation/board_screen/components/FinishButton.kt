@@ -8,8 +8,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.investorssquare.game.events.Event
+import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun FinishButton() {
@@ -18,7 +21,7 @@ fun FinishButton() {
     if (isFinishButtonVisible) {
         Button(
             onClick = {
-                Game.finishTurn()
+                GlobalScope.launch { EventBus.postEvent(Event.ON_MOVE_FINISHED) }
             },
             modifier = Modifier
                 .padding(top = 10.dp)

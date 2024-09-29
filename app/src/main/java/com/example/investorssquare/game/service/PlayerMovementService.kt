@@ -1,12 +1,12 @@
 package com.example.investorssquare.game.service
 
+import com.example.investorssquare.game.domain.model.Field
+import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game.players
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -20,8 +20,8 @@ object PlayerMovementService {
         serviceScope.launch {
             EventBus.events.collect { event ->
                 when (event) {
-                    is Event.DiceThrown -> moveActivePlayer()
-                    is Event.PlayerLanded -> handlePlayerLanding()
+                    is Event.ON_DICE_THROWN -> moveActivePlayer()
+                    is Event.ON_GO_TO_JAIL -> goToJail()
                     else -> { }
                 }
             }
@@ -34,23 +34,44 @@ object PlayerMovementService {
                 for (i in 1..diceSum) {
                     player.moveBySteps(1)
                     if (player.position.value == 0) {
-                        serviceScope.launch { EventBus.postEvent(Event.PlayerCrossedStart) }
+                        serviceScope.launch { EventBus.postEvent(Event.ON_PLAYER_CROSSED_START) }
                     }
-                    delay(150)
+                    delay(200)
                 }
-                serviceScope.launch { EventBus.postEvent(Event.PlayerLanded) }
+                handlePlayerLanding()
+            }
+        }
+    }
+    private fun goToJail(){
+        val player = Game.getActivePlayer()!!
+        serviceScope.launch {
+            while (player.position.value!=10) {
+                if(player.position.value>10)
+                    player.moveByStepsBackwards(1)
+                else
+                    player.moveBySteps(1)
+                delay(70)
             }
         }
     }
     private fun handlePlayerLanding() {
-        Game.getEstateByFieldIndex(Game.getActivePlayer()?.position?.value ?: -1)?.let { estate ->
-            val ownerIndex = estate.ownerIndex.value
-            serviceScope.launch {
-                if (ownerIndex != -1)
-                    EventBus.postEvent(Event.PlayerLandedOnBoughtEstate)
-                else
-                    EventBus.postEvent(Event.PlayerLandedOnFreeEstate)
+        val position = Game.getActivePlayer()?.position?.value!!
+        val field: Field = Game.board.value?.fields?.get(position)!!
+        when(field.type){
+            FieldType.GO_TO_JAIL -> {serviceScope.launch{EventBus.postEvent(Event.ON_GO_TO_JAIL)}}
+            FieldType.CHANCE, FieldType.COMMUNITY_CHEST -> {serviceScope.launch{EventBus.postEvent(Event.ON_COMMUNITY_CARD_OPENED)}}
+            FieldType.GO -> {}
+            FieldType.JAIL -> {}
+            FieldType.PARKING -> {serviceScope.launch{EventBus.postEvent(Event.ON_PLAYER_LANDED_ON_FREE_PARKING)}}
+            FieldType.TAX -> {serviceScope.launch{EventBus.postEvent(Event.ON_PLAYER_LANDED_ON_TAX)}}
+            else -> {
+                serviceScope.launch {
+                    if (Game.getOwnerOfEstate(position) != null)
+                        EventBus.postEvent(Event.ON_PLAYER_LANDED_ON_BOUGHT_ESTATE)
+                    else
+                        EventBus.postEvent(Event.ON_PLAYER_LANDED_ON_FREE_ESTATE)
+                }
             }
-        } ?: serviceScope.launch { EventBus.postEvent(Event.PlayerLandedOnFreeEstate) }
+        }
     }
 }

@@ -1,7 +1,6 @@
 package com.example.investorssquare.game.presentation.board_screen.popups
 
 import android.annotation.SuppressLint
-import android.provider.Settings.Global
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -105,7 +104,7 @@ fun PropertyDetails(
                 PropertyDetailsContent(property, scrollState, popupHeight)
                 if (buyButtonVisibility) {
                     BuyButton(popupWidth, popupHeight) {
-                        GlobalScope.launch { EventBus.postEvent(Event.BuyingEstate(field.index)) }
+                        GlobalScope.launch { EventBus.postEvent(Event.ON_BUYING_ESTATE(field.index)) }
                     }
                 }
             }

@@ -39,6 +39,10 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
         _position.value = (_position.value + steps) % NUMBER_OF_FIELDS
     }
 
+    fun moveByStepsBackwards(steps: Int) {
+        _position.value = (_position.value - steps + NUMBER_OF_FIELDS) % NUMBER_OF_FIELDS
+    }
+
     fun moveToField(field: Int) {
         if (field < NUMBER_OF_FIELDS) _position.value = field
     }

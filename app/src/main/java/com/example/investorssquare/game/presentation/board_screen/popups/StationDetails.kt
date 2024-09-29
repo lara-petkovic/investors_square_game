@@ -31,7 +31,6 @@ import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.Station
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.util.Constants.BUY
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -162,7 +161,7 @@ fun StationDetails(
                 if(buyButtonVisibility) {
                     Button(
                         onClick = {
-                            station?.index?.let { GlobalScope.launch { EventBus.postEvent(Event.BuyingEstate(field.index)) } }
+                            station?.index?.let { GlobalScope.launch { EventBus.postEvent(Event.ON_BUYING_ESTATE(field.index)) } }
                         },
                         modifier = Modifier
                             .size((popupWidth.value * 0.5).dp, (popupHeight.value * 0.07).dp)

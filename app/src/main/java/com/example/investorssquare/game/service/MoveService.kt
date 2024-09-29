@@ -3,13 +3,12 @@ package com.example.investorssquare.game.service
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game.diceViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
-object DiceService {
+object MoveService {
     private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     init {
         observeEvents()
@@ -18,20 +17,18 @@ object DiceService {
         serviceScope.launch {
             EventBus.events.collect { event ->
                 when (event) {
-                    is Event.ON_DICE_THROWN -> handleDiceThrown(event.firstNumber, event.secondNumber)
-                    is Event.ON_GO_TO_JAIL -> disableDice()
+                    is Event.ON_MOVE_FINISHED -> handleFinishedMove()
                     else -> { }
                 }
             }
         }
     }
-    private fun handleDiceThrown(firstNumber: Int, secondNumber: Int) {
-        if(firstNumber!=secondNumber || Game.board.value?.ruleBook?.playAgainIfRolledDouble==false){
-            disableDice()
-        }
-    }
-    private fun disableDice(){
-        diceViewModel.disableDiceButton()
-        Game.showFinishButton()
+    private fun handleFinishedMove() {
+        Game.diceViewModel.enableDiceButton()
+        Game.hideFinishButton()
+        val activePlayer = Game.getActivePlayer()!!
+        activePlayer.finishMove()
+        val nextPlayersIndex = (activePlayer.index.value+1) % Game.players.value.size
+        Game.players.value[nextPlayersIndex].startMove()
     }
 }

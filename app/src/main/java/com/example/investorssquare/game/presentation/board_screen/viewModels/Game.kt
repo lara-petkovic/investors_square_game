@@ -83,14 +83,6 @@ object Game{
     fun hideFinishButton(){
         _isFinishButtonVisible.value = false
     }
-
-    //ovo izbaciti
-    fun finishTurn() {
-        diceViewModel.enableDiceButton()
-        _isFinishButtonVisible.value = false
-        switchToNextPlayer()
-    }
-
     fun setBoard(board: Board) {
         _board.value = board
         _estates.value = board.fields.filterIsInstance<Estate>().map { EstateViewModel(it) }

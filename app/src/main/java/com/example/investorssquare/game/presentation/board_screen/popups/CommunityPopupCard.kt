@@ -34,6 +34,7 @@ import androidx.compose.ui.window.PopupProperties
 import kotlinx.coroutines.delay
 import com.example.investorssquare.R
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.service.CommunityCardService
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -47,10 +48,7 @@ fun CommunityCardPopup(
     var isFlipped by remember { mutableStateOf(false) }
     var isClosing by remember { mutableStateOf(false) }
 
-    val card = remember {
-        if (isChance) Game.board.value?.chance?.drawCard()
-        else Game.board.value?.communityChest?.drawCard()
-    }
+    val card = remember { CommunityCardService.drawCard(isChance) }
 
     val rotation by animateFloatAsState(
         targetValue = if (isFlipped) 180f else 0f,
