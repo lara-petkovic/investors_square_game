@@ -189,7 +189,7 @@ private fun PropertyDetailsContent(
     }
 }
 
-@SuppressLint("DiscouragedApi")
+@SuppressLint("DiscouragedApi", "StateFlowValueCalledInComposition")
 @Composable
 private fun RentWithHousesRow(index: Int, rent: Int) {
     val context = LocalContext.current
@@ -236,7 +236,7 @@ private fun RentWithHousesRow(index: Int, rent: Int) {
     }
 }
 
-@SuppressLint("DiscouragedApi")
+@SuppressLint("DiscouragedApi", "StateFlowValueCalledInComposition")
 @Composable
 private fun RentWithHotelRow(rent: Int) {
     val context = LocalContext.current

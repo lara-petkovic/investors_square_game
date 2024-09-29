@@ -74,7 +74,7 @@ fun DiceButton() {
             currentDice1 = Game.diceViewModel.diceNumber1.value
             currentDice2 = Game.diceViewModel.diceNumber2.value
             isRolling = false
-            GlobalScope.launch { EventBus.postEvent(Event.ON_DICE_THROWN(number1, number2)) }
+            GlobalScope.launch { EventBus.postEvent(Event.ON_DICE_THROWN(currentDice1, currentDice2)) }
         }
     }
 }
