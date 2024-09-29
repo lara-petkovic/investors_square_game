@@ -41,6 +41,8 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     val remainingTime: StateFlow<Int> get() = _remainingTime
 
     private var turnTimer: CountDownTimer? = null
+    
+    var doublesRolledCounter: Int = 0
 
     fun buyNewEstate(estate: EstateViewModel) {
         estate.setOwnerIndex(index.value)
@@ -68,6 +70,7 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     }
 
     fun finishMove() {
+        doublesRolledCounter = 0
         _isActive.value = false
         stopTurnTimer()
     }
