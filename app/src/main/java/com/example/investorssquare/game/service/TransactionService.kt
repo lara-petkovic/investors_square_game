@@ -18,8 +18,8 @@ object TransactionService {
     fun payPriceForEstate(index: Int) : Boolean{
         val player = Game.getActivePlayer()!!
         val estate = Game.getEstateByFieldIndex(index)!!
-        if(player.money.value>=estate.estate.value.price){
-            player.pay(estate.estate.value.price)
+        if(player.money.value>=estate.estate.price){
+            player.pay(estate.estate.price)
             return true
         }
         return false
@@ -27,7 +27,7 @@ object TransactionService {
     fun payRent() {
         val payer = Game.getActivePlayer()!!
         val estate = Game.getEstateByFieldIndex(payer.position.value)!!
-        val receiver = Game.getOwnerOfEstate(estate.estate.value.index)!!
+        val receiver = Game.getOwnerOfEstate(estate.estate.index)!!
         if(payer!=receiver){
             val moneyToTransfer = calculatePrice(estate)
             payer.pay(moneyToTransfer)
@@ -46,16 +46,16 @@ object TransactionService {
     }
     private fun calculatePrice(estate: EstateViewModel): Int{
         if(estate.isProperty){
-            return estate.estate.value.rent[estate.numberOfBuildings.value]
+            return estate.estate.rent[estate.numberOfBuildings.value]
         }
         if(estate.isUtility){
             val utilitiesOwned = Game.estates.value.filter { e -> e.isUtility && e.ownerIndex.value == estate.ownerIndex.value }.size
             val diceMultiplier = Game.diceViewModel.getDiceSum()
-            return estate.estate.value.rent[utilitiesOwned - 1] * diceMultiplier
+            return estate.estate.rent[utilitiesOwned - 1] * diceMultiplier
         }
         if(estate.isStation){
             val stationsOwned = Game.estates.value.filter { e -> e.isStation && e.ownerIndex.value == estate.ownerIndex.value }.size
-            return estate.estate.value.rent[stationsOwned - 1]
+            return estate.estate.rent[stationsOwned - 1]
         }
         return 0
     }

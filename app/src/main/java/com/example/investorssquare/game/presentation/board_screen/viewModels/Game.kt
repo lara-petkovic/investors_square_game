@@ -100,7 +100,7 @@ object Game {
     }
 
     fun getEstateByFieldIndex(index: Int): EstateViewModel? {
-        return _estates.value.firstOrNull { it.estate.value.index == index }
+        return _estates.value.firstOrNull { it.estate.index == index }
     }
 
     fun showPaymentPopup(

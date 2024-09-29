@@ -1,5 +1,6 @@
 package com.example.investorssquare.game.presentation.board_screen.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,6 +30,7 @@ import com.example.investorssquare.util.Constants.FIELD_CARD_STRAP_HEIGHT_PERCEN
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun FieldCard(
     fieldWidth: Dp,

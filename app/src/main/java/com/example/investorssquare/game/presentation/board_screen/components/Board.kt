@@ -87,7 +87,7 @@ fun Board(
 
         // Check if the current field is a property and if it is owned
         val isPropertyOwned = estates.any { estate ->
-            estate.estate.value.index == currentField?.index && estate.ownerIndex.value != -1
+            estate.estate.index == currentField?.index && estate.ownerIndex.value != -1
         }
 
         // Black background overlay
@@ -121,14 +121,14 @@ fun Board(
                     if(estate.ownerIndex.value != -1)
                         BoughtEstateMarker(
                             fieldWidth = fieldWidth,
-                            field = estate.estate.value,
+                            field = estate.estate,
                             modifier = Modifier.offset {
                                 IntOffset(
-                                    x = calculateXOffsetForBoughtEstateMarker(estate.estate.value.index, fieldHeight, fieldWidth, boardSize).roundToPx(),
-                                    y = calculateYOffsetForBoughtEstateMarker(estate.estate.value.index, fieldHeight, fieldWidth, boardSize).roundToPx()
+                                    x = calculateXOffsetForBoughtEstateMarker(estate.estate.index, fieldHeight, fieldWidth, boardSize).roundToPx(),
+                                    y = calculateYOffsetForBoughtEstateMarker(estate.estate.index, fieldHeight, fieldWidth, boardSize).roundToPx()
                                 )
                             },
-                            horizontal = estate.estate.value.index<10 || (estate.estate.value.index in 21..29)
+                            horizontal = estate.estate.index<10 || (estate.estate.index in 21..29)
                         )
                 }
                 CornerFieldCard(
@@ -279,7 +279,7 @@ private fun canBuyEstate(activePlayer: PlayerViewModel, currentField: Field): Bo
 
     // Check if the player is on the correct field and does not already own this estate
     val isOnCorrectField = activePlayer.position.value == currentField.index
-    val alreadyOwnsEstate = activePlayer.estates.value.any { it.estate.value.index == currentField.index }
+    val alreadyOwnsEstate = activePlayer.estates.value.any { it.estate.index == currentField.index }
 
     return isOnCorrectField && !alreadyOwnsEstate
 }

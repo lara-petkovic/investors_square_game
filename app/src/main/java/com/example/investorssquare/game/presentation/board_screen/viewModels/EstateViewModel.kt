@@ -7,10 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
-class EstateViewModel @Inject constructor(estate: Estate) : ViewModel() {
-    private val _estate = MutableStateFlow(estate)
-    val estate: StateFlow<Estate> get() = _estate
-
+class EstateViewModel @Inject constructor(val estate: Estate) : ViewModel() {
     val isUtility: Boolean = estate.type==FieldType.UTILITY
     val isStation: Boolean = estate.type==FieldType.STATION
     val isProperty: Boolean = estate.type==FieldType.PROPERTY

@@ -1,5 +1,6 @@
 package com.example.investorssquare.game.presentation.board_screen.components
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -76,6 +77,7 @@ fun PlayerCard(playerViewModel: PlayerViewModel) {
     )
 }
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 private fun PlayerCardLayout(
     isActive: Boolean,
