@@ -22,24 +22,31 @@ object PlayerMovementService {
                 return
             }
             val diceSum = Game.diceViewModel.getDiceSum()
-            moveStepByStepForward(diceSum, player)
+            moveStepByStepForward(diceSum, player, 200)
         }
     }
 
-    private fun moveStepByStepForward(steps: Int, player: PlayerViewModel) = serviceScope.launch {
+    fun moveStepByStepForward(steps: Int, player: PlayerViewModel, delay: Long) = serviceScope.launch {
         for (i in 1..steps) {
             player.moveBySteps(1)
             if (player.position.value == 0) {
                 serviceScope.launch { EventBus.postEvent(Event.ON_PLAYER_CROSSED_START) }
             }
-            delay(200)
+            delay(delay)
+        }
+        handlePlayerLanding()
+    }
+    fun moveStepByStepBackwards(steps: Int, player: PlayerViewModel) = serviceScope.launch {
+        for (i in 1..steps) {
+            player.moveByStepsBackwards(1)
+            delay(80)
         }
         handlePlayerLanding()
     }
 
     fun moveToField(fieldIndex: Int){
         Game.getActivePlayer()?.let { player ->
-            moveStepByStepForward(fieldIndex - player.position.value, player)
+            moveStepByStepForward(fieldIndex - player.position.value, player, 80)
         }
     }
 
