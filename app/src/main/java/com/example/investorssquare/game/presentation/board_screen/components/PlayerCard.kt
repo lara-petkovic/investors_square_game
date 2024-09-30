@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -95,14 +96,17 @@ private fun PlayerCardLayout(
             .width(cardWidth)
             .height(60.dp)
             .border(
-                width = 2.5.dp,
-                color = if (isActive) Color.Red else lerp(playerColor, Color.Black, 0.2f),
+                width = if (isActive) 4.dp else 2.5.dp,
+                color = lerp(playerColor, Color.Black, 0.2f),
                 shape = RoundedCornerShape(8.dp)
             )
             .clip(RoundedCornerShape(8.dp))
     ) {
         Card(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = if (isActive) Color.White
+                else lerp(playerColor, Color.Black, 0.2f)),
             shape = RoundedCornerShape(8.dp),
             colors = CardDefaults.cardColors(containerColor = animatedBackgroundColor.copy(alpha = 0.9f))
         ) {
