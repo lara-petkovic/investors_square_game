@@ -45,6 +45,7 @@ object PlayerMovementService {
 
     fun goToJail(){
         val player = Game.getActivePlayer()!!
+        player.goToJail(Game.ruleBook.jailSentenceInMoves)
         val jailPosition = Game.board.value?.fields?.find { field-> field.type==FieldType.JAIL }?.index!!
         serviceScope.launch {
             while (player.position.value!=jailPosition) {

@@ -17,6 +17,12 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     private val _isActive = MutableStateFlow(false)
     val isActive: StateFlow<Boolean> get() = _isActive
 
+    private val _jailSentence = MutableStateFlow(0)
+    val jailSentence: StateFlow<Int> get() = _jailSentence
+
+    private val _isInJail = MutableStateFlow(false)
+    val isInJail: StateFlow<Boolean> get() = _isInJail
+
     private val _index = MutableStateFlow(0)
     val index: StateFlow<Int> get() = _index
 
@@ -53,6 +59,16 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
         _position.value = (_position.value + steps) % NUMBER_OF_FIELDS
     }
 
+    fun goToJail(sentence: Int){
+        _isInJail.value = true
+        _jailSentence.value = sentence + 1
+    }
+
+    fun escapeJail(){
+        _isInJail.value = false
+        _jailSentence.value = 0
+    }
+
     fun moveByStepsBackwards(steps: Int) {
         _position.value = (_position.value - steps + NUMBER_OF_FIELDS) % NUMBER_OF_FIELDS
     }
@@ -73,6 +89,10 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
         doublesRolledCounter = 0
         _isActive.value = false
         stopTurnTimer()
+        if(isInJail.value){
+            _jailSentence.value--
+            _isInJail.value = _jailSentence.value>0
+        }
     }
 
     fun startMove() {

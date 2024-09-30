@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 
 object EventService {
     private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    private var i = 0
     init {
         observeEvents()
     }
@@ -37,9 +38,17 @@ object EventService {
                     is Event.ON_COMMUNITY_CARD_CLOSED -> executeCardAction()
                     is Event.ON_COMMUNITY_CARD_OPENED -> openCardPopup()
                     is Event.ON_DICE_THROWN -> {
-                        handleDiceThrown(event.firstNumber, event.secondNumber)
-                        moveActivePlayer()
+                        if(Game.getActivePlayer()?.index?.value!=1)
+                            handleDiceThrown(event.firstNumber, event.secondNumber)
+                        else{
+                            if(i==0){
+                                serviceScope.launch { EventBus.postEvent(Event.ON_GO_TO_JAIL) }
+                                i++
+                            }
+                            else handleDiceThrown(event.firstNumber, event.secondNumber)
+                        }
                     }
+                    is Event.ON_MOVE_PLAYER -> moveActivePlayer()
                     is Event.ON_GO_TO_JAIL -> {
                         disableDice()
                         goToJail()

@@ -16,6 +16,7 @@ sealed class Event {
     data class ON_DICE_THROWN(val firstNumber: Int, val secondNumber: Int) : Event()
     data object ON_PLAYER_CROSSED_START : Event()
     data object ON_MOVE_FINISHED : Event()
+    data object ON_MOVE_PLAYER : Event()
     data object ON_GO_TO_JAIL : Event()
     data object ON_MOVE_TIMER_ELAPSED : Event()
     data object ON_COMMUNITY_CARD_CLOSED : Event()

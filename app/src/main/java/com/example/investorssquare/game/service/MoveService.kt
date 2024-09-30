@@ -4,17 +4,17 @@ import com.example.investorssquare.game.presentation.board_screen.viewModels.Gam
 
 object MoveService {
     fun handleDiceToTheNextPlayer() {
-        Game.diceViewModel.enableDiceButton()
-        Game.hideFinishButton()
-
         val activePlayer = Game.getActivePlayer() ?: return
         activePlayer.finishMove()
 
-        val players = Game.players.value
-        if (players.isEmpty()) return
+        val nextPlayersIndex = (activePlayer.index.value + 1) % Game.players.value.size
+        val nextPlayer = Game.players.value[nextPlayersIndex]
+        nextPlayer.startMove()
 
-        val nextPlayersIndex = (activePlayer.index.value + 1) % players.size
-        players[nextPlayersIndex].startMove()
+        if(!nextPlayer.isInJail.value || Game.ruleBook.rollADoubleToEscapeJailEnabled){
+            Game.diceViewModel.enableDiceButton()
+            Game.hideFinishButton()
+        }
     }
     fun handleMoveTimerElapsed(){
         if(Game.isFinishButtonVisible.value)

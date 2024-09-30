@@ -17,15 +17,26 @@ object DiceService {
         serviceScope.launch { EventBus.postEvent(Event.ON_DICE_THROWN(diceViewModel.diceNumber1.value, diceViewModel.diceNumber2.value)) }
     }
     fun handleDiceThrown(firstNumber: Int, secondNumber: Int) {
-        if(firstNumber==secondNumber){
-            val player = Game.getActivePlayer()!!
-            player.doublesRolledCounter++
-            if(Game.ruleBook.playAgainIfRolledDouble){
-                return
-            }
+        val player = Game.getActivePlayer() ?: return
+        if (firstNumber != secondNumber) {
+            if (!player.isInJail.value)
+                serviceScope.launch { EventBus.postEvent(Event.ON_MOVE_PLAYER) }
+            disableDice()
+            return
         }
-        disableDice()
+        if (player.isInJail.value && Game.ruleBook.rollADoubleToEscapeJailEnabled) {
+            player.escapeJail()
+            disableDice()
+            serviceScope.launch { EventBus.postEvent(Event.ON_MOVE_PLAYER) }
+            return
+        }
+        player.doublesRolledCounter++
+        if (!Game.ruleBook.playAgainIfRolledDouble) {
+            disableDice()
+        }
+        serviceScope.launch { EventBus.postEvent(Event.ON_MOVE_PLAYER) }
     }
+
     fun disableDice(){
         diceViewModel.disableDiceButton()
         Game.showFinishButton()

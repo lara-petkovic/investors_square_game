@@ -7,6 +7,7 @@ class RuleBook(
     var collectTaxesOnFreeParkingEnabled: Boolean = true,
     var playAgainOnFreeParkingEnabled: Boolean = false,
     var rollADoubleToEscapeJailEnabled: Boolean = true,
+    var collectRentsWhileInJail: Boolean = false,
     var payToEscapeJailEnabled: Boolean = true,
     var mortgagesEnabled: Boolean = true,
     var sellingEstateEnabled: Boolean = false,
@@ -26,5 +27,4 @@ class RuleBook(
     var buildingsPerMovePerProperty: Int = 1,
     var numberOfPlayers: Int = 2,
     var doublesRolledLimit: Int = 3
-) {
-}
+)
