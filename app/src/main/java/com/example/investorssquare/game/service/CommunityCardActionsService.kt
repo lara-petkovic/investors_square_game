@@ -67,7 +67,8 @@ object CommunityCardActionsService {
         TransactionService.receive(player, 50)
     }
     fun action9(){
-
+        val player = Game.getActivePlayer()!!
+        player.acquireGetOutOfJailFreeCard()
     }
     fun action10(){
         val player = Game.getActivePlayer()!!
@@ -78,7 +79,7 @@ object CommunityCardActionsService {
         serviceScope.launch { EventBus.postEvent(Event.ON_GO_TO_JAIL) }
     }
     fun action12(){
-
+        TransactionService.payGeneralRepairsOnBuildings(25,100)
     }
     fun action13(){
         val player = Game.getActivePlayer()!!
@@ -99,45 +100,66 @@ object CommunityCardActionsService {
         TransactionService.receive(player, 150)
     }
     fun action17(){
-
+        action2()
     }
     fun action18(){
-
+        val player = Game.getActivePlayer()!!
+        TransactionService.receive(player, 200)
     }
     fun action19(){
-
+        val player = Game.getActivePlayer()!!
+        TransactionService.pay(player, 50)
     }
     fun action20(){
-
+        val player = Game.getActivePlayer()!!
+        TransactionService.receive(player, 50)
     }
     fun action21(){
-
+        action9()
     }
     fun action22(){
-
+        action11()
     }
     fun action23(){
-
+        val player = Game.getActivePlayer()!!
+        TransactionService.receive(player, 100)
     }
     fun action24(){
-
+        val player = Game.getActivePlayer()!!
+        TransactionService.receive(player,20)
     }
     fun action25(){
-
+        val player = Game.getActivePlayer()!!
+        for(p in Game.players.value){
+            TransactionService.pay(p,10)
+        }
+        TransactionService.receive(player, 10 * Game.players.value.size)
     }
     fun action26(){
-
+        val player = Game.getActivePlayer()!!
+        TransactionService.receive(player, 100)
     }
     fun action27(){
-
+        val player = Game.getActivePlayer()!!
+        TransactionService.pay(player,100)
     }
     fun action28(){
-
+        val player = Game.getActivePlayer()!!
+        TransactionService.pay(player,150)
     }
     fun action29(){
-
+        val player = Game.getActivePlayer()!!
+        TransactionService.receive(player,25)
     }
     fun action30(){
-
+        TransactionService.payGeneralRepairsOnBuildings(40,115)
+    }
+    fun action31(){
+        val player = Game.getActivePlayer()!!
+        TransactionService.receive(player,10)
+    }
+    fun action32(){
+        val player = Game.getActivePlayer()!!
+        TransactionService.receive(player,100)
     }
 }

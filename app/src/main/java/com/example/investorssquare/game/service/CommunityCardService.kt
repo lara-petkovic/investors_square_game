@@ -23,7 +23,6 @@ object CommunityCardService {
         Game.showPopupForField(player.position.value)
     }
     fun executeCardAction(){
-        Game.dismissPopup()
         when(card?.actionCode){
             1 -> CommunityCardActionsService.action1()
             2 -> CommunityCardActionsService.action2()
@@ -55,6 +54,8 @@ object CommunityCardService {
             28 -> CommunityCardActionsService.action28()
             29 -> CommunityCardActionsService.action29()
             30 -> CommunityCardActionsService.action30()
+            31 -> CommunityCardActionsService.action31()
+            32 -> CommunityCardActionsService.action32()
             else -> {}
         }
     }

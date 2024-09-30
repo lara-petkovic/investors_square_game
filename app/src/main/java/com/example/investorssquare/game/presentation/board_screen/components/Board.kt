@@ -256,7 +256,10 @@ fun Board(
 
                         FieldType.CHANCE, FieldType.COMMUNITY_CHEST -> CommunityCardPopup(
                             isChance = field.type == FieldType.CHANCE,
-                            onDismissRequest = { GlobalScope.launch{EventBus.postEvent(Event.ON_COMMUNITY_CARD_CLOSED)} },
+                            onDismissRequest = {
+                                Game.dismissPopup()
+                                GlobalScope.launch{EventBus.postEvent(Event.ON_COMMUNITY_CARD_CLOSED)}
+                            },
                             offset = IntOffset(
                                 (with(LocalDensity.current) { fieldHeight.toPx() } + (0.05f * 9 * with(LocalDensity.current) { fieldWidth.toPx() })).toInt(),
                                 (with(LocalDensity.current) { fieldHeight.toPx() } + 1.5 * with(LocalDensity.current) { fieldWidth.toPx() }).toInt()

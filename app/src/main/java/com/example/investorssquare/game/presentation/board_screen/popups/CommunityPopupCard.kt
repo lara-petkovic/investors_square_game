@@ -66,7 +66,7 @@ fun CommunityCardPopup(
         onDismissRequest()
     }
     Popup(
-        onDismissRequest = { onDismissRequest() },
+        onDismissRequest = { },
         properties = PopupProperties(focusable = true),
         offset = offset
     ) {

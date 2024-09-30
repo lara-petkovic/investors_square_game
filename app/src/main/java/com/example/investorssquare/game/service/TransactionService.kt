@@ -2,15 +2,9 @@ package com.example.investorssquare.game.service
 
 import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.domain.model.Tax
-import com.example.investorssquare.game.events.Event
-import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 
 object TransactionService {
     var priceMultiplier = 1
@@ -36,7 +30,7 @@ object TransactionService {
         val receiver = Game.getOwnerOfEstate(estate.estate.index)!!
         if(receiver.isInJail.value && !Game.ruleBook.collectRentsWhileInJail) return
         if(payer!=receiver){
-            val moneyToTransfer = calculatePrice(estate)
+            val moneyToTransfer = calculateRentPrice(estate)
             Game.showPaymentPopup(payer, receiver, moneyToTransfer) {
                 payer.pay(moneyToTransfer)
                 receiver.receive(moneyToTransfer)
@@ -61,7 +55,7 @@ object TransactionService {
     fun pay(player: PlayerViewModel, money: Int){
         player.pay(money)
     }
-    private fun calculatePrice(estate: EstateViewModel): Int{
+    private fun calculateRentPrice(estate: EstateViewModel): Int{
         var ret = 0
         if(estate.isProperty){
             if(Game.ruleBook.doubleRentOnCollectedSetsEnabled
@@ -86,5 +80,11 @@ object TransactionService {
         ret *= priceMultiplier
         priceMultiplier = 1
         return ret
+    }
+    fun payGeneralRepairsOnBuildings(pricePerHouse: Int, pricePerHotel: Int){
+        val player = Game.getActivePlayer()!!
+        val totalPriceForHouses = pricePerHouse * EstateService.getNumberOfHousesOwned(player)
+        val totalPriceForHotels = pricePerHotel * EstateService.getNumberOfHotelsOwned(player)
+        player.pay(totalPriceForHouses + totalPriceForHotels)
     }
 }

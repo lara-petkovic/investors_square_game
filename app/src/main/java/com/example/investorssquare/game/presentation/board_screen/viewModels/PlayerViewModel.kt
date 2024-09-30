@@ -15,6 +15,9 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     private val _jailSentence = MutableStateFlow(0)
     val jailSentence: StateFlow<Int> get() = _jailSentence
 
+    private val _numberOfGetOutOfJailFreeCards = MutableStateFlow(0)
+    val numberOfGetOutOfJailFreeCards: StateFlow<Int> get() = _numberOfGetOutOfJailFreeCards
+
     private val _isInJail = MutableStateFlow(false)
     val isInJail: StateFlow<Boolean> get() = _isInJail
 
@@ -41,6 +44,14 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     fun buyNewEstate(estate: EstateViewModel) {
         estate.setOwnerIndex(index.value)
         _estates.value += estate
+    }
+
+    fun acquireGetOutOfJailFreeCard(){
+        _numberOfGetOutOfJailFreeCards.value++
+    }
+
+    fun useGetOutOfJailFreeCard(){
+        _numberOfGetOutOfJailFreeCards.value--
     }
 
     fun moveBySteps(steps: Int) {
