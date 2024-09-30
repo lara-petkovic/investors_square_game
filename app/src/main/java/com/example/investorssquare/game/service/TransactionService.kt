@@ -6,15 +6,20 @@ import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 object TransactionService {
+    var priceMultiplier = 1
     fun collectSalary() {
         val player = Game.getActivePlayer()!!
         player.receive(Game.ruleBook.salary)
+    }
+    fun receive(player: PlayerViewModel, money: Int){
+        player.receive(money)
     }
     fun payPriceForEstate(index: Int) : Boolean{
         val player = Game.getActivePlayer()!!
@@ -53,25 +58,33 @@ object TransactionService {
         if(Game.ruleBook.gatheringTaxesEnabled)
             Game.addToGatheredTaxes(tax)
     }
+    fun pay(player: PlayerViewModel, money: Int){
+        player.pay(money)
+    }
     private fun calculatePrice(estate: EstateViewModel): Int{
+        var ret = 0
         if(estate.isProperty){
             if(Game.ruleBook.doubleRentOnCollectedSetsEnabled
                 && estate.numberOfBuildings.value==0
                 && Game.doesPlayerOwnASet(estate.ownerIndex.value,(estate.estate as Property).setColor)
                 ){
-                return estate.estate.rent[0] * 2
+                ret = estate.estate.rent[0] * 2
             }
-            return estate.estate.rent[estate.numberOfBuildings.value]
+            else {
+                ret = estate.estate.rent[estate.numberOfBuildings.value]
+            }
         }
         if(estate.isUtility){
             val utilitiesOwned = Game.estates.value.filter { e -> e.isUtility && e.ownerIndex.value == estate.ownerIndex.value }.size
             val diceMultiplier = Game.diceViewModel.getDiceSum()
-            return estate.estate.rent[utilitiesOwned - 1] * diceMultiplier
+            ret = estate.estate.rent[utilitiesOwned - 1] * diceMultiplier
         }
         if(estate.isStation){
             val stationsOwned = Game.estates.value.filter { e -> e.isStation && e.ownerIndex.value == estate.ownerIndex.value }.size
-            return estate.estate.rent[stationsOwned - 1]
+            ret = estate.estate.rent[stationsOwned - 1]
         }
-        return 0
+        ret *= priceMultiplier
+        priceMultiplier = 1
+        return ret
     }
 }

@@ -36,7 +36,6 @@ object DiceService {
         }
         serviceScope.launch { EventBus.postEvent(Event.ON_MOVE_PLAYER) }
     }
-
     fun disableDice(){
         diceViewModel.disableDiceButton()
         Game.showFinishButton()
