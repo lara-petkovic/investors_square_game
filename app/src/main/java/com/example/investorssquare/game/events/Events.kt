@@ -18,7 +18,6 @@ sealed class Event {
     data object ON_MOVE_FINISHED : Event()
     data object ON_MOVE_PLAYER : Event()
     data object ON_GO_TO_JAIL : Event()
-    data object ON_MOVE_TIMER_ELAPSED : Event()
     data object ON_COMMUNITY_CARD_CLOSED : Event()
     data object ON_COMMUNITY_CARD_OPENED : Event()
     data object ON_PLAYER_LANDED_ON_FREE_PARKING : Event()

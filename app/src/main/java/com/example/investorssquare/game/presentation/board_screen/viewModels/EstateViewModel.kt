@@ -12,10 +12,10 @@ class EstateViewModel @Inject constructor(val estate: Estate) : ViewModel() {
     val isStation: Boolean = estate.type==FieldType.STATION
     val isProperty: Boolean = estate.type==FieldType.PROPERTY
 
-    private val _numberOfBuildings = MutableStateFlow<Int>(0)
+    private val _numberOfBuildings = MutableStateFlow(0)
     val numberOfBuildings : StateFlow<Int> get() = _numberOfBuildings
 
-    private val _ownerIndex = MutableStateFlow(1)
+    private val _ownerIndex = MutableStateFlow(-1)
     val ownerIndex: StateFlow<Int> get() = _ownerIndex
 
     fun setOwnerIndex(ownerIndex: Int) {

@@ -49,7 +49,6 @@ fun PlayerCard(playerViewModel: PlayerViewModel) {
     val isActive by playerViewModel.isActive.collectAsState()
     val playerColor by playerViewModel.color.collectAsState()
     val money by playerViewModel.money.collectAsState()
-    val remainingTime by playerViewModel.remainingTime.collectAsState()
 
     val showPaymentGif = remember { mutableStateOf(false) }
     val gifPainter = remember { mutableStateOf<Int?>(null) }
@@ -72,7 +71,6 @@ fun PlayerCard(playerViewModel: PlayerViewModel) {
         animatedBackgroundColor = animatedBackgroundColor,
         playerViewModel = playerViewModel,
         money = money,
-        remainingTime = remainingTime,
         showPaymentGif = showPaymentGif.value,
         gifPainter = gifPainter.value
     )
@@ -86,7 +84,6 @@ private fun PlayerCardLayout(
     animatedBackgroundColor: Color,
     playerViewModel: PlayerViewModel,
     money: Int,
-    remainingTime: Int,
     showPaymentGif: Boolean,
     gifPainter: Int?
 ) {
@@ -119,25 +116,8 @@ private fun PlayerCardLayout(
             ) {
                 PlayerInfoSection(playerViewModel.name.value, Modifier.weight(1f))
                 MoneySection(money, showPaymentGif, gifPainter, cardWidth.value)
-                TimerSection(remainingTime)
             }
         }
-    }
-}
-
-@Composable
-private fun TimerSection(remainingTime: Int) {
-    Box(
-        modifier = Modifier
-            .size(40.dp)
-            .padding(horizontal = 4.dp)
-    ) {
-        Text(
-            text = "$remainingTime s",
-            fontSize = 14.sp,
-            color = if (remainingTime <= 5) Color.Red else Color.Black,
-            modifier = Modifier.align(Alignment.Center)
-        )
     }
 }
 

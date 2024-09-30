@@ -12,12 +12,11 @@ import com.example.investorssquare.game.service.EstateService.handleCardInformat
 import com.example.investorssquare.game.service.EstateService.handleEstateBought
 import com.example.investorssquare.game.service.EstateService.showPopupForEstate
 import com.example.investorssquare.game.service.MoveService.handleDiceToTheNextPlayer
-import com.example.investorssquare.game.service.MoveService.handleMoveTimerElapsed
 import com.example.investorssquare.game.service.PlayerMovementService.goToJail
 import com.example.investorssquare.game.service.PlayerMovementService.moveActivePlayer
 import com.example.investorssquare.game.service.TransactionService.collectGatheredTaxes
-import com.example.investorssquare.game.service.TransactionService.payPriceForEstate
 import com.example.investorssquare.game.service.TransactionService.collectSalary
+import com.example.investorssquare.game.service.TransactionService.payPriceForEstate
 import com.example.investorssquare.game.service.TransactionService.payRent
 import com.example.investorssquare.game.service.TransactionService.payTax
 import kotlinx.coroutines.CoroutineScope
@@ -37,23 +36,12 @@ object EventService {
                 when (event) {
                     is Event.ON_COMMUNITY_CARD_CLOSED -> executeCardAction()
                     is Event.ON_COMMUNITY_CARD_OPENED -> openCardPopup()
-                    is Event.ON_DICE_THROWN -> {
-                        if(Game.getActivePlayer()?.index?.value!=1)
-                            handleDiceThrown(event.firstNumber, event.secondNumber)
-                        else{
-                            if(i==0){
-                                serviceScope.launch { EventBus.postEvent(Event.ON_GO_TO_JAIL) }
-                                i++
-                            }
-                            else handleDiceThrown(event.firstNumber, event.secondNumber)
-                        }
-                    }
+                    is Event.ON_DICE_THROWN -> handleDiceThrown(event.firstNumber, event.secondNumber)
                     is Event.ON_MOVE_PLAYER -> moveActivePlayer()
                     is Event.ON_GO_TO_JAIL -> {
                         disableDice()
                         goToJail()
                     }
-                    is Event.ON_MOVE_TIMER_ELAPSED -> handleMoveTimerElapsed()
                     is Event.ON_PLAYER_LANDED_ON_FREE_ESTATE -> showPopupForEstate()
                     is Event.ON_FIELD_CLICKED -> handleCardInformationClick(event.fieldIndex)
                     is Event.ON_ESTATE_BOUGHT -> {

@@ -16,10 +16,4 @@ object MoveService {
             Game.hideFinishButton()
         }
     }
-    fun handleMoveTimerElapsed(){
-        if(Game.isFinishButtonVisible.value)
-            handleDiceToTheNextPlayer()
-        else
-            DiceService.rollDice()
-    }
 }
