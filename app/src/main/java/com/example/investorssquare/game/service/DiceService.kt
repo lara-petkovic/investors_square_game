@@ -6,7 +6,6 @@ import com.example.investorssquare.game.presentation.board_screen.viewModels.Gam
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game.diceViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 

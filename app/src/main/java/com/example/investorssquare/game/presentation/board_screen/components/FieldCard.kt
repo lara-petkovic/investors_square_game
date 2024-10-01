@@ -1,6 +1,5 @@
 package com.example.investorssquare.game.presentation.board_screen.components
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,7 +29,6 @@ import com.example.investorssquare.game.presentation.board_screen.viewModels.Gam
 import com.example.investorssquare.util.Constants.FIELD_CARD_STRAP_HEIGHT_PERCENTAGE
 import kotlinx.coroutines.launch
 
-@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun FieldCard(
     fieldWidth: Dp,
@@ -39,6 +37,7 @@ fun FieldCard(
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
+
     Box(
         modifier = modifier
             .clickable { coroutineScope.launch { EventBus.postEvent(Event.ON_FIELD_CLICKED(field.index)) } }
@@ -47,46 +46,69 @@ fun FieldCard(
             modifier = Modifier.size(fieldWidth, fieldHeight),
             shape = RectangleShape,
             colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-            border = BorderStroke(width = 1.dp, color = Color.Black)
+            border = BorderStroke(1.dp, Color.Black)
         ) {
-            val property = field as? Property
-
-            Box(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .alpha(
-                        if(Game.getEstateByFieldIndex(field.index) != null
-                            && Game.getEstateByFieldIndex(field.index)?.ownerIndex?.value != -1) 0.5f else 0.0f)
-                    .background(color = Color(0xFFDAF7DB))
-                )
-                if (field.type == FieldType.PROPERTY) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(fieldHeight * FIELD_CARD_STRAP_HEIGHT_PERCENTAGE)
-                            .background(property?.setColor ?: Color.Gray)
-                            .align(Alignment.TopStart)
-                            .drawBehind {
-                                val strokeWidth = 1.5.dp.toPx()
-                                val y = size.height - strokeWidth / 2
-                                drawLine(
-                                    color = Color.Black,
-                                    start = androidx.compose.ui.geometry.Offset(0f, y),
-                                    end = androidx.compose.ui.geometry.Offset(size.width, y),
-                                    strokeWidth = strokeWidth
-                                )
-                            }
-                    )
-                }
-
-                PlayerDrawer(
-                    canvasHeight = fieldHeight * (1 + FIELD_CARD_STRAP_HEIGHT_PERCENTAGE),
-                    canvasWidth = fieldWidth,
-                    fieldIndex = field.index
-                )
-            }
+            FieldCardContent(field = field, fieldWidth = fieldWidth, fieldHeight = fieldHeight)
         }
     }
+}
+
+@Composable
+private fun FieldCardContent(
+    field: Field,
+    fieldWidth: Dp,
+    fieldHeight: Dp
+) {
+    val isFieldOwned = Game.getEstateByFieldIndex(field.index)?.ownerIndex?.value != -1
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        OwnershipIndicator(isOwned = isFieldOwned)
+        if (field.type == FieldType.PROPERTY) {
+            PropertyStrap(
+                property = field as? Property,
+                fieldHeight = fieldHeight,
+                modifier = Modifier.align(Alignment.TopStart)
+            )
+        }
+
+        PlayerDrawer(
+            canvasHeight = fieldHeight * (1 + FIELD_CARD_STRAP_HEIGHT_PERCENTAGE),
+            canvasWidth = fieldWidth,
+            fieldIndex = field.index
+        )
+    }
+}
+
+@Composable
+private fun PropertyStrap(
+    property: Property?,
+    fieldHeight: Dp,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(fieldHeight * FIELD_CARD_STRAP_HEIGHT_PERCENTAGE)
+            .background(property?.setColor ?: Color.Gray)
+            .drawBehind {
+                val strokeWidth = 1.5.dp.toPx()
+                val y = size.height - strokeWidth / 2
+                drawLine(
+                    color = Color.Black,
+                    start = androidx.compose.ui.geometry.Offset(0f, y),
+                    end = androidx.compose.ui.geometry.Offset(size.width, y),
+                    strokeWidth = strokeWidth
+                )
+            }
+    )
+}
+
+@Composable
+private fun OwnershipIndicator(isOwned: Boolean) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .alpha(if (isOwned) 0.5f else 0.0f)
+            .background(Color(0xFFDAF7DB))
+    )
 }
