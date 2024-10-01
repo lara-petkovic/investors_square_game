@@ -19,6 +19,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +40,7 @@ import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.events.Event
-import com.example.investorssquare.game.events.EventBus
+import com.example.investorssquare.game.events.EventBus.postEvent
 import com.example.investorssquare.game.presentation.board_screen.popups.CommunityCardPopup
 import com.example.investorssquare.game.presentation.board_screen.popups.PropertyDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.StationDetails
@@ -196,7 +197,7 @@ fun Board(
                 ){}
 
                 for (estate in estates) {
-//                    if (estate.ownerIndex.value != -1) {
+                    if (estate.ownerIndex.value != -1) {
 
                         val estateVM = Game.getEstateByFieldIndex(estate.estate.index)
                         val numberOfHouses = estateVM?.numberOfBuildings?.collectAsState()?.value ?: 0
@@ -243,7 +244,7 @@ fun Board(
                                     .zIndex(2f)
                             )
                         }
-                   // }
+                    }
                 }
             }
         }
@@ -295,7 +296,7 @@ fun Board(
                             isChance = field.type == FieldType.CHANCE,
                             onDismissRequest = {
                                 Game.dismissPopup()
-                                coroutineScope.launch{EventBus.postEvent(Event.ON_COMMUNITY_CARD_CLOSED)}
+                                coroutineScope.launch{ postEvent(Event.ON_COMMUNITY_CARD_CLOSED) }
                             },
                             offset = IntOffset(
                                 (fieldHeight + 0.05f * 9 * fieldWidth).value.toInt(),
