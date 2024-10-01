@@ -109,6 +109,10 @@ object Game {
         _isFinishButtonVisible.value = true
     }
 
+    fun getPropertiesBySetColor(set: Color): List<EstateViewModel>{
+        return estates.value.filter { e -> e.isProperty && (e.estate as Property).setColor == set }
+    }
+
     fun hideFinishButton() {
         _isFinishButtonVisible.value = false
     }

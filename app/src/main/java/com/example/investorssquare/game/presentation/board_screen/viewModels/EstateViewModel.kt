@@ -21,4 +21,10 @@ class EstateViewModel @Inject constructor(val estate: Estate) : ViewModel() {
     fun setOwnerIndex(ownerIndex: Int) {
         _ownerIndex.value = ownerIndex
     }
+    fun isOwnedByPlayer(player: PlayerViewModel): Boolean{
+        return ownerIndex.value == player.index.value
+    }
+    fun isFullyBuilt(): Boolean{
+        return numberOfBuildings.value == estate.rent.size-1
+    }
 }

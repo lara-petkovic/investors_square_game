@@ -13,11 +13,11 @@ class RuleBook(
     var sellingEstateEnabled: Boolean = false,
     var doubleRentOnCollectedSetsEnabled: Boolean = true,
     var speedDieEnabled: Boolean = false,
-    var payingTaxesViaPercentagesEnabled: Boolean = false,
+    var payingTaxesViaPercentagesEnabled: Boolean = true,
     var isSetNecessaryToBuild: Boolean = true,
     var isVisitNecessaryToBuild: Boolean = true,
     var evenlyBuilding: Boolean = false,
-    var buildingOnMultiplePropertiesInOneMoveEnabled: Boolean = false,
+    var buildingOnMultiplePropertiesInOneMoveEnabled: Boolean = true,
 
     var salary: Int = 200,
     var startingCapital: Int = 1500,

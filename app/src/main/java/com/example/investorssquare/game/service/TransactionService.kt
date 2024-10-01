@@ -47,7 +47,7 @@ object TransactionService {
     fun payTax(){
         val player = Game.getActivePlayer()!!
         val field : Tax = Game.board.value?.fields?.get(player.position.value)!! as Tax
-        val tax = if(Game.ruleBook.payingTaxesViaPercentagesEnabled) minOf(field.tax, player.money.value * field.taxPercentage / 100) else field.tax
+        val tax = if(Game.ruleBook.payingTaxesViaPercentagesEnabled && field.taxPercentage>0) minOf(field.tax, player.money.value * field.taxPercentage / 100) else field.tax
         player.pay(tax)
         if(Game.ruleBook.gatheringTaxesEnabled)
             Game.addToGatheredTaxes(tax)
