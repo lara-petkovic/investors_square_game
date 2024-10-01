@@ -59,7 +59,7 @@ fun CommunityCardPopup(
     LaunchedEffect(Unit) {
         delay(300)
         isFlipped = true
-        delay(4000)
+        delay(calculateShowDuration(card.text))
         isFlipped = false
         isClosing = true
         delay(900)
@@ -138,4 +138,8 @@ fun CommunityCardPopup(
             }
         }
     }
+}
+
+fun calculateShowDuration(text: String): Long{
+    return (maxOf(text.length*40, 2000)).toLong()
 }

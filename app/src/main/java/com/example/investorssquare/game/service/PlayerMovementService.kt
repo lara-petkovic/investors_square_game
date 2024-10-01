@@ -6,6 +6,7 @@ import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.util.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -46,7 +47,8 @@ object PlayerMovementService {
 
     fun moveToField(fieldIndex: Int){
         Game.getActivePlayer()?.let { player ->
-            moveStepByStepForward(fieldIndex - player.position.value, player, 80)
+            val steps = (fieldIndex + Constants.NUMBER_OF_FIELDS - player.position.value) % Constants.NUMBER_OF_FIELDS
+            moveStepByStepForward(steps, player, 80)
         }
     }
 
