@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -41,7 +42,7 @@ import com.example.investorssquare.game.service.CommunityCardService
 fun CommunityCardPopup(
     isChance: Boolean,
     onDismissRequest: () -> Unit,
-    offset : IntOffset,
+    centerOfTheBoard: IntOffset,
     popupWidth: Dp,
     popupHeight: Dp,
 ) {
@@ -49,6 +50,13 @@ fun CommunityCardPopup(
     var isClosing by remember { mutableStateOf(false) }
 
     val card = remember { CommunityCardService.drawCard(isChance) }
+
+    val density = LocalDensity.current
+    val popupWidthPx = with(density) { popupWidth.toPx() }
+    val popupHeightPx = with(density) { popupHeight.toPx() }
+
+    val offsetX = centerOfTheBoard.x - (popupWidthPx / 2).toInt()
+    val offsetY = centerOfTheBoard.y - (popupHeightPx / 2).toInt()
 
     val rotation by animateFloatAsState(
         targetValue = if (isFlipped) 180f else 0f,
@@ -68,7 +76,7 @@ fun CommunityCardPopup(
     Popup(
         onDismissRequest = { },
         properties = PopupProperties(focusable = true),
-        offset = offset
+        offset = IntOffset(offsetX, offsetY)
     ) {
 
         Box(
@@ -76,7 +84,7 @@ fun CommunityCardPopup(
                 .size(popupWidth, popupHeight)
                 .graphicsLayer {
                     rotationY = rotation
-                    cameraDistance = 12f * density
+                    cameraDistance = 12f * density.density
                 }
                 .background(Color.White, shape = RoundedCornerShape(8.dp))
                 .clip(RoundedCornerShape(5.dp))
@@ -123,16 +131,14 @@ fun CommunityCardPopup(
                         modifier = Modifier.fillMaxSize().border(1.dp, Color.Black).background(color = Color.White),
                         contentAlignment = Alignment.Center
                     ) {
-                        if (card != null) {
-                            Text(
-                                modifier = Modifier.padding(horizontal = 3.dp),
-                                text = card.text,
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontSize = 13.sp,
-                                color = Color.Black,
-                                textAlign = TextAlign.Center,
-                            )
-                        }
+                        Text(
+                            modifier = Modifier.padding(horizontal = 3.dp),
+                            text = card.text,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontSize = 13.sp,
+                            color = Color.Black,
+                            textAlign = TextAlign.Center,
+                        )
                     }
                 }
             }
@@ -140,6 +146,6 @@ fun CommunityCardPopup(
     }
 }
 
-fun calculateShowDuration(text: String): Long{
+fun calculateShowDuration(text: String): Long {
     return (maxOf(text.length*40, 2000)).toLong()
 }

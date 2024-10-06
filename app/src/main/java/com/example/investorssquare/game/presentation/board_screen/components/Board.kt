@@ -34,7 +34,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.times
 import androidx.compose.ui.zIndex
 import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.game.domain.model.Field
@@ -198,10 +197,6 @@ fun Board(
 
                 for (estate in estates) {
                     if (estate.ownerIndex.value != -1) {
-
-                        val estateVM = Game.getEstateByFieldIndex(estate.estate.index)
-                        val numberOfHouses = estateVM?.numberOfBuildings?.collectAsState()?.value ?: 0
-
                         Box {
                             BoughtEstateMarker(
                                 fieldWidth = fieldWidth,
@@ -215,33 +210,6 @@ fun Board(
                                     }
                                     .zIndex(1f),
                                 horizontal = estate.estate.index < 10 || (estate.estate.index in 21..29)
-                            )
-
-                            var xHouseOffset = 1.dp
-                            var yHouseOffset = 5.dp
-                            when (estate.estate.index) {
-                                in 11..19 -> {
-
-                                }
-                                in 21..29 -> {
-                                }
-                                else -> {
-                                }
-                            }
-
-
-
-                            HousesLayout(
-                                numberOfHouses = numberOfHouses,
-                                houseSize = 10.dp,
-                                modifier = Modifier
-                                    .offset {
-                                        IntOffset(
-                                            x = (calculateXOffsetForBoughtEstateMarker(estate.estate.index, fieldHeight, fieldWidth, boardSize) + xHouseOffset).roundToPx(),
-                                            y = (calculateYOffsetForBoughtEstateMarker(estate.estate.index, fieldHeight, fieldWidth, boardSize) + yHouseOffset).roundToPx()
-                                        )
-                                    }
-                                    .zIndex(2f)
                             )
                         }
                     }
@@ -259,36 +227,28 @@ fun Board(
                         FieldType.PROPERTY -> PropertyDetails(
                             field = field,
                             onDismissRequest = { Game.dismissPopup() },
-                            offset = IntOffset(
-                                (fieldHeight + 1.75 * fieldWidth).value.toInt(),
-                                (fieldHeight + 0.02f * 9 * fieldWidth).value.toInt()
-                            ),
                             popupWidth = (5.5 * fieldWidth.value).dp,
                             popupHeight = (0.96 * 9 * fieldWidth.value).dp,
+                            boardSize = boardSize,
+                            centerOfTheBoard = centerOfTheBoard,
                             buyButtonVisibility = buyButtonVisibility
                         )
 
                         FieldType.STATION -> StationDetails(
                             field = field,
                             onDismissRequest = { Game.dismissPopup() },
-                            offset = IntOffset(
-                                (fieldHeight + 1.75 * fieldWidth).value.toInt(),
-                                (fieldHeight + 0.02f * 9 * fieldWidth).value.toInt()
-                            ),
                             popupWidth = (5.5 * fieldWidth.value).dp,
                             popupHeight = (0.96 * 9 * fieldWidth.value).dp,
+                            centerOfTheBoard = centerOfTheBoard,
                             buyButtonVisibility = buyButtonVisibility
                         )
 
                         FieldType.UTILITY -> UtilityDetails(
                             field = field,
                             onDismissRequest = { Game.dismissPopup() },
-                            offset = IntOffset(
-                                (fieldHeight + 1.75 * fieldWidth).value.toInt(),
-                                (fieldHeight + 0.02f * 9 * fieldWidth).value.toInt()
-                            ),
                             popupWidth = (5.5 * fieldWidth.value).dp,
                             popupHeight = (0.96 * 9 * fieldWidth.value).dp,
+                            centerOfTheBoard = centerOfTheBoard,
                             buyButtonVisibility = buyButtonVisibility
                         )
 
@@ -298,10 +258,7 @@ fun Board(
                                 Game.dismissPopup()
                                 coroutineScope.launch{ postEvent(Event.ON_COMMUNITY_CARD_CLOSED) }
                             },
-                            offset = IntOffset(
-                                (fieldHeight + 0.05f * 9 * fieldWidth).value.toInt(),
-                                (fieldHeight + 1.5 * fieldWidth).value.toInt()
-                            ),
+                            centerOfTheBoard = centerOfTheBoard,
                             popupWidth = (0.9 * 9 * fieldWidth.value).dp,
                             popupHeight = (6 * fieldWidth.value).dp,
                         )
@@ -318,7 +275,6 @@ private fun canBuyEstate(activePlayer: PlayerViewModel, currentField: Field): Bo
         return false
     }
 
-    // Check if the player is on the correct field and does not already own this estate
     val isOnCorrectField = activePlayer.position.value == currentField.index
     val alreadyOwnsEstate = activePlayer.estates.value.any { it.estate.index == currentField.index }
 

@@ -6,11 +6,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,9 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -55,74 +53,67 @@ import kotlinx.coroutines.launch
 
 private val row_height = 20.dp
 
-@SuppressLint("StateFlowValueCalledInComposition", "DiscouragedApi")
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun PropertyDetails(
     field: Field,
     onDismissRequest: () -> Unit,
-    offset: IntOffset,
     popupWidth: Dp,
     popupHeight: Dp,
+    boardSize: Dp,  // Pass the board size to center within the board
+    centerOfTheBoard: IntOffset,  // Center of the board in pixel coordinates
     buyButtonVisibility: Boolean
 ) {
     val property = field as? Property ?: return
     val scrollState = rememberScrollState()
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-    Popup(
-        onDismissRequest = { onDismissRequest() },
-        properties = PopupProperties(focusable = true),
-        offset = offset
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+    BoxWithConstraints {
+        // Convert popup dimensions from Dp to Px
+        val density = LocalDensity.current
+        val popupWidthPx = with(density) { popupWidth.toPx() }
+        val popupHeightPx = with(density) { popupHeight.toPx() }
+
+        // Calculate the popup's offset to center it on the board
+        val offsetX = centerOfTheBoard.x - (popupWidthPx / 2).toInt()
+        val offsetY = centerOfTheBoard.y - (popupHeightPx / 2).toInt()
+
+        // Use the calculated offsets to position the popup
+        Popup(
+            onDismissRequest = { onDismissRequest() },
+            properties = PopupProperties(focusable = true),
+            offset = IntOffset(offsetX, offsetY)
         ) {
-            Box(
-                modifier = Modifier
-                    .size(popupWidth, popupHeight)
-                    .background(Color.White, shape = RoundedCornerShape(8.dp))
-                    .clip(RoundedCornerShape(8.dp))
-                    .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
-                if (property.imageUrl.isNotEmpty()) {
-                    Image(
-                        painter = painterResource(
-                            context.resources.getIdentifier(
-                                property.imageUrl,
-                                "drawable",
-                                context.packageName
-                            )
-                        ),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(8.dp))
-                            .graphicsLayer(alpha = 0.2f),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-
-                Column(
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .size(popupWidth, popupHeight)
+                        .background(Color.White, shape = RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(8.dp))
+                        .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp))
                 ) {
-                    PropertyHeader(property)
-                    PropertyDetailsContent(property, scrollState)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        PropertyHeader(property)
+                        PropertyDetailsContent(property, scrollState)
+                    }
                 }
-            }
 
-            if (buyButtonVisibility) {
-                Spacer(modifier = Modifier.width(16.dp))
+                if (buyButtonVisibility) {
+                    Spacer(modifier = Modifier.width(16.dp))
 
-                BuyButton(popupWidth, popupHeight) {
-                    coroutineScope.launch {
-                        EventBus.postEvent(Event.ON_ESTATE_BOUGHT(field.index))
-
+                    BuyButton(popupWidth, popupHeight) {
+                        coroutineScope.launch {
+                            EventBus.postEvent(Event.ON_ESTATE_BOUGHT(field.index))
+                        }
                     }
                 }
             }

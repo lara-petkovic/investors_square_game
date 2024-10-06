@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -49,9 +50,9 @@ import kotlinx.coroutines.launch
 fun StationDetails(
     field: Field,
     onDismissRequest: () -> Unit,
-    offset: IntOffset,
     popupWidth: Dp,
     popupHeight: Dp,
+    centerOfTheBoard: IntOffset,
     buyButtonVisibility: Boolean
 ) {
     val station = field as? Station ?: return
@@ -59,10 +60,17 @@ fun StationDetails(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
+    val density = LocalDensity.current
+    val popupWidthPx = with(density) { popupWidth.toPx() }
+    val popupHeightPx = with(density) { popupHeight.toPx() }
+
+    val offsetX = centerOfTheBoard.x - (popupWidthPx / 2).toInt()
+    val offsetY = centerOfTheBoard.y - (popupHeightPx / 2).toInt()
+
     Popup(
         onDismissRequest = onDismissRequest,
         properties = PopupProperties(focusable = true),
-        offset = offset
+        offset = IntOffset(offsetX, offsetY)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
