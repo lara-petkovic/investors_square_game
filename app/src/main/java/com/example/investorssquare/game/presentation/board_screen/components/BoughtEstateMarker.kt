@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.util.Constants.TOTAL_FIELDS
 
 @Composable
 fun BoughtEstateMarker(
@@ -32,4 +33,22 @@ fun BoughtEstateMarker(
             .size(width, height)
             .border(1.dp, color = Color.Black)
     )
+}
+
+fun calculateXOffsetForBoughtEstateMarker(fieldIndex: Int, fieldHeight: Dp, fieldWidth: Dp, boardSize: Dp): Dp {
+    return when {
+        fieldIndex < 10 -> boardSize - (fieldHeight.value + (fieldIndex - 1 + 0.25) * fieldWidth.value).dp - (0.5 * fieldWidth.value).dp
+        fieldIndex < 20 -> boardSize - (fieldHeight.value + 8.5 * fieldWidth.value).dp - (0.5 * fieldWidth.value).dp
+        fieldIndex < 30 -> boardSize - (fieldHeight.value + (30 - fieldIndex - 1 + 0.25) * fieldWidth.value).dp - (0.5 * fieldWidth.value).dp
+        else -> boardSize - fieldHeight - (0.25 * fieldWidth.value).dp
+    }
+}
+
+fun calculateYOffsetForBoughtEstateMarker(fieldIndex: Int, fieldHeight: Dp, fieldWidth: Dp, boardSize: Dp): Dp {
+    return when {
+        fieldIndex < 10 -> boardSize - fieldHeight - (0.25 * fieldWidth.value).dp
+        fieldIndex < 20 -> boardSize - (fieldHeight.value + (fieldIndex - 11 + 0.25) * fieldWidth.value).dp - (0.5 * fieldWidth.value).dp
+        fieldIndex < 30 -> boardSize - (fieldHeight.value + 8.5 * fieldWidth.value).dp - (0.5 * fieldWidth.value).dp
+        else -> boardSize - (fieldHeight.value + (TOTAL_FIELDS - fieldIndex - 1 + 0.25) * fieldWidth.value).dp - (0.5 * fieldWidth.value).dp
+    }
 }

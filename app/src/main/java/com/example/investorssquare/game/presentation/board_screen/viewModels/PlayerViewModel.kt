@@ -2,7 +2,9 @@ package com.example.investorssquare.game.presentation.board_screen.viewModels
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
-import com.example.investorssquare.util.Constants.NUMBER_OF_FIELDS
+import com.example.investorssquare.game.domain.model.Estate
+import com.example.investorssquare.game.domain.model.Field
+import com.example.investorssquare.util.Constants.TOTAL_FIELDS
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
@@ -55,7 +57,7 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     }
 
     fun moveBySteps(steps: Int) {
-        _position.value = (_position.value + steps) % NUMBER_OF_FIELDS
+        _position.value = (_position.value + steps) % TOTAL_FIELDS
     }
 
     fun goToJail(sentence: Int){
@@ -69,11 +71,11 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     }
 
     fun moveByStepsBackwards(steps: Int) {
-        _position.value = (_position.value - steps + NUMBER_OF_FIELDS) % NUMBER_OF_FIELDS
+        _position.value = (_position.value - steps + TOTAL_FIELDS) % TOTAL_FIELDS
     }
 
     fun moveToField(field: Int) {
-        if (field < NUMBER_OF_FIELDS) _position.value = field
+        if (field < TOTAL_FIELDS) _position.value = field
     }
 
     fun pay(price: Int) {
@@ -115,5 +117,16 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
 
     fun setName(name: String) {
         _name.value = name
+    }
+
+    fun canBuyEstate(currentField: Field): Boolean {
+        if (currentField !is Estate) {
+            return false
+        }
+
+        val isOnCorrectField = position.value == currentField.index
+        val alreadyOwnsEstate = _estates.value.any { it.estate.index == currentField.index }
+
+        return isOnCorrectField && !alreadyOwnsEstate
     }
 }

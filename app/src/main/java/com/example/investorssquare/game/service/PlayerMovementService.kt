@@ -47,7 +47,7 @@ object PlayerMovementService {
 
     fun moveToField(fieldIndex: Int){
         Game.getActivePlayer()?.let { player ->
-            val steps = (fieldIndex + Constants.NUMBER_OF_FIELDS - player.position.value) % Constants.NUMBER_OF_FIELDS
+            val steps = (fieldIndex + Constants.TOTAL_FIELDS - player.position.value) % Constants.TOTAL_FIELDS
             moveStepByStepForward(steps, player, 80)
         }
     }

@@ -36,7 +36,7 @@ object CommunityCardActionsService {
                 PlayerMovementService.moveStepByStepForward(steps, player, 80)
                 break
             }
-            position = (position + 1)% Constants.NUMBER_OF_FIELDS
+            position = (position + 1)% Constants.TOTAL_FIELDS
             steps++
         }
     }
@@ -58,7 +58,7 @@ object CommunityCardActionsService {
                 PlayerMovementService.moveStepByStepForward(steps, player, 80)
                 break
             }
-            position = (position + 1)% Constants.NUMBER_OF_FIELDS
+            position = (position + 1)% Constants.TOTAL_FIELDS
             steps++
         }
     }

@@ -45,11 +45,15 @@ import com.example.investorssquare.game.presentation.board_screen.popups.Propert
 import com.example.investorssquare.game.presentation.board_screen.popups.StationDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.UtilityDetails
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
-import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import com.example.investorssquare.util.Constants.BLACK_OVERLAY
 import com.example.investorssquare.util.Constants.FIELDS_PER_ROW
-import com.example.investorssquare.util.Constants.NUMBER_OF_FIELDS
+import com.example.investorssquare.util.Constants.RELATIVE_COMMUNITY_CARD_HEIGHT
+import com.example.investorssquare.util.Constants.RELATIVE_COMMUNITY_CARD_WIDTH
 import com.example.investorssquare.util.Constants.RELATIVE_FIELD_HEIGHT
+import com.example.investorssquare.util.Constants.RELATIVE_POPUP_HEIGHT
+import com.example.investorssquare.util.Constants.RELATIVE_POPUP_WIDTH
+import com.example.investorssquare.util.Constants.THIRD_ROW_INTERVAL
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -117,11 +121,7 @@ fun Board(
                     )
                 }
 
-                CornerFieldCard(
-                    fieldSize = fieldHeight,
-                    modifier = Modifier.align(Alignment.BottomEnd),
-                    index = 0
-                )
+                CornerFieldCard(fieldHeight, Modifier.align(Alignment.BottomEnd),0)
                 RowFieldCards(
                     fieldHeight = fieldHeight,
                     fieldWidth = fieldWidth,
@@ -130,11 +130,7 @@ fun Board(
                     board = board,
                     onFieldClick = { }
                 )
-                CornerFieldCard(
-                    fieldSize = fieldHeight,
-                    modifier = Modifier.align(Alignment.BottomStart),
-                    index = 10
-                )
+                CornerFieldCard(fieldHeight, Modifier.align(Alignment.BottomStart), 10)
                 RowFieldCards(
                     fieldHeight = fieldHeight,
                     fieldWidth = fieldWidth,
@@ -146,12 +142,8 @@ fun Board(
                     translationY = -with(LocalDensity.current) { fieldWidth.toPx() } * 4.5f - with(LocalDensity.current){fieldHeight.toPx()} * 0.5f,
                     translationX = -with(LocalDensity.current){fieldHeight.toPx()} * 2.5f,
 
-                )
-                CornerFieldCard(
-                    fieldSize = fieldHeight,
-                    modifier = Modifier.align(Alignment.TopStart),
-                    index = 20
-                )
+                    )
+                CornerFieldCard(fieldHeight, Modifier.align(Alignment.TopStart), 20)
                 RowFieldCards(
                     fieldHeight = fieldHeight,
                     fieldWidth = fieldWidth,
@@ -162,11 +154,7 @@ fun Board(
                     rotation = 180f,
                     translationY = -with(LocalDensity.current) { fieldWidth.toPx() } * 9.0f - with(LocalDensity.current){fieldHeight.toPx()} * 1f,
                 )
-                CornerFieldCard(
-                    fieldSize = fieldHeight,
-                    modifier = Modifier.align(Alignment.TopEnd),
-                    index = 30
-                )
+                CornerFieldCard(fieldHeight, Modifier.align(Alignment.TopEnd), 30)
                 RowFieldCards(
                     fieldHeight = fieldHeight,
                     fieldWidth = fieldWidth,
@@ -184,12 +172,12 @@ fun Board(
                         .fillMaxHeight()
                         .padding(fieldHeight)
                         .onGloballyPositioned { layoutCoordinates ->
-                        val size = layoutCoordinates.size
-                        val positionInWindow = layoutCoordinates.positionInWindow()
-                        val centerX = positionInWindow.x + (size.width / 2)
-                        val centerY = positionInWindow.y + (size.height / 2)
-                        centerOfTheBoard = IntOffset(centerX.roundToInt(), centerY.roundToInt())
-                    },
+                            val size = layoutCoordinates.size
+                            val positionInWindow = layoutCoordinates.positionInWindow()
+                            val centerX = positionInWindow.x + (size.width / 2)
+                            val centerY = positionInWindow.y + (size.height / 2)
+                            centerOfTheBoard = IntOffset(centerX.roundToInt(), centerY.roundToInt())
+                        },
                     border = BorderStroke(width = 1.dp, color = Color.Black),
                     colors = CardDefaults.cardColors(containerColor = Color.Transparent),
                     shape = RectangleShape
@@ -209,7 +197,7 @@ fun Board(
                                         )
                                     }
                                     .zIndex(1f),
-                                horizontal = estate.estate.index < 10 || (estate.estate.index in 21..29)
+                                horizontal = estate.estate.index < 10 || (estate.estate.index in THIRD_ROW_INTERVAL)
                             )
                         }
                     }
@@ -217,84 +205,61 @@ fun Board(
             }
         }
 
-        currentField?.let { currentField ->
+        currentField?.let { field ->
             if (showPopup) {
-                currentField.let { field ->
-                    val activePlayer = Game.getActivePlayer()
-                    val buyButtonVisibility = activePlayer?.let { canBuyEstate(it, field) } ?: false
-
-                    when (field.type) {
-                        FieldType.PROPERTY -> PropertyDetails(
-                            field = field,
-                            onDismissRequest = { Game.dismissPopup() },
-                            popupWidth = (5.5 * fieldWidth.value).dp,
-                            popupHeight = (0.96 * 9 * fieldWidth.value).dp,
-                            boardSize = boardSize,
-                            centerOfTheBoard = centerOfTheBoard,
-                            buyButtonVisibility = buyButtonVisibility
-                        )
-
-                        FieldType.STATION -> StationDetails(
-                            field = field,
-                            onDismissRequest = { Game.dismissPopup() },
-                            popupWidth = (5.5 * fieldWidth.value).dp,
-                            popupHeight = (0.96 * 9 * fieldWidth.value).dp,
-                            centerOfTheBoard = centerOfTheBoard,
-                            buyButtonVisibility = buyButtonVisibility
-                        )
-
-                        FieldType.UTILITY -> UtilityDetails(
-                            field = field,
-                            onDismissRequest = { Game.dismissPopup() },
-                            popupWidth = (5.5 * fieldWidth.value).dp,
-                            popupHeight = (0.96 * 9 * fieldWidth.value).dp,
-                            centerOfTheBoard = centerOfTheBoard,
-                            buyButtonVisibility = buyButtonVisibility
-                        )
-
-                        FieldType.CHANCE, FieldType.COMMUNITY_CHEST -> CommunityCardPopup(
-                            isChance = field.type == FieldType.CHANCE,
-                            onDismissRequest = {
-                                Game.dismissPopup()
-                                coroutineScope.launch{ postEvent(Event.ON_COMMUNITY_CARD_CLOSED) }
-                            },
-                            centerOfTheBoard = centerOfTheBoard,
-                            popupWidth = (0.9 * 9 * fieldWidth.value).dp,
-                            popupHeight = (6 * fieldWidth.value).dp,
-                        )
-                        else -> {}
-                    }
-                }
+                DisplayPopup(field, boardSize, fieldWidth, centerOfTheBoard, coroutineScope)
             }
         }
     }
 }
 
-private fun canBuyEstate(activePlayer: PlayerViewModel, currentField: Field): Boolean {
-    if (currentField !is Estate) {
-        return false
-    }
+@Composable
+private fun DisplayPopup(
+    field: Field,
+    boardSize: Dp,
+    fieldWidth: Dp,
+    centerOfTheBoard: IntOffset,
+    coroutineScope: CoroutineScope
+) {
+    val activePlayer = Game.getActivePlayer()
+    val buyButtonVisibility = activePlayer?.canBuyEstate(field) ?: false
 
-    val isOnCorrectField = activePlayer.position.value == currentField.index
-    val alreadyOwnsEstate = activePlayer.estates.value.any { it.estate.index == currentField.index }
-
-    return isOnCorrectField && !alreadyOwnsEstate
-}
-
-private fun calculateXOffsetForBoughtEstateMarker(fieldIndex: Int, fieldHeight: Dp, fieldWidth: Dp, boardSize: Dp): Dp {
-    return when {
-        fieldIndex < 10 -> boardSize - (fieldHeight.value + (fieldIndex - 1 + 0.25) * fieldWidth.value).dp - (0.5 * fieldWidth.value).dp
-        fieldIndex < 20 -> boardSize - (fieldHeight.value + 8.5 * fieldWidth.value).dp - (0.5 * fieldWidth.value).dp
-        fieldIndex < 30 -> boardSize - (fieldHeight.value + (30 - fieldIndex - 1 + 0.25) * fieldWidth.value).dp - (0.5 * fieldWidth.value).dp
-        else -> boardSize - fieldHeight - (0.25 * fieldWidth.value).dp
-    }
-}
-
-private fun calculateYOffsetForBoughtEstateMarker(fieldIndex: Int, fieldHeight: Dp, fieldWidth: Dp, boardSize: Dp): Dp {
-    return when {
-        fieldIndex < 10 -> boardSize - fieldHeight - (0.25 * fieldWidth.value).dp
-        fieldIndex < 20 -> boardSize - (fieldHeight.value + (fieldIndex - 11 + 0.25) * fieldWidth.value).dp - (0.5 * fieldWidth.value).dp
-        fieldIndex < 30 -> boardSize - (fieldHeight.value + 8.5 * fieldWidth.value).dp - (0.5 * fieldWidth.value).dp
-        else -> boardSize - (fieldHeight.value + (NUMBER_OF_FIELDS - fieldIndex - 1 + 0.25) * fieldWidth.value).dp - (0.5 * fieldWidth.value).dp
+    when (field.type) {
+        FieldType.PROPERTY -> PropertyDetails(
+            field = field,
+            onDismissRequest = { Game.dismissPopup() },
+            popupWidth = (RELATIVE_POPUP_WIDTH * fieldWidth.value).dp,
+            popupHeight = (RELATIVE_POPUP_HEIGHT * FIELDS_PER_ROW * fieldWidth.value).dp,
+            boardSize = boardSize,
+            centerOfTheBoard = centerOfTheBoard,
+            buyButtonVisibility = buyButtonVisibility
+        )
+        FieldType.STATION -> StationDetails(
+            field = field,
+            onDismissRequest = { Game.dismissPopup() },
+            popupWidth = (RELATIVE_POPUP_WIDTH * fieldWidth.value).dp,
+            popupHeight = (RELATIVE_POPUP_HEIGHT * FIELDS_PER_ROW * fieldWidth.value).dp,
+            centerOfTheBoard = centerOfTheBoard,
+            buyButtonVisibility = buyButtonVisibility
+        )
+        FieldType.UTILITY -> UtilityDetails(
+            field = field,
+            onDismissRequest = { Game.dismissPopup() },
+            popupWidth = (RELATIVE_POPUP_WIDTH * fieldWidth.value).dp,
+            popupHeight = (RELATIVE_POPUP_HEIGHT * FIELDS_PER_ROW * fieldWidth.value).dp,
+            centerOfTheBoard = centerOfTheBoard,
+            buyButtonVisibility = buyButtonVisibility
+        )
+        FieldType.CHANCE, FieldType.COMMUNITY_CHEST -> CommunityCardPopup(
+            isChance = field.type == FieldType.CHANCE,
+            onDismissRequest = {
+                Game.dismissPopup()
+                coroutineScope.launch { postEvent(Event.ON_COMMUNITY_CARD_CLOSED) }
+            },
+            centerOfTheBoard = centerOfTheBoard,
+            popupWidth = (RELATIVE_COMMUNITY_CARD_WIDTH * FIELDS_PER_ROW * fieldWidth.value).dp,
+            popupHeight = (RELATIVE_COMMUNITY_CARD_HEIGHT * fieldWidth.value).dp,
+        )
+        else -> {}
     }
 }
