@@ -2,7 +2,9 @@ package com.example.investorssquare.game.presentation.board_screen.components
 
 import android.media.MediaPlayer
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
@@ -83,11 +86,24 @@ fun DiceButton() {
 @Composable
 fun DiceImage(diceNumber: Int) {
     val painterResourceId = getDiceImage(diceNumber)
-    Image(
-        painter = painterResource(id = painterResourceId),
-        contentDescription = null,
+    val isDiceButtonEnabled by Game.diceViewModel.isDiceButtonEnabled.collectAsState()
+    Box(
         modifier = Modifier.size(40.dp)
-    )
+    ) {
+        Image(
+            painter = painterResource(id = painterResourceId),
+            contentDescription = null,
+            modifier = Modifier.matchParentSize() // Ensure the image fills the entire Box
+        )
+        if (!isDiceButtonEnabled) {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .background(Color.White.copy(alpha = 0.5f), shape = RectangleShape)
+            )
+        }
+    }
+
 }
 
 private fun getDiceImage(number: Int): Int {
