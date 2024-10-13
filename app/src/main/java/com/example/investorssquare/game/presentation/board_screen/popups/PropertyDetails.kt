@@ -48,6 +48,7 @@ import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.components.BuyButton
 import com.example.investorssquare.game.presentation.board_screen.components.CoinIcon
+import com.example.investorssquare.game.presentation.board_screen.components.HouseIcon
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import kotlinx.coroutines.launch
 
@@ -201,15 +202,7 @@ private fun RentWithHousesRow(index: Int, rent: Int) {
                 fontSize = 14.sp,
                 color = Color.Black
             )
-            Image(
-                painter = painterResource(
-                    context.resources.getIdentifier(
-                        Game.board.value?.houseImageUrl, "drawable", context.packageName
-                    )
-                ),
-                contentDescription = null,
-                modifier = Modifier.size(16.dp)
-            )
+            HouseIcon(Modifier.size(16.dp))
         }
         DotSeparator(rent)
         Row(
