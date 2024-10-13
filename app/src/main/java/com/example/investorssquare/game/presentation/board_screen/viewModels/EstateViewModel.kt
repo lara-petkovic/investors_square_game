@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 class EstateViewModel @Inject constructor(val estate: Estate) : ViewModel() {
-    val isUtility: Boolean = estate.type==FieldType.UTILITY
-    val isStation: Boolean = estate.type==FieldType.STATION
-    val isProperty: Boolean = estate.type==FieldType.PROPERTY
+    val isUtility: Boolean = estate.type == FieldType.UTILITY
+    val isStation: Boolean = estate.type == FieldType.STATION
+    val isProperty: Boolean = estate.type == FieldType.PROPERTY
 
     private val _numberOfBuildings = MutableStateFlow(0)
     val numberOfBuildings : StateFlow<Int> get() = _numberOfBuildings
@@ -21,10 +21,10 @@ class EstateViewModel @Inject constructor(val estate: Estate) : ViewModel() {
     fun setOwnerIndex(ownerIndex: Int) {
         _ownerIndex.value = ownerIndex
     }
-    fun isOwnedByPlayer(player: PlayerViewModel): Boolean{
+    fun isOwnedByPlayer(player: PlayerViewModel): Boolean {
         return ownerIndex.value == player.index.value
     }
-    fun isFullyBuilt(): Boolean{
+    fun isFullyBuilt(): Boolean {
         return numberOfBuildings.value == estate.rent.size-1
     }
 }

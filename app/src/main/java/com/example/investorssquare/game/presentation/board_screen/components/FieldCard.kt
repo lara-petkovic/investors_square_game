@@ -9,9 +9,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.domain.model.Property
@@ -140,7 +145,7 @@ fun DrawHouses(
     numberOfHouses: Int,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier.fillMaxSize()) {
         when (numberOfHouses) {
             in 0..3 -> {
                 Row(
@@ -148,7 +153,7 @@ fun DrawHouses(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     repeat(numberOfHouses) {
-                        HouseIcon()
+                        HouseIcon(Modifier.size(8.dp))
                     }
                 }
             }
@@ -166,24 +171,28 @@ fun DrawHouses(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        repeat(numberOfHouses / 2) { HouseIcon() }
+                        repeat(numberOfHouses / 2) { HouseIcon(Modifier.size(8.dp)) }
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        repeat(numberOfHouses / 2 + i) { HouseIcon() }
+                        repeat(numberOfHouses / 2 + i) { HouseIcon(Modifier.size(8.dp)) }
                     }
                 }
             }
             else -> {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment.Top,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    HouseIcon()
-                    Text(text = "x$numberOfHouses")
+                    Text(
+                        text = "x$numberOfHouses",
+                        fontSize = 7.sp,
+                        modifier = Modifier.offset(y = (-5).dp)
+                    )
+                    HouseIcon(Modifier.size(10.dp).padding(top = 3.dp))
                 }
             }
         }
@@ -191,22 +200,22 @@ fun DrawHouses(
 }
 
 
-@SuppressLint("StateFlowValueCalledInComposition")
+@SuppressLint("StateFlowValueCalledInComposition", "DiscouragedApi")
 @Composable
 fun HouseIcon(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
 
-        val resourceId = context.resources.getIdentifier(
-            Game.board.value?.houseImageUrl, "drawable", context.packageName
-        )
+    val resourceId = context.resources.getIdentifier(
+        Game.board.value?.houseImageUrl, "drawable", context.packageName
+    )
 
-        if (resourceId != 0) {
-            Image(
-                painter = painterResource(id = resourceId),
-                contentDescription = null,
-                modifier = modifier.size(8.dp)
-            )
-        }
+    if (resourceId != 0) {
+        Image(
+            painter = painterResource(id = resourceId),
+            contentDescription = null,
+            modifier = modifier
+        )
+    }
 }
