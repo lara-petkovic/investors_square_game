@@ -21,12 +21,16 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
@@ -40,9 +44,13 @@ import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.service.BuildingService
 import com.example.investorssquare.util.Constants.FIELD_CARD_STRAP_HEIGHT_PERCENTAGE
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun FieldCard(
     fieldWidth: Dp,
@@ -51,10 +59,21 @@ fun FieldCard(
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
+    //ove tri stari sam dodao da kad se upali mod za gradnju mogu da prepoznam gde mogu a gde ne mogu da gradim
+    val buildingModeOn = BuildingService.buildingModeOn.collectAsState()
+    val estate = Game.getEstateByFieldIndex(field.index)
+    val openToBuild = if(estate!= null && estate.isProperty) estate.isOpenToBuild.collectAsState() else mutableStateOf(false)
 
     Box(
         modifier = modifier
             .clickable { coroutineScope.launch { EventBus.postEvent(Event.ON_FIELD_CLICKED(field.index)) } }
+            .background(
+                // ovo popraviti da bude jednako zatamnjeno na svakom polju (ne znam zasto ne radi)
+                // svakako treba izrefaktorisati ja se nisam puno bavio UIem pa sam stavio na prvo logicno mesto
+                if(buildingModeOn.value && !openToBuild.value)
+                    Color(0f, 0f, 0f, 0.25f)
+                else Color.Transparent
+            )
     ) {
         Card(
             modifier = Modifier.size(fieldWidth, fieldHeight),

@@ -37,17 +37,27 @@ object EventService {
                     is Event.ON_COMMUNITY_CARD_OPENED -> openCardPopup()
                     is Event.ON_DICE_THROWN -> handleDiceThrown(event.firstNumber, event.secondNumber)
                     is Event.ON_MOVE_PLAYER -> moveActivePlayer()
+                    is Event.ON_SWITCH_TO_BUILDING_MODE -> BuildingService.switchBuildingMode()
                     is Event.ON_GO_TO_JAIL -> {
                         disableDice()
                         goToJail()
                     }
                     is Event.ON_PLAYER_LANDED_ON_FREE_ESTATE -> showPopupForEstate()
-                    is Event.ON_FIELD_CLICKED -> handleCardInformationClick(event.fieldIndex)
+                    is Event.ON_FIELD_CLICKED -> {
+                        val estate =Game.getEstateByFieldIndex(event.fieldIndex)
+                        if(estate !=null && estate.isOpenToBuild.value)
+                            BuildingService.build(estate)
+                        else
+                            handleCardInformationClick(event.fieldIndex)
+                    }
                     is Event.ON_ESTATE_BOUGHT -> {
                         if(payPriceForEstate(event.fieldIndex))
                             handleEstateBought(event.fieldIndex)
                     }
-                    is Event.ON_MOVE_FINISHED -> handleDiceToTheNextPlayer()
+                    is Event.ON_MOVE_FINISHED -> {
+                        handleDiceToTheNextPlayer()
+                        BuildingService.turnOffBuildMode()
+                    }
                     is Event.ON_PLAYER_LANDED_ON_BOUGHT_ESTATE -> payRent()
                     is Event.ON_PLAYER_CROSSED_START -> collectSalary()
                     is Event.ON_PLAYER_LANDED_ON_TAX -> payTax()

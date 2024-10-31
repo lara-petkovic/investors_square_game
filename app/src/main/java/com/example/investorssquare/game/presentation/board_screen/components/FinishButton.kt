@@ -1,5 +1,7 @@
 package com.example.investorssquare.game.presentation.board_screen.components
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -20,14 +22,27 @@ fun FinishButton() {
     val isFinishButtonVisible by Game.isFinishButtonVisible.collectAsState()
 
     if (isFinishButtonVisible) {
-        Button(
-            onClick = {
-                coroutineScope.launch { EventBus.postEvent(Event.ON_MOVE_FINISHED) }
-            },
-            modifier = Modifier
-                .padding(top = 10.dp)
-        ) {
-            Text(text = "Finish Turn")
+        Column {
+            Button(
+                onClick = {
+                    coroutineScope.launch { EventBus.postEvent(Event.ON_MOVE_FINISHED) }
+                },
+                modifier = Modifier
+                    .padding(top = 10.dp)
+            ) {
+                Text(text = "Finish Turn")
+            }
+            //privremeno ovde ubaceno dugme za build, samo ga treba premestiti
+            //zbog mesta gde sam ga ubacio ovo dugme se prikazuje samo kad neko zavrsava potez ali to naravno treba promeniti da je uvek vidljivo
+            Button(
+                onClick = {
+                    coroutineScope.launch { EventBus.postEvent(Event.ON_SWITCH_TO_BUILDING_MODE) }
+                },
+                modifier = Modifier
+                    .padding(top = 10.dp)
+            ) {
+                Text(text = "Build")
+            }
         }
     }
 }

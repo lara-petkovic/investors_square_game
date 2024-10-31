@@ -14,8 +14,8 @@ class RuleBook(
     var doubleRentOnCollectedSetsEnabled: Boolean = true,
     var speedDieEnabled: Boolean = false,
     var payingTaxesViaPercentagesEnabled: Boolean = true,
-    var isSetNecessaryToBuild: Boolean = true,
-    var isVisitNecessaryToBuild: Boolean = true,
+    var isSetNecessaryToBuild: Boolean = false,
+    var isVisitNecessaryToBuild: Boolean = false,
     var evenlyBuilding: Boolean = false,
     var buildingOnMultiplePropertiesInOneMoveEnabled: Boolean = true,
 
@@ -24,7 +24,7 @@ class RuleBook(
     var jailEscapePrice: Int = 100,
     var jailSentenceInMoves: Int = 3,
     var timePerMoveInSeconds: Int = 60,
-    var buildingsPerMovePerProperty: Int = 1,
+    var buildingsPerMovePerProperty: Int = 10,
     var numberOfPlayers: Int = 2,
     var doublesRolledLimit: Int = 3
 )

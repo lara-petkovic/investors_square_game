@@ -4,8 +4,38 @@ import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 object BuildingService {
+
+    private var highlightedProperties: List<EstateViewModel> = emptyList()
+
+    private val _buildingModeOn = MutableStateFlow<Boolean>(false)
+    val buildingModeOn: StateFlow<Boolean> get() = _buildingModeOn
+
+    fun switchBuildingMode(){
+        if(buildingModeOn.value)
+            turnOffBuildMode()
+        else
+            turnOnBuildingMode()
+    }
+    fun turnOnBuildingMode(){
+        _buildingModeOn.value = true
+        highlightProperties()
+    }
+    private fun highlightProperties() {
+        highlightedProperties.forEach { p -> p.setClosedToBuild() }
+        highlightedProperties = getPropertiesWherePlayerCanBuild(Game.getActivePlayer()!!)
+        highlightedProperties.forEach { p -> p.setOpenToBuild() }
+    }
+    fun turnOffBuildMode(){
+        if(_buildingModeOn.value){
+            _buildingModeOn.value = false
+            highlightedProperties.forEach { p-> p.setClosedToBuild() }
+            highlightedProperties = emptyList()
+        }
+    }
     fun getPropertiesWherePlayerCanBuild(player: PlayerViewModel): List<EstateViewModel>{
         var propertiesWherePlayerCanBuild = Game.estates.value.filter { e->
             e.isOwnedByPlayer(player) && e.isProperty && !e.isFullyBuilt()
@@ -43,8 +73,10 @@ object BuildingService {
         if(estate.numberOfBuildings.value==property.rent.size-1)
             return
         val player = Game.getActivePlayer()!!
-        if(TransactionService.buyBuilding(player, property.housePrice))
+        if(TransactionService.buyBuilding(player, property.housePrice)){
             estate.addBuilding()
+            highlightProperties()
+        }
     }
     fun sell(estate: EstateViewModel){
         if(!estate.isProperty)
