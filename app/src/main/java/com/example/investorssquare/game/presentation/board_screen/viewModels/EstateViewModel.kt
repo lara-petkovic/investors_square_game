@@ -27,4 +27,10 @@ class EstateViewModel @Inject constructor(val estate: Estate) : ViewModel() {
     fun isFullyBuilt(): Boolean {
         return numberOfBuildings.value == estate.rent.size-1
     }
+    fun addBuilding(){
+        _numberOfBuildings.value++
+    }
+    fun removeBuilding(){
+        _numberOfBuildings.value--
+    }
 }

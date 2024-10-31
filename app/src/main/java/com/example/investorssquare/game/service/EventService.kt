@@ -26,7 +26,6 @@ import kotlinx.coroutines.launch
 
 object EventService {
     private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-    private var i = 0
     init {
         observeEvents()
     }
@@ -57,6 +56,12 @@ object EventService {
                             collectGatheredTaxes()
                         else if(Game.ruleBook.playAgainOnFreeParkingEnabled)
                             enableDice()
+                    }
+                    is Event.ON_BUILDING_ON_ESTATE -> {
+                        BuildingService.build(Game.getEstateByFieldIndex(event.fieldIndex)!!)
+                    }
+                    is Event.ON_SELLING_BUILDING_ON_ESTATE -> {
+                        BuildingService.sell(Game.getEstateByFieldIndex(event.fieldIndex)!!)
                     }
                     else -> { }
                 }

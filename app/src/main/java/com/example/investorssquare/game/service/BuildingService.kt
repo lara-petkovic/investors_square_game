@@ -36,7 +36,24 @@ object BuildingService {
         }
         return propertiesWherePlayerCanBuild
     }
-    fun build(property: EstateViewModel){
-
+    fun build(estate: EstateViewModel){
+        if(!estate.isProperty)
+            return
+        val property = estate.estate as Property
+        if(estate.numberOfBuildings.value==property.rent.size-1)
+            return
+        val player = Game.getActivePlayer()!!
+        if(TransactionService.buyBuilding(player, property.housePrice))
+            estate.addBuilding()
+    }
+    fun sell(estate: EstateViewModel){
+        if(!estate.isProperty)
+            return
+        val property = estate.estate as Property
+        if(estate.numberOfBuildings.value==0)
+            return
+        val player = Game.getActivePlayer()!!
+        TransactionService.receive(player, property.housePrice/2)
+        estate.removeBuilding()
     }
 }
