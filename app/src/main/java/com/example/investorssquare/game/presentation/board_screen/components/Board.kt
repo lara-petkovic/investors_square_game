@@ -122,50 +122,22 @@ fun Board(
                 }
 
                 CornerFieldCard(fieldHeight, Modifier.align(Alignment.BottomEnd),0)
-                RowFieldCards(
-                    fieldHeight = fieldHeight,
-                    fieldWidth = fieldWidth,
-                    modifier = Modifier.align(Alignment.BottomCenter),
-                    startIndex = 0,
-                    board = board,
-                    onFieldClick = { }
-                )
-                CornerFieldCard(fieldHeight, Modifier.align(Alignment.BottomStart), 10)
-                RowFieldCards(
-                    fieldHeight = fieldHeight,
-                    fieldWidth = fieldWidth,
-                    modifier = Modifier.align(Alignment.BottomStart),
-                    startIndex = 10,
-                    board = board,
-                    onFieldClick = { },
-                    rotation = 90f,
-                    translationY = -with(LocalDensity.current) { fieldWidth.toPx() } * 4.5f - with(LocalDensity.current){fieldHeight.toPx()} * 0.5f,
-                    translationX = -with(LocalDensity.current){fieldHeight.toPx()} * 2.5f,
+                RowFieldCards(fieldHeight, fieldWidth, Modifier.align(Alignment.BottomCenter),0, board, onFieldClick = { })
 
-                    )
+                CornerFieldCard(fieldHeight, Modifier.align(Alignment.BottomStart), 10)
+                RowFieldCards(fieldHeight, fieldWidth, Modifier.align(Alignment.BottomStart), 10, board, onFieldClick = { }, 90f,
+                    -with(LocalDensity.current) { fieldWidth.toPx() } * 4.5f - with(LocalDensity.current) { fieldHeight.toPx() } * 0.5f,
+                    -with(LocalDensity.current) { fieldHeight.toPx() } * 2.5f)
+
                 CornerFieldCard(fieldHeight, Modifier.align(Alignment.TopStart), 20)
-                RowFieldCards(
-                    fieldHeight = fieldHeight,
-                    fieldWidth = fieldWidth,
-                    modifier = Modifier.align(Alignment.BottomCenter),
-                    startIndex = 20,
-                    board = board,
-                    onFieldClick = { },
-                    rotation = 180f,
-                    translationY = -with(LocalDensity.current) { fieldWidth.toPx() } * 9.0f - with(LocalDensity.current){fieldHeight.toPx()} * 1f,
-                )
+                RowFieldCards(fieldHeight, fieldWidth, Modifier.align(Alignment.BottomCenter), 20, board, onFieldClick = { }, 180f,
+                    translationY = -with(LocalDensity.current) { fieldWidth.toPx() } * 9.0f - with(LocalDensity.current){fieldHeight.toPx()} * 1f)
+
                 CornerFieldCard(fieldHeight, Modifier.align(Alignment.TopEnd), 30)
-                RowFieldCards(
-                    fieldHeight = fieldHeight,
-                    fieldWidth = fieldWidth,
-                    modifier = Modifier.align(Alignment.BottomCenter),
-                    startIndex = 30,
-                    board = board,
-                    onFieldClick = { },
-                    rotation = 270f,
-                    translationY = -with(LocalDensity.current) { fieldWidth.toPx() } * 4.5f - with(LocalDensity.current){fieldHeight.toPx()} * 0.5f,
-                    translationX = with(LocalDensity.current){fieldHeight.toPx()} * 2.5f,
-                )
+                RowFieldCards(fieldHeight, fieldWidth, Modifier.align(Alignment.BottomCenter), 30, board, onFieldClick = { }, 270f,
+                    with(LocalDensity.current){fieldHeight.toPx()} * 2.5f,
+                    -with(LocalDensity.current) { fieldWidth.toPx() } * 4.5f - with(LocalDensity.current){fieldHeight.toPx()} * 0.5f)
+
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()

@@ -140,10 +140,15 @@ private fun PropertyStrap(
             val estateVM = Game.getEstateByFieldIndex(it.index)
             val numberOfHouses = estateVM?.numberOfBuildings?.collectAsState()?.value ?: 0
 
-            DrawHouses(
-                numberOfHouses = numberOfHouses,
-                modifier = Modifier.align(Alignment.Center)
-            )
+            if(property.rent.size - 1 == numberOfHouses) { // property size - 1 because there can be 0 houses
+                DrawHotel(Modifier.align(Alignment.Center));
+            }
+            else {
+                DrawHouses(
+                    numberOfHouses = numberOfHouses,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
         }
     }
 }
@@ -158,6 +163,23 @@ private fun OwnershipIndicator(isOwned: Boolean) {
     )
 }
 
+@SuppressLint("StateFlowValueCalledInComposition", "DiscouragedApi")
+@Composable
+fun DrawHotel(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+
+    val resourceId = context.resources.getIdentifier(
+        Game.board.value?.hotelImageUrl, "drawable", context.packageName
+    )
+
+    if (resourceId != 0) {
+        Image(
+            painter = painterResource(id = resourceId),
+            contentDescription = "hotel image",
+            modifier = modifier.size(10.dp)
+        )
+    }
+}
 
 @Composable
 fun DrawHouses(
@@ -233,7 +255,7 @@ fun HouseIcon(
     if (resourceId != 0) {
         Image(
             painter = painterResource(id = resourceId),
-            contentDescription = null,
+            contentDescription = "house image",
             modifier = modifier
         )
     }

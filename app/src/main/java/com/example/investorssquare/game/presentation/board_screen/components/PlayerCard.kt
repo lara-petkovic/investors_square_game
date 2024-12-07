@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -53,7 +54,7 @@ fun PlayerCard(playerViewModel: PlayerViewModel) {
 
     val showPaymentGif = remember { mutableStateOf(false) }
     val gifPainter = remember { mutableStateOf<Int?>(null) }
-    val previousMoney = remember { mutableStateOf(money) }
+    val previousMoney = remember { mutableIntStateOf(money) }
     val targetBackgroundColor = remember { mutableStateOf(Color.White) }
 
     val animatedBackgroundColor by animateColorAsState(
@@ -62,8 +63,8 @@ fun PlayerCard(playerViewModel: PlayerViewModel) {
     )
 
     LaunchedEffect(money) {
-        handleMoneyChange(money, previousMoney.value, targetBackgroundColor, gifPainter, showPaymentGif)
-        previousMoney.value = money
+        handleMoneyChange(money, previousMoney.intValue, targetBackgroundColor, gifPainter, showPaymentGif)
+        previousMoney.intValue = money
     }
 
     PlayerCardLayout(
