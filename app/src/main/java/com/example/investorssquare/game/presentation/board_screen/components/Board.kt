@@ -28,13 +28,13 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
@@ -53,11 +53,12 @@ import com.example.investorssquare.util.Constants.RELATIVE_FIELD_HEIGHT
 import com.example.investorssquare.util.Constants.RELATIVE_POPUP_HEIGHT
 import com.example.investorssquare.util.Constants.RELATIVE_POPUP_WIDTH
 import com.example.investorssquare.util.Constants.THIRD_ROW_INTERVAL
+import com.example.investorssquare.util.ResourceMapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-@SuppressLint("StateFlowValueCalledInComposition", "DiscouragedApi")
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun Board(
     screenWidthDp: Dp,
@@ -70,7 +71,6 @@ fun Board(
     val fieldHeight = (boardSize.value * RELATIVE_FIELD_HEIGHT).dp
     val fieldWidth = ((boardSize.value - 2 * fieldHeight.value) / FIELDS_PER_ROW).dp
     var centerOfTheBoard by remember { mutableStateOf(IntOffset.Zero) }
-    val context = LocalContext.current
     val board = Game.board.value!!
     val coroutineScope = rememberCoroutineScope()
 
@@ -112,9 +112,11 @@ fun Board(
             Box(
                 modifier = Modifier.fillMaxSize()
             ) {
-                if (board.imageUrl.isNotEmpty()) {
+                val imageResourceId = ResourceMapper.getImageResource(board.name)
+
+                if (imageResourceId != null) {
                     Image(
-                        painter = painterResource(context.resources.getIdentifier(board.imageUrl, "drawable", context.packageName)),
+                        painter = painterResource(id = imageResourceId),
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
@@ -179,7 +181,7 @@ fun Board(
 
         currentField?.let { field ->
             if (showPopup) {
-                DisplayPopup(field, boardSize, fieldWidth, centerOfTheBoard, coroutineScope)
+                DisplayPopup(field, fieldWidth, centerOfTheBoard, coroutineScope)
             }
         }
     }
@@ -188,7 +190,6 @@ fun Board(
 @Composable
 private fun DisplayPopup(
     field: Field,
-    boardSize: Dp,
     fieldWidth: Dp,
     centerOfTheBoard: IntOffset,
     coroutineScope: CoroutineScope
@@ -202,7 +203,6 @@ private fun DisplayPopup(
             onDismissRequest = { Game.dismissPopup() },
             popupWidth = (RELATIVE_POPUP_WIDTH * fieldWidth.value).dp,
             popupHeight = (RELATIVE_POPUP_HEIGHT * FIELDS_PER_ROW * fieldWidth.value).dp,
-            boardSize = boardSize,
             centerOfTheBoard = centerOfTheBoard,
             buyButtonVisibility = buyButtonVisibility
         )

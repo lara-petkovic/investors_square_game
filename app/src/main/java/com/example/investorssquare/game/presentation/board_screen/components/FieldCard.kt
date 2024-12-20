@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,8 +19,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,10 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -46,8 +40,7 @@ import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.service.BuildingService
 import com.example.investorssquare.util.Constants.FIELD_CARD_STRAP_HEIGHT_PERCENTAGE
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.example.investorssquare.util.ResourceMapper
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnrememberedMutableState")
@@ -163,18 +156,15 @@ private fun OwnershipIndicator(isOwned: Boolean) {
     )
 }
 
-@SuppressLint("StateFlowValueCalledInComposition", "DiscouragedApi")
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun DrawHotel(modifier: Modifier = Modifier) {
-    val context = LocalContext.current
+    val boardName = Game.board.value?.name ?: "default"
+    val hotelImageResource = ResourceMapper.getImageResource("${boardName}_hotel")
 
-    val resourceId = context.resources.getIdentifier(
-        Game.board.value?.hotelImageUrl, "drawable", context.packageName
-    )
-
-    if (resourceId != 0) {
+    if (hotelImageResource != null) {
         Image(
-            painter = painterResource(id = resourceId),
+            painter = painterResource(id = hotelImageResource),
             contentDescription = "hotel image",
             modifier = modifier.size(10.dp)
         )
@@ -241,20 +231,17 @@ fun DrawHouses(
 }
 
 
-@SuppressLint("StateFlowValueCalledInComposition", "DiscouragedApi")
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun HouseIcon(
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
+    val boardName = Game.board.value?.name ?: "default"
+    val houseImageResource = ResourceMapper.getImageResource("${boardName}_house")
 
-    val resourceId = context.resources.getIdentifier(
-        Game.board.value?.houseImageUrl, "drawable", context.packageName
-    )
-
-    if (resourceId != 0) {
+    if (houseImageResource != null) {
         Image(
-            painter = painterResource(id = resourceId),
+            painter = painterResource(id = houseImageResource),
             contentDescription = "house image",
             modifier = modifier
         )

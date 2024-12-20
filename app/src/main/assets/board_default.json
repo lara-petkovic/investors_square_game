@@ -1,54 +1,184 @@
 {
-  "name": "Nba board",
-  "image-url": "board1",
+  "name": "default",
   "dice-color": "#ffffff",
-  "house-image-url": "house",
-  "hotel-image-url": "hotel",
-  "property-common-name": "club",
-  "property-common-name-plural": "clubs",
-  "station-common-name": "arena",
-  "station-common-name-plural": "arenas",
-  "utility-common-name": "jersey",
-  "utility-common-name-plural": "jerseys",
+  "property-common-name": "property",
+  "property-common-name-plural": "properties",
+  "station-common-name": "station",
+  "station-common-name-plural": "stations",
+  "utility-common-name": "utility",
+  "utility-common-name-plural": "utilities",
   "default-rules": {},
-  "community-chest-cards": [
-    {
-      "text": "Go to JAIL. Do not collect 200.",
-      "action": "10"
-    }
-  ],
-  "chance-cards": [],
-  "player-colors": ["#ff0000", "#00ff00", "#0000ff", "#ff00ff", "#ffff00", "#00ffff"],
+  "chance": {
+    "image-url": "chance_card",
+    "primary-color": "#ff9900",
+    "common-name": "Chance",
+    "cards": [
+      {
+        "text": "Advance to Boardwalk",
+        "action": "1"
+      },
+      {
+        "text": "Advance to Go (Collect 200)",
+        "action": "2"
+      },
+      {
+        "text": "Advance to Illinois Avenue. If you pass Go, collect 200",
+        "action": "3"
+      },
+      {
+        "text": "Advance to St Charles Place. If you pass Go, collect 200",
+        "action": "4"
+      },
+      {
+        "text": "Advance to the nearest Railroad. If unowned, you may buy it from the Bank. If owned, pay owner twice the rental to which they are otherwise entitled.",
+        "action": "5"
+      },
+      {
+        "text": "Advance to the nearest Railroad. If unowned, you may buy it from the Bank. If owned, pay owner twice the rental to which they are otherwise entitled.",
+        "action": "6"
+      },
+      {
+        "text": "Advance to the nearest Utility. If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total ten times amount thrown.",
+        "action": "7"
+      },
+      {
+        "text": "Bank pays you dividend of 50",
+        "action": "8"
+      },
+      {
+        "text": "Get out of Jail free",
+        "action": "9"
+      },
+      {
+        "text": "Go back three spaces",
+        "action": "10"
+      },
+      {
+        "text": "Go to Jail. Go directly to Jail, do not pass Go, do not collect 200",
+        "action": "11"
+      },
+      {
+        "text": "Make general repairs on all your property. For each house pay 25. For each hotel pay 100.",
+        "action": "12"
+      },
+      {
+        "text": "Speeding fine 15",
+        "action": "13"
+      },
+      {
+        "text": "Take a trip to reading Railroad. If you pass go, collect 200.",
+        "action": "14"
+      },
+      {
+        "text": "You have been elected chairman of the board. Pay each player 50.",
+        "action": "15"
+      },
+      {
+        "text": "Your building loan matures. Collect 150.",
+        "action": "16"
+      }
+    ]
+  },
+  "community-chest": {
+    "image-url": "community_chest_card",
+    "primary-color": "#6666ff",
+    "common-name": "Community Chest",
+    "cards": [
+      {
+        "text": "Advance to go (Collect 200)",
+        "action": "17"
+      },
+      {
+        "text": "Bank error in your favor. Collect 200.",
+        "action": "18"
+      },
+      {
+        "text": "Doctors fee. Pay 50.",
+        "action": "19"
+      },
+      {
+        "text": "From sale of stock you get 50.",
+        "action": "20"
+      },
+      {
+        "text": "Get out of Jail free.",
+        "action": "21"
+      },
+      {
+        "text": "Go to Jail. Go directly to Jail, do not pass Go, do not collect 200.",
+        "action": "22"
+      },
+      {
+        "text": "Holiday fund matures. Receive 100.",
+        "action": "23"
+      },
+      {
+        "text": "Income tax refund. Collect 20.",
+        "action": "24"
+      },
+      {
+        "text": "Its your birthday. Collect 10 from each player.",
+        "action": "25"
+      },
+      {
+        "text": "Life insurance matures. Collect 100.",
+        "action": "26"
+      },
+      {
+        "text": "Pay hospital 100.",
+        "action": "27"
+      },
+      {
+        "text": "Pay school tax 150.",
+        "action": "28"
+      },
+      {
+        "text": "Receive 25 consultancy fee.",
+        "action": "29"
+      },
+      {
+        "text": "You are assessed for street repair. Pay 40 per house, 115 per hotel.",
+        "action": "30"
+      },
+      {
+        "text": "You have won second prize in a beauty contest. Collect 10.",
+        "action": "31"
+      },
+      {
+        "text": "You inherit 100.",
+        "action": "32"
+      }
+    ]
+  },
+  "player-colors": ["#00ff00","#ff0000", "#0000ff", "#ff00ff", "#ffff00", "#00ffff"],
   "fields": [
     {
       "name": "GO",
       "type": "GO"
     },
     {
-      "name": "San Antonio Spurs",
+      "name": "Mediterranean Avenue",
       "type": "PROPERTY",
       "price": "60",
       "house-price": "50",
       "mortgage-price": "30",
       "sell-price": "30",
       "rent": [ "2", "10", "30", "90", "160", "250" ],
-      "set": "#000000",
-      "image-url": "nba_sas_logo"
+      "set": "#8f622c"
     },
     {
       "name": "Community chest",
       "type": "COMMUNITY_CHEST"
     },
     {
-      "name": "Brooklyn Nets",
+      "name": "Baltic Avenue",
       "type": "PROPERTY",
       "price": "60",
       "house-price": "50",
       "mortgage-price": "30",
       "sell-price": "30",
       "rent": [ "4", "20", "60", "180", "320", "450", "800", "1000", "1300", "1500" ],
-      "set": "#000000",
-      "image-url": "nba_bkn_logo"
+      "set": "#8f622c"
     },
     {
       "name": "Income tax",
@@ -57,316 +187,296 @@
       "tax-percentage": "10"
     },
     {
-      "name": "Crypto.com Arena",
+      "name": "Reading Railroad",
       "type": "STATION",
       "rent": [ "25", "50", "100", "200" ],
       "price": "200",
       "mortgage-price": "100",
       "sell-price": "100",
-      "image-url": "nba_lal_court"
+      "image-url": "default_station"
     },
     {
-      "name": "New York Knicks",
+      "name": "Oriental Avenue",
       "type": "PROPERTY",
       "price": "100",
       "house-price": "50",
       "mortgage-price": "50",
       "sell-price": "50",
       "rent": [ "6", "30", "90", "270", "400", "550" ],
-      "set": "#f79328",
-      "image-url": "nba_nyk_logo"
+      "set": "#45c8f7"
     },
     {
       "name": "Chance",
       "type": "CHANCE"
     },
     {
-      "name": "Phoenix Suns",
+      "name": "Vermont Avenue",
       "type": "PROPERTY",
       "price": "100",
       "house-price": "50",
       "mortgage-price": "50",
       "sell-price": "50",
       "rent": [ "6", "30", "90", "270", "400", "550" ],
-      "set": "#f79328",
-      "image-url": "nba_pho_logo"
+      "set": "#45c8f7"
     },
     {
-      "name": "Oklahoma City Thunder",
+      "name": "Connecticut Avenue",
       "type": "PROPERTY",
       "price": "120",
       "house-price": "50",
       "mortgage-price": "60",
       "sell-price": "60",
       "rent": [ "8", "40", "100", "300", "450", "600" ],
-      "set": "#f79328",
-      "image-url": "nba_okc_logo"
+      "set": "#45c8f7"
     },
     {
       "name": "Jail",
       "type": "JAIL"
     },
     {
-      "name": "Chicago Bulls",
+      "name": "St. Charles Place",
       "type": "PROPERTY",
       "price": "140",
       "house-price": "100",
       "mortgage-price": "70",
       "sell-price": "70",
       "rent": [ "10", "50", "150", "450", "625", "750" ],
-      "set": "#d10804",
-      "image-url": "nba_chi_logo"
+      "set": "#f71eda"
     },
     {
-      "name": "Home Jersey",
+      "name": "Electric Company",
       "type": "UTILITY",
       "rent": [ "4", "10" ],
       "price": "150",
       "mortgage-price": "75",
       "sell-price": "75",
-      "image-url": "@drawable/utility1"
+      "image-url": "default_electric_company"
     },
     {
-      "name": "Miami Heat",
+      "name": "States Avenue",
       "type": "PROPERTY",
       "price": "140",
       "house-price": "100",
       "mortgage-price": "70",
       "sell-price": "70",
       "rent": [ "10", "50", "150", "450", "625", "750" ],
-      "set": "#d10804",
-      "image-url": "nba_mia_logo"
+      "set": "#f71eda"
     },
     {
-      "name": "Houston Rockets",
+      "name": "Virginia Avenue",
       "type": "PROPERTY",
       "price": "160",
       "house-price": "100",
       "mortgage-price": "80",
       "sell-price": "80",
       "rent": [ "12", "60", "180", "500", "700", "900" ],
-      "set": "#d10804",
-      "image-url": "nba_hou_logo"
+      "set": "#f71eda"
     },
     {
-      "name": "TD Garden",
+      "name": "Pennsylvania Railroad",
       "type": "STATION",
       "rent": [ "25", "50", "100", "200" ],
       "price": "200",
       "mortgage-price": "100",
       "sell-price": "100",
-      "image-url": "nba_bos_court"
+      "image-url": "default_station"
     },
     {
-      "name": "Orlando Magic",
+      "name": "St. James Place",
       "type": "PROPERTY",
       "price": "180",
       "house-price": "100",
       "mortgage-price": "90",
       "sell-price": "90",
       "rent": [ "14", "70", "200", "550", "750", "950" ],
-      "set": "#0eb7eb",
-      "image-url": "nba_orl_logo"
+      "set": "#f77f16"
     },
     {
       "name": "Community Chest",
       "type": "COMMUNITY_CHEST"
     },
     {
-      "name": "Charlotte Hornets",
+      "name": "Tennessee Avenue",
       "type": "PROPERTY",
       "price": "180",
       "house-price": "100",
       "mortgage-price": "90",
       "sell-price": "90",
       "rent": [ "14", "70", "200", "550", "750", "950" ],
-      "set": "#0eb7eb",
-      "image-url": "nba_cha_logo"
+      "set": "#f77f16"
     },
     {
-      "name": "Dallas Mavericks",
+      "name": "New York Avenue",
       "type": "PROPERTY",
       "price": "200",
       "house-price": "100",
       "mortgage-price": "100",
       "sell-price": "100",
       "rent": [ "16", "80", "220", "600", "800", "1000" ],
-      "set": "#0eb7eb",
-      "image-url": "nba_dal_logo"
+      "set": "#f77f16"
     },
     {
-      "name": "Half Time",
+      "name": "Free parking",
       "type": "PARKING"
     },
     {
-      "name": "Minnesota Timberwolves",
+      "name": "Kentucky Avenue",
       "type": "PROPERTY",
       "price": "220",
       "house-price": "150",
       "mortgage-price": "110",
       "sell-price": "110",
       "rent": [ "18", "90", "250", "700", "875", "1050" ],
-      "set": "#0d9603",
-      "image-url": "nba_min_logo"
+      "set": "#c70202"
     },
     {
       "name": "Chance",
       "type": "CHANCE"
     },
     {
-      "name": "Milwaukee Bucks",
+      "name": "Indiana Avenue",
       "type": "PROPERTY",
       "price": "220",
       "house-price": "150",
       "mortgage-price": "110",
       "sell-price": "110",
       "rent": [ "18", "90", "250", "700", "875", "1050" ],
-      "set": "#0d9603",
-      "image-url": "nba_mil_logo"
+      "set": "#c70202"
     },
     {
-      "name": "Boston Celtics",
+      "name": "Illinois",
       "type": "PROPERTY",
       "price": "240",
       "house-price": "150",
       "mortgage-price": "120",
       "sell-price": "120",
       "rent": [ "20", "100", "300", "750", "925", "1100" ],
-      "set": "#0d9603",
-      "image-url": "nba_bos_logo"
+      "set": "#c70202"
     },
     {
-      "name": "Target Center",
+      "name": "B&O Railroad",
       "type": "STATION",
       "rent": [ "25", "50", "100", "200" ],
       "price": "200",
       "mortgage-price": "100",
       "sell-price": "100",
-      "image-url": "nba_bos_court"
+      "image-url": "default_station"
     },
     {
-      "name": "Detroit Pistons",
+      "name": "Atlantic Avenue",
       "type": "PROPERTY",
       "price": "260",
       "house-price": "150",
       "mortgage-price": "130",
       "sell-price": "130",
       "rent": [ "22", "110", "330", "800", "975", "1150" ],
-      "set": "#ed4cd8",
-      "image-url": "nba_det_logo"
+      "set": "#faea0c"
     },
     {
-      "name": "Los Angeles Clippers",
+      "name": "Ventnor Avenue",
       "type": "PROPERTY",
       "price": "260",
       "house-price": "150",
       "mortgage-price": "130",
       "sell-price": "130",
       "rent": [ "22", "110", "330", "800", "975", "1150" ],
-      "set": "#ed4cd8",
-      "image-url": "nba_lac_logo"
+      "set": "#faea0c"
     },
     {
-      "name": "Away Jersey",
+      "name": "Water Works",
       "type": "UTILITY",
       "rent": [ "4", "10" ],
       "price": "150",
       "mortgage-price": "75",
       "sell-price": "75",
-      "image-url": "@drawable/utility2"
+      "image-url": "default_water_works"
     },
     {
-      "name": "Philadelphia 76ers",
+      "name": "Marvin Gardens",
       "type": "PROPERTY",
       "price": "280",
       "house-price": "150",
       "mortgage-price": "140",
       "sell-price": "140",
       "rent": [ "24", "120", "360", "850", "1025", "1200" ],
-      "set": "#ed4cd8",
-      "image-url": "nba_phi_logo"
+      "set": "#faea0c"
     },
     {
-      "name": "Go to jail",
+      "name": "Go to Jail",
       "type": "GO_TO_JAIL"
     },
     {
-      "name": "Indiana Pacers",
+      "name": "Pacific Avenue",
       "type": "PROPERTY",
       "price": "300",
       "house-price": "200",
       "mortgage-price": "150",
       "sell-price": "150",
       "rent": [ "26", "130", "390", "900", "1100", "1275" ],
-      "set": "#ffeb12",
-      "image-url": "nba_ind_logo"
+      "set": "#0d9603"
     },
     {
-      "name": "Denver Nuggets",
+      "name": "North Carolina Avenue",
       "type": "PROPERTY",
       "price": "300",
       "house-price": "200",
       "mortgage-price": "150",
       "sell-price": "150",
       "rent": [ "26", "130", "390", "900", "1100", "1275" ],
-      "set": "#ffeb12",
-      "image-url": "nba_den_logo"
+      "set": "#0d9603"
     },
     {
-      "name": "Community chest",
+      "name": "Community Chest",
       "type": "COMMUNITY_CHEST"
     },
     {
-      "name": "Golden State Warriors",
+      "name": "Pennsylvania Avenue",
       "type": "PROPERTY",
       "price": "320",
       "house-price": "200",
       "mortgage-price": "160",
       "sell-price": "160",
       "rent": [ "28", "150", "450", "1000", "1200", "1400" ],
-      "set": "#ffeb12",
-      "image-url": "nba_gsw_logo"
+      "set": "#0d9603"
     },
     {
-      "name": "Ball Arena",
+      "name": "Short Line Railroad",
       "type": "STATION",
       "rent": [ "25", "50", "100", "200" ],
       "price": "200",
       "mortgage-price": "100",
       "sell-price": "100",
-      "image-url": "nba_bos_court"
+      "image-url": "default_station"
     },
     {
       "name": "Chance",
       "type": "CHANCE"
     },
     {
-      "name": "Sacramento Kings",
+      "name": "Park Place",
       "type": "PROPERTY",
       "price": "350",
       "house-price": "200",
       "mortgage-price": "175",
       "sell-price": "175",
       "rent": [ "35", "175", "500", "1100", "1300", "1500" ],
-      "set": "#8f18de",
-      "image-url": "nba_sac_logo"
+      "set": "#11014d"
     },
     {
-      "name": "Luxury tax",
+      "name": "Luxury Tax",
       "type": "TAX",
       "tax": "75",
       "tax-percentage": "-1"
     },
     {
-      "name": "Los Angeles Lakers",
+      "name": "Boardwalk",
       "type": "PROPERTY",
       "price": "400",
       "house-price": "200",
       "mortgage-price": "200",
       "sell-price": "200",
       "rent": [ "50", "200", "600", "1400", "1700", "2000" ],
-      "set": "#8f18de",
-      "image-url": "nba_lal_logo"
+      "set": "#11014d"
     }
   ]
 }

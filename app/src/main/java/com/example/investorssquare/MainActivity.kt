@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val jsonParser = JsonParser(this)
-        val board: Board = jsonParser.loadBoard("table_prototype.json")
+        val board: Board = jsonParser.loadBoard("board_default.json")
         setContent {
             InvestorsSquareTheme {
                 Box {

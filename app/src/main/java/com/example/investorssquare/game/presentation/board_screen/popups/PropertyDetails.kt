@@ -32,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -50,6 +49,7 @@ import com.example.investorssquare.game.presentation.board_screen.components.Buy
 import com.example.investorssquare.game.presentation.board_screen.components.CoinIcon
 import com.example.investorssquare.game.presentation.board_screen.components.HouseIcon
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.util.ResourceMapper
 import kotlinx.coroutines.launch
 
 private val row_height = 20.dp
@@ -61,7 +61,6 @@ fun PropertyDetails(
     onDismissRequest: () -> Unit,
     popupWidth: Dp,
     popupHeight: Dp,
-    boardSize: Dp,  // Pass the board size to center within the board
     centerOfTheBoard: IntOffset,  // Center of the board in pixel coordinates
     buyButtonVisibility: Boolean
 ) {
@@ -181,10 +180,9 @@ private fun PropertyDetailsContent(
     }
 }
 
-@SuppressLint("DiscouragedApi", "StateFlowValueCalledInComposition")
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 private fun RentWithHousesRow(index: Int, rent: Int) {
-    val context = LocalContext.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -220,10 +218,12 @@ private fun RentWithHousesRow(index: Int, rent: Int) {
     }
 }
 
-@SuppressLint("DiscouragedApi", "StateFlowValueCalledInComposition")
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 private fun RentWithHotelRow(rent: Int) {
-    val context = LocalContext.current
+    val boardName = Game.board.value?.name ?: "default"
+    val hotelImageResource = ResourceMapper.getImageResource("${boardName}_hotel")
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -231,15 +231,13 @@ private fun RentWithHotelRow(rent: Int) {
             .height(row_height),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Image(
-            painter = painterResource(
-                context.resources.getIdentifier(
-                    Game.board.value?.hotelImageUrl, "drawable", context.packageName
-                )
-            ),
-            contentDescription = null,
-            modifier = Modifier.size(16.dp)
-        )
+        if (hotelImageResource != null) {
+            Image(
+                painter = painterResource(id = hotelImageResource),
+                contentDescription = null,
+                modifier = Modifier.size(16.dp)
+            )
+        }
         DotSeparator(rent)
         Row(
             horizontalArrangement = Arrangement.spacedBy(1.dp),
