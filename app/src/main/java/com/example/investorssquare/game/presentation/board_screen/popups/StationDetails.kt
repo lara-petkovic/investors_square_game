@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -133,11 +134,13 @@ fun StationDetailsContent(station: Station, scrollState: androidx.compose.founda
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 6.dp, vertical = 4.dp)
+            .fillMaxHeight()
+            .padding(horizontal = 6.dp, vertical = 7.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .fillMaxHeight()
                 .verticalScroll(scrollState)
                 .border(1.dp, Color.Black),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -149,6 +152,7 @@ fun StationDetailsContent(station: Station, scrollState: androidx.compose.founda
                     index = index
                 )
             }
+            Spacer(modifier = Modifier.weight(1f))
             StationCostRow(label = "Mortgage Value", cost = station.mortgagePrice)
             StationCostRow(label = "Sell Value", cost = station.sellPrice)
             Spacer(modifier = Modifier.height(6.dp))

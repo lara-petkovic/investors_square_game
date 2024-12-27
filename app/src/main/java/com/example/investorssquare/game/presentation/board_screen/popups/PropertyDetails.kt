@@ -166,8 +166,9 @@ private fun PropertyDetailsContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .fillMaxHeight()
             .verticalScroll(scrollState)
-            .padding(horizontal = 6.dp, vertical = 4.dp)
+            .padding(horizontal = 6.dp, vertical = 5.dp)
             .border(1.dp, Color.Black),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -176,6 +177,7 @@ private fun PropertyDetailsContent(
             RentWithHousesRow(i, property.rent[i])
         }
         RentWithHotelRow(property.rent.last())
+        Spacer(modifier = Modifier.weight(1f))
         PropertyCostRows(property)
     }
 }
@@ -256,24 +258,38 @@ private fun RentWithHotelRow(rent: Int) {
 
 @Composable
 private fun PropertyCostRows(property: Property) {
-    PropertyCostRow("Building Cost", property.housePrice)
-    PropertyCostRow("Mortgage Value", property.mortgagePrice)
-    PropertyCostRow("Sell Value", property.sellPrice)
+    Column(modifier=Modifier.padding(vertical = 5.dp, horizontal = 5.dp)
+        .border(1.dp, Color.LightGray)
+        .fillMaxWidth()
+    ){
+        Column(Modifier.padding(vertical = 3.dp)){
+            PropertyCostRow("Building Cost", property.housePrice)
+            PropertyCostRow("Mortgage Value", property.mortgagePrice)
+            PropertyCostRow("Sell Value", property.sellPrice)
+        }
+    }
 }
 
 @Composable
 private fun PropertyCostRow(label: String, cost: Int) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(1.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "$label $cost",
-            style = MaterialTheme.typography.bodySmall,
-            fontSize = 12.sp,
-            color = Color.Black
-        )
-        CoinIcon(size = 14.dp)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ){
+        Row(
+            modifier = Modifier.padding(vertical = 1.dp),
+            horizontalArrangement = Arrangement.spacedBy(1.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = "$label $cost",
+                style = MaterialTheme.typography.bodySmall,
+                fontSize = 12.sp,
+                color = Color.Black
+            )
+            CoinIcon(size = 14.dp)
+        }
     }
 }
 
