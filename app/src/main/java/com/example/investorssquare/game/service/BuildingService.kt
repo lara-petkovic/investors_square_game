@@ -49,7 +49,7 @@ object BuildingService {
         if(estate.numberOfBuildings.value==property.rent.size-1)
             return
         val player = Game.getActivePlayer()!!
-        if(TransactionService.buyBuilding(player, property.housePrice)){
+        if(TransactionService.payIfAffordable(player, property.housePrice)){
             estate.addBuilding()
             if(buildingsInCurrentMove.containsKey(estate)){
                 buildingsInCurrentMove[estate] = buildingsInCurrentMove[estate]?.plus(1)!!
