@@ -1,4 +1,4 @@
-package com.example.investorssquare.game.presentation.board_screen.components
+package com.example.investorssquare.game.presentation.board_screen.components.buttons
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer

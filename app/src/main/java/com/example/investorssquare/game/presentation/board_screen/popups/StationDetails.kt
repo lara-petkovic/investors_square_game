@@ -43,7 +43,7 @@ import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.Station
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
-import com.example.investorssquare.game.presentation.board_screen.components.BuyButton
+import com.example.investorssquare.game.presentation.board_screen.components.buttons.BuyButton
 import com.example.investorssquare.game.presentation.board_screen.components.CoinIcon
 import kotlinx.coroutines.launch
 

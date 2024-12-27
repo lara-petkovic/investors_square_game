@@ -9,14 +9,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.example.investorssquare.game.presentation.board_screen.components.Board
-import com.example.investorssquare.game.presentation.board_screen.components.DiceButton
-import com.example.investorssquare.game.presentation.board_screen.components.FinishButton
+import com.example.investorssquare.game.presentation.board_screen.components.buttons.BuildButton
+import com.example.investorssquare.game.presentation.board_screen.components.buttons.DiceButton
+import com.example.investorssquare.game.presentation.board_screen.components.buttons.FinishButton
 import com.example.investorssquare.game.presentation.board_screen.components.PlayerCardColumns
 import com.example.investorssquare.game.presentation.board_screen.popups.PaymentPopupCard
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
@@ -31,6 +35,7 @@ fun BoardScreen() {
 
     val showPaymentPopup by Game.showPaymentPopup.collectAsState()
     val paymentDetails by Game.paymentDetails.collectAsState()
+    var isButtonClicked by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -54,6 +59,11 @@ fun BoardScreen() {
                 .padding(top = 10.dp)) {
                 FinishButton()
             }
+
+            BuildButton(
+                isButtonClicked = isButtonClicked,
+                onButtonClicked = { isButtonClicked = !isButtonClicked }
+            )
         }
 
         if (showPaymentPopup && paymentDetails != null) {
