@@ -73,6 +73,16 @@ fun BoardScreen() {
                     isButtonClicked = isSellButtonClicked,
                     onButtonClicked = { isSellButtonClicked = !isSellButtonClicked }
                 )
+
+                BuildButton( // This should be mortgage
+                    isButtonClicked = isBuildButtonClicked,
+                    onButtonClicked = { isBuildButtonClicked = !isBuildButtonClicked }
+                )
+
+                SellButton( // This should be redeem
+                    isButtonClicked = isSellButtonClicked,
+                    onButtonClicked = { isSellButtonClicked = !isSellButtonClicked }
+                )
             }
         }
 
