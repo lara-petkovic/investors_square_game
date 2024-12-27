@@ -67,9 +67,9 @@ fun FieldCard(
                 // ovo popraviti da bude jednako zatamnjeno na svakom polju (ne znam zasto ne radi)
                 // svakako treba izrefaktorisati ja se nisam puno bavio UIem pa sam stavio na prvo logicno mesto
                 if(buildingModeOn.value && !openToBuild.value)
-                    Color(0f, 0f, 0f, 0.55f)
+                    Color(0f, 0f, 0f, 0.3025f)
                 else if(sellingModeOn.value && !openToSell.value)
-                    Color(0f, 0f, 0f, 0.55f)
+                    Color(0f, 0f, 0f, 0.3025f)
                 else Color.Transparent
             )
     ) {
@@ -94,7 +94,7 @@ private fun FieldCardContent(
     val isFieldOwned = Game.getEstateByFieldIndex(field.index)?.ownerIndex?.value != -1
 
     Box(modifier = Modifier.fillMaxSize()) {
-        OwnershipIndicator(isOwned = isFieldOwned)
+        OwnershipIndicator(isOwned = isFieldOwned, field)
 
         if (field.type == FieldType.PROPERTY) {
             PropertyStrap(
@@ -152,11 +152,17 @@ private fun PropertyStrap(
 }
 
 @Composable
-private fun OwnershipIndicator(isOwned: Boolean) {
+private fun OwnershipIndicator(isOwned: Boolean, field: Field) {
+    val buildingModeOn = BuildingService.buildingModeOn.collectAsState()
+    val sellingModeOn = SellingService.sellingModeOn.collectAsState()
+    var alpha = 0.0f
+    if(Game.getEstateByFieldIndex(field.index)!=null && isOwned && !buildingModeOn.value && !sellingModeOn.value){
+        alpha = 0.5f
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .alpha(if (isOwned) 0.5f else 0.0f)
+            .alpha(alpha)
             .background(Color(0xFFDAF7DB))
     )
 }
