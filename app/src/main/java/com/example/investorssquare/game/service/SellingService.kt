@@ -22,17 +22,19 @@ object SellingService {
     }
     fun turnOnSellingMode(){
         _sellingModeOn.value = true
+        Game.turnOnHighlightMode()
         highlightProperties()
     }
     private fun highlightProperties() {
-        highlightedProperties.forEach { p -> p.setClosedToSell() }
+        highlightedProperties.forEach { p -> p.unhighlight() }
         highlightedProperties = getPropertiesWherePlayerCanSell(Game.getActivePlayer()!!)
-        highlightedProperties.forEach { p -> p.setOpenToSell() }
+        highlightedProperties.forEach { p -> p.highlight() }
     }
     fun turnOffSellingMode(){
         if(_sellingModeOn.value){
             _sellingModeOn.value = false
-            highlightedProperties.forEach { p-> p.setClosedToSell() }
+            Game.turnOffHighlightMode()
+            highlightedProperties.forEach { p-> p.unhighlight() }
             highlightedProperties = emptyList()
         }
     }

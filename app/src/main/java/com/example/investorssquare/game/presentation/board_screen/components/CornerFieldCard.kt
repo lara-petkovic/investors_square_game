@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
+import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.service.BuildingService
 import com.example.investorssquare.game.service.SellingService
 import kotlinx.coroutines.launch
@@ -26,8 +27,7 @@ fun CornerFieldCard(
     modifier: Modifier = Modifier,
     index: Int,
 ) {
-    val buildingModeOn = BuildingService.buildingModeOn.collectAsState()
-    val sellingModeOn = SellingService.sellingModeOn.collectAsState()
+    val highlightModeOn = Game.highlightMode.collectAsState()
     Card(
         modifier = modifier
             .size(fieldSize),
@@ -38,7 +38,7 @@ fun CornerFieldCard(
         Box(
             modifier = modifier
                 .background(
-                    if(buildingModeOn.value || sellingModeOn.value)
+                    if(highlightModeOn.value)
                         Color(0f, 0f, 0f, 0.3025f)
                     else Color.Transparent
                 )

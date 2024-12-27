@@ -54,11 +54,9 @@ fun FieldCard(
 ) {
     val coroutineScope = rememberCoroutineScope()
     //ove tri stari sam dodao da kad se upali mod za gradnju mogu da prepoznam gde mogu a gde ne mogu da gradim
-    val buildingModeOn = BuildingService.buildingModeOn.collectAsState()
-    val sellingModeOn = SellingService.sellingModeOn.collectAsState()
+    val highlightModeOn = Game.highlightMode.collectAsState()
     val estate = Game.getEstateByFieldIndex(field.index)
-    val openToBuild = if(estate!= null && estate.isProperty) estate.isOpenToBuild.collectAsState() else mutableStateOf(false)
-    val openToSell = if(estate!= null && estate.isProperty) estate.isOpenToSell.collectAsState() else mutableStateOf(false)
+    val highlighted = if(estate!= null && estate.isProperty) estate.isHighlighted.collectAsState() else mutableStateOf(false)
 
     Box(
         modifier = modifier
@@ -66,9 +64,7 @@ fun FieldCard(
             .background(
                 // ovo popraviti da bude jednako zatamnjeno na svakom polju (ne znam zasto ne radi)
                 // svakako treba izrefaktorisati ja se nisam puno bavio UIem pa sam stavio na prvo logicno mesto
-                if(buildingModeOn.value && !openToBuild.value)
-                    Color(0f, 0f, 0f, 0.3025f)
-                else if(sellingModeOn.value && !openToSell.value)
+                if(highlightModeOn.value && !highlighted.value)
                     Color(0f, 0f, 0f, 0.3025f)
                 else Color.Transparent
             )

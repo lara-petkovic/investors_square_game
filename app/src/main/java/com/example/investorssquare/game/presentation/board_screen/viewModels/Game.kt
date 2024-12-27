@@ -53,6 +53,9 @@ object Game {
     private val _paymentDetails = MutableStateFlow<PaymentDetails?>(null)
     val paymentDetails: StateFlow<PaymentDetails?> = _paymentDetails
 
+    private val _highlightMode = MutableStateFlow<Boolean>(false)
+    val highlightMode: StateFlow<Boolean> = _highlightMode
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val playersPositions: StateFlow<List<Int>> = _players.flatMapLatest { players ->
         combine(players.map { it.position }) { positions ->
@@ -148,6 +151,12 @@ object Game {
 
     fun getActivePlayer(): PlayerViewModel? {
         return _players.value.firstOrNull { it.isActive.value }
+    }
+    fun turnOnHighlightMode(){
+        _highlightMode.value = true
+    }
+    fun turnOffHighlightMode(){
+        _highlightMode.value = false
     }
 }
 
