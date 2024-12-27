@@ -53,19 +53,16 @@ fun FieldCard(
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
-    //ove tri stari sam dodao da kad se upali mod za gradnju mogu da prepoznam gde mogu a gde ne mogu da gradim
     val highlightModeOn = Game.highlightMode.collectAsState()
     val estate = Game.getEstateByFieldIndex(field.index)
-    val highlighted = if(estate!= null && estate.isProperty) estate.isHighlighted.collectAsState() else mutableStateOf(false)
+    val highlighted = estate?.isHighlighted?.collectAsState() ?: mutableStateOf(false)
 
     Box(
         modifier = modifier
             .clickable { coroutineScope.launch { EventBus.postEvent(Event.ON_FIELD_CLICKED(field.index)) } }
             .background(
-                // ovo popraviti da bude jednako zatamnjeno na svakom polju (ne znam zasto ne radi)
-                // svakako treba izrefaktorisati ja se nisam puno bavio UIem pa sam stavio na prvo logicno mesto
                 if(highlightModeOn.value && !highlighted.value)
-                    Color(0f, 0f, 0f, 0.3025f)
+                    Color(0f, 0f, 0f, 0.5f)
                 else Color.Transparent
             )
     ) {
@@ -149,10 +146,9 @@ private fun PropertyStrap(
 
 @Composable
 private fun OwnershipIndicator(isOwned: Boolean, field: Field) {
-    val buildingModeOn = BuildingService.buildingModeOn.collectAsState()
-    val sellingModeOn = SellingService.sellingModeOn.collectAsState()
+    val highlightModeOn = Game.highlightMode.collectAsState()
     var alpha = 0.0f
-    if(Game.getEstateByFieldIndex(field.index)!=null && isOwned && !buildingModeOn.value && !sellingModeOn.value){
+    if(Game.getEstateByFieldIndex(field.index)!=null && isOwned && !highlightModeOn.value){
         alpha = 0.5f
     }
     Box(

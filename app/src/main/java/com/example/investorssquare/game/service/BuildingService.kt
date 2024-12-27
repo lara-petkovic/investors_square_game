@@ -60,7 +60,7 @@ object BuildingService {
             highlightProperties()
         }
     }
-    fun getPropertiesWherePlayerCanBuild(player: PlayerViewModel): List<EstateViewModel>{
+    private fun getPropertiesWherePlayerCanBuild(player: PlayerViewModel): List<EstateViewModel>{
         var propertiesWherePlayerCanBuild = Game.estates.value.filter { e->
             e.isOwnedByPlayer(player) && e.isProperty && !e.isFullyBuilt()
         }

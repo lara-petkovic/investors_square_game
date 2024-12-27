@@ -39,7 +39,7 @@ fun CornerFieldCard(
             modifier = modifier
                 .background(
                     if(highlightModeOn.value)
-                        Color(0f, 0f, 0f, 0.3025f)
+                        Color(0f, 0f, 0f, 0.5f)
                     else Color.Transparent
                 )
         ) {

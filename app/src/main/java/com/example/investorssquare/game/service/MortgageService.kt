@@ -1,7 +1,5 @@
 package com.example.investorssquare.game.service
 
-import androidx.compose.ui.graphics.Color
-import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
@@ -42,12 +40,12 @@ object MortgageService {
         if (estate.isMortgaged.value || !Game.ruleBook.mortgagesEnabled || !estate.isHighlighted.value)
             return
         estate.Mortgage()
-        val property = estate.estate as Property
+        val property = estate.estate
         val player = Game.getActivePlayer()!!
         TransactionService.receive(player, property.mortgagePrice)
         highlightProperties()
     }
-    fun getPropertiesWhichPlayerCanMortgage(player: PlayerViewModel): List<EstateViewModel>{
+    private fun getPropertiesWhichPlayerCanMortgage(player: PlayerViewModel): List<EstateViewModel>{
         if(!Game.ruleBook.mortgagesEnabled)
             return emptyList()
         val propertiesWhichPlayerCanMortgage = Game.estates.value.filter { e->

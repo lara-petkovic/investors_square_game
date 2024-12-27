@@ -28,7 +28,8 @@ object TransactionService {
         val payer = Game.getActivePlayer()!!
         val estate = Game.getEstateByFieldIndex(payer.position.value)!!
         val receiver = Game.getOwnerOfEstate(estate.estate.index)!!
-        if(receiver.isInJail.value && !Game.ruleBook.collectRentsWhileInJail) return
+        if((receiver.isInJail.value && !Game.ruleBook.collectRentsWhileInJail)
+            || estate.isMortgaged.value) return //dont pay if the estate is mortgaged or the owner is in jail
         if(payer!=receiver){
             val moneyToTransfer = calculateRentPrice(estate)
             Game.showPaymentPopup(payer, receiver, moneyToTransfer) {

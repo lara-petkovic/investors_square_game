@@ -1,6 +1,5 @@
 package com.example.investorssquare.game.service
 
-import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
@@ -41,14 +40,14 @@ object RedeemService {
         if(!estate.isMortgaged.value || !Game.ruleBook.mortgagesEnabled || !estate.isHighlighted.value)
             return
 
-        val property = estate.estate as Property
+        val property = estate.estate
         val player = Game.getActivePlayer()!!
         if(TransactionService.payIfAffordable(player, property.mortgagePrice)){
             estate.Redeem()
             highlightProperties()
         }
     }
-    fun getPropertiesWhichPlayerCanRedeem(player: PlayerViewModel): List<EstateViewModel>{
+    private fun getPropertiesWhichPlayerCanRedeem(player: PlayerViewModel): List<EstateViewModel>{
         if(!Game.ruleBook.mortgagesEnabled)
             return emptyList()
         val propertiesWhichPlayerCanRedeem = Game.estates.value.filter { e->

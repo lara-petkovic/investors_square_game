@@ -38,7 +38,7 @@ object SellingService {
             highlightedProperties = emptyList()
         }
     }
-    fun getPropertiesWherePlayerCanSell(player: PlayerViewModel): List<EstateViewModel>{
+    private fun getPropertiesWherePlayerCanSell(player: PlayerViewModel): List<EstateViewModel>{
         var propertiesWherePlayerCanSell = Game.estates.value.filter{ p->
             p.isProperty && p.isOwnedByPlayer(player) && p.numberOfBuildings.value>0
         }

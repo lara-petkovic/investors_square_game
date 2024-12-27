@@ -30,7 +30,7 @@ fun MortgageButton(
     IconButton(
         onClick = {
             onButtonClicked() // Update state in parent
-            coroutineScope.launch { EventBus.postEvent(Event.ON_SWITCH_TO_BUILDING_MODE) }
+            coroutineScope.launch { EventBus.postEvent(Event.ON_SWITCH_TO_MORTGAGE_MODE) }
         },
         modifier = Modifier
             .padding(top = 10.dp)
