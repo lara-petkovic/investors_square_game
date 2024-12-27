@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -22,6 +23,7 @@ import com.example.investorssquare.game.presentation.board_screen.components.but
 import com.example.investorssquare.game.presentation.board_screen.components.buttons.DiceButton
 import com.example.investorssquare.game.presentation.board_screen.components.buttons.FinishButton
 import com.example.investorssquare.game.presentation.board_screen.components.PlayerCardColumns
+import com.example.investorssquare.game.presentation.board_screen.components.buttons.SellButton
 import com.example.investorssquare.game.presentation.board_screen.popups.PaymentPopupCard
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.util.Constants.SIDE_BOARD_MARGIN
@@ -35,7 +37,8 @@ fun BoardScreen() {
 
     val showPaymentPopup by Game.showPaymentPopup.collectAsState()
     val paymentDetails by Game.paymentDetails.collectAsState()
-    var isButtonClicked by remember { mutableStateOf(false) }
+    var isBuildButtonClicked by remember { mutableStateOf(false) }
+    var isSellButtonClicked by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -60,10 +63,17 @@ fun BoardScreen() {
                 FinishButton()
             }
 
-            BuildButton(
-                isButtonClicked = isButtonClicked,
-                onButtonClicked = { isButtonClicked = !isButtonClicked }
-            )
+            Row {
+                BuildButton(
+                    isButtonClicked = isBuildButtonClicked,
+                    onButtonClicked = { isBuildButtonClicked = !isBuildButtonClicked }
+                )
+
+                SellButton(
+                    isButtonClicked = isSellButtonClicked,
+                    onButtonClicked = { isSellButtonClicked = !isSellButtonClicked }
+                )
+            }
         }
 
         if (showPaymentPopup && paymentDetails != null) {
