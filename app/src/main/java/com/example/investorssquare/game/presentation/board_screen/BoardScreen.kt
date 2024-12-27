@@ -23,6 +23,8 @@ import com.example.investorssquare.game.presentation.board_screen.components.but
 import com.example.investorssquare.game.presentation.board_screen.components.buttons.DiceButton
 import com.example.investorssquare.game.presentation.board_screen.components.buttons.FinishButton
 import com.example.investorssquare.game.presentation.board_screen.components.PlayerCardColumns
+import com.example.investorssquare.game.presentation.board_screen.components.buttons.MortgageButton
+import com.example.investorssquare.game.presentation.board_screen.components.buttons.RedeemButton
 import com.example.investorssquare.game.presentation.board_screen.components.buttons.SellButton
 import com.example.investorssquare.game.presentation.board_screen.popups.PaymentPopupCard
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
@@ -39,6 +41,8 @@ fun BoardScreen() {
     val paymentDetails by Game.paymentDetails.collectAsState()
     var isBuildButtonClicked by remember { mutableStateOf(false) }
     var isSellButtonClicked by remember { mutableStateOf(false) }
+    var isMortgageButtonClicked by remember { mutableStateOf(false) }
+    var isRedeemButtonClicked by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -74,14 +78,14 @@ fun BoardScreen() {
                     onButtonClicked = { isSellButtonClicked = !isSellButtonClicked }
                 )
 
-                BuildButton( // This should be mortgage
-                    isButtonClicked = isBuildButtonClicked,
-                    onButtonClicked = { isBuildButtonClicked = !isBuildButtonClicked }
+                MortgageButton(
+                    isButtonClicked = isMortgageButtonClicked,
+                    onButtonClicked = { isMortgageButtonClicked = !isMortgageButtonClicked }
                 )
 
-                SellButton( // This should be redeem
-                    isButtonClicked = isSellButtonClicked,
-                    onButtonClicked = { isSellButtonClicked = !isSellButtonClicked }
+                RedeemButton(
+                    isButtonClicked = isRedeemButtonClicked,
+                    onButtonClicked = { isRedeemButtonClicked = !isRedeemButtonClicked }
                 )
             }
         }
