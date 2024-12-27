@@ -18,6 +18,9 @@ class EstateViewModel @Inject constructor(val estate: Estate) : ViewModel() {
     private val _isOpenToBuild = MutableStateFlow(false)
     val isOpenToBuild : StateFlow<Boolean> get() = _isOpenToBuild
 
+    private val _isOpenToSell = MutableStateFlow(false)
+    val isOpenToSell : StateFlow<Boolean> get() = _isOpenToSell
+
     private val _ownerIndex = MutableStateFlow(-1)
     val ownerIndex: StateFlow<Int> get() = _ownerIndex
 
@@ -41,5 +44,11 @@ class EstateViewModel @Inject constructor(val estate: Estate) : ViewModel() {
     }
     fun setClosedToBuild(){
         _isOpenToBuild.value = false
+    }
+    fun setOpenToSell(){
+        _isOpenToSell.value = true
+    }
+    fun setClosedToSell(){
+        _isOpenToSell.value = false
     }
 }

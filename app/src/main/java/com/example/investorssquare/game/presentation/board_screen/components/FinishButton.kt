@@ -1,6 +1,7 @@
 package com.example.investorssquare.game.presentation.board_screen.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -33,7 +34,8 @@ fun FinishButton() {
             }
             //privremeno ovde ubaceno dugme za build, samo ga treba premestiti
             //zbog mesta gde sam ga ubacio ovo dugme se prikazuje samo kad neko zavrsava potez ali to naravno treba promeniti da je uvek vidljivo
-            Button(
+
+            Row{Button(
                 onClick = {
                     coroutineScope.launch { EventBus.postEvent(Event.ON_SWITCH_TO_BUILDING_MODE) }
                 },
@@ -42,6 +44,15 @@ fun FinishButton() {
             ) {
                 Text(text = "Build")
             }
+            Button(
+                onClick = {
+                    coroutineScope.launch { EventBus.postEvent(Event.ON_SWITCH_TO_SELLING_MODE) }
+                },
+                modifier = Modifier
+                    .padding(top = 10.dp)
+            ) {
+                Text(text = "Sell")
+            }}
         }
     }
 }

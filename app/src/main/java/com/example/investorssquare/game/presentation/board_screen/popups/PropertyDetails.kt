@@ -259,7 +259,7 @@ private fun RentWithHotelRow(rent: Int) {
 @Composable
 private fun PropertyCostRows(property: Property) {
     Column(modifier=Modifier.padding(vertical = 5.dp, horizontal = 5.dp)
-        .border(1.dp, Color.LightGray)
+        .border(1.dp, property.setColor)
         .fillMaxWidth()
     ){
         Column(Modifier.padding(vertical = 3.dp)){

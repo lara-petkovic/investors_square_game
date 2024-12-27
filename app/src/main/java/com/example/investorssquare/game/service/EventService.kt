@@ -37,16 +37,29 @@ object EventService {
                     is Event.ON_COMMUNITY_CARD_OPENED -> openCardPopup()
                     is Event.ON_DICE_THROWN -> handleDiceThrown(event.firstNumber, event.secondNumber)
                     is Event.ON_MOVE_PLAYER -> moveActivePlayer()
-                    is Event.ON_SWITCH_TO_BUILDING_MODE -> BuildingService.switchBuildingMode()
+                    is Event.ON_SWITCH_TO_BUILDING_MODE -> {
+                        SellingService.turnOffSellingMode()
+                        BuildingService.switchBuildingMode()
+                    }
+                    is Event.ON_SWITCH_TO_SELLING_MODE -> {
+                        BuildingService.turnOffBuildMode()
+                        SellingService.switchSellingMode()
+                    }
                     is Event.ON_GO_TO_JAIL -> {
                         disableDice()
                         goToJail()
                     }
                     is Event.ON_PLAYER_LANDED_ON_FREE_ESTATE -> showPopupForEstate()
                     is Event.ON_FIELD_CLICKED -> {
-                        val estate =Game.getEstateByFieldIndex(event.fieldIndex)
-                        if(estate !=null && estate.isOpenToBuild.value)
-                            BuildingService.build(estate)
+                        val estate = Game.getEstateByFieldIndex(event.fieldIndex)
+                        if(BuildingService.buildingModeOn.value){
+                            if(estate !=null && estate.isOpenToBuild.value)
+                                BuildingService.build(estate)
+                        }
+                        else if(SellingService.sellingModeOn.value){
+                            if(estate !=null && estate.isOpenToSell.value)
+                                SellingService.sell(estate)
+                        }
                         else
                             handleCardInformationClick(event.fieldIndex)
                     }
@@ -55,8 +68,9 @@ object EventService {
                             handleEstateBought(event.fieldIndex)
                     }
                     is Event.ON_MOVE_FINISHED -> {
-                        handleDiceToTheNextPlayer()
                         BuildingService.turnOffBuildMode()
+                        SellingService.turnOffSellingMode()
+                        handleDiceToTheNextPlayer()
                     }
                     is Event.ON_PLAYER_LANDED_ON_BOUGHT_ESTATE -> payRent()
                     is Event.ON_PLAYER_CROSSED_START -> collectSalary()
@@ -71,7 +85,7 @@ object EventService {
                         BuildingService.build(Game.getEstateByFieldIndex(event.fieldIndex)!!)
                     }
                     is Event.ON_SELLING_BUILDING_ON_ESTATE -> {
-                        BuildingService.sell(Game.getEstateByFieldIndex(event.fieldIndex)!!)
+                        SellingService.sell(Game.getEstateByFieldIndex(event.fieldIndex)!!)
                     }
                     else -> { }
                 }

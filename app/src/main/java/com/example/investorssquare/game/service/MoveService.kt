@@ -6,6 +6,7 @@ object MoveService {
     fun handleDiceToTheNextPlayer() {
         val activePlayer = Game.getActivePlayer() ?: return
         activePlayer.finishMove()
+        BuildingService.resetBuildingsInCurrentMove()
 
         val nextPlayersIndex = (activePlayer.index.value + 1) % Game.players.value.size
         val nextPlayer = Game.players.value[nextPlayersIndex]
