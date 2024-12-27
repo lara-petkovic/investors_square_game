@@ -2,6 +2,7 @@ package com.example.investorssquare.game.presentation.board_screen.components.bu
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -33,9 +34,14 @@ fun BuildButton(
         },
         modifier = Modifier
             .padding(top = 10.dp)
-            .size(60.dp)
+            .size(54.dp)
             .background(
                 if (isButtonClicked) Color.Gray else Color.White,
+                shape = CircleShape
+            )
+            .border(
+                width = 1.dp,
+                color = if (isButtonClicked) Color.White else Color.Black,
                 shape = CircleShape
             )
     ) {
@@ -43,7 +49,7 @@ fun BuildButton(
         Image(
             painter = buildIcon,
             contentDescription = "Build",
-            modifier = Modifier.size(46.dp),
+            modifier = Modifier.size(49.dp),
             colorFilter = if (isButtonClicked) ColorFilter.tint(Color.White) else ColorFilter.tint(
                 Color.Black
             )
