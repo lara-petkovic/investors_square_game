@@ -53,11 +53,11 @@ object EventService {
                     is Event.ON_FIELD_CLICKED -> {
                         val estate = Game.getEstateByFieldIndex(event.fieldIndex)
                         if(BuildingService.buildingModeOn.value){
-                            if(estate !=null && estate.isOpenToBuild.value)
+                            if(estate !=null && estate.isHighlighted.value)
                                 BuildingService.build(estate)
                         }
                         else if(SellingService.sellingModeOn.value){
-                            if(estate !=null && estate.isOpenToSell.value)
+                            if(estate !=null && estate.isHighlighted.value)
                                 SellingService.sell(estate)
                         }
                         else

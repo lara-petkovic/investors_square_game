@@ -25,18 +25,20 @@ object BuildingService {
             turnOnBuildingMode()
     }
     fun turnOnBuildingMode(){
+        Game.turnOnHighlightMode()
         _buildingModeOn.value = true
         highlightProperties()
     }
     private fun highlightProperties() {
-        highlightedProperties.forEach { p -> p.setClosedToBuild() }
+        highlightedProperties.forEach { p -> p.unhighlight() }
         highlightedProperties = getPropertiesWherePlayerCanBuild(Game.getActivePlayer()!!)
-        highlightedProperties.forEach { p -> p.setOpenToBuild() }
+        highlightedProperties.forEach { p -> p.highlight() }
     }
     fun turnOffBuildMode(){
         if(_buildingModeOn.value){
             _buildingModeOn.value = false
-            highlightedProperties.forEach { p-> p.setClosedToBuild() }
+            Game.turnOffHighlightMode()
+            highlightedProperties.forEach { p-> p.unhighlight() }
             highlightedProperties = emptyList()
         }
     }
