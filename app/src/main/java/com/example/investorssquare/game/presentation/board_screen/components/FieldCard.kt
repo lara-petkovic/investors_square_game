@@ -39,6 +39,7 @@ import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.service.BuildingService
+import com.example.investorssquare.game.service.SellingService
 import com.example.investorssquare.util.Constants.FIELD_CARD_STRAP_HEIGHT_PERCENTAGE
 import com.example.investorssquare.util.ResourceMapper
 import kotlinx.coroutines.launch
@@ -54,8 +55,10 @@ fun FieldCard(
     val coroutineScope = rememberCoroutineScope()
     //ove tri stari sam dodao da kad se upali mod za gradnju mogu da prepoznam gde mogu a gde ne mogu da gradim
     val buildingModeOn = BuildingService.buildingModeOn.collectAsState()
+    val sellingModeOn = SellingService.sellingModeOn.collectAsState()
     val estate = Game.getEstateByFieldIndex(field.index)
     val openToBuild = if(estate!= null && estate.isProperty) estate.isOpenToBuild.collectAsState() else mutableStateOf(false)
+    val openToSell = if(estate!= null && estate.isProperty) estate.isOpenToSell.collectAsState() else mutableStateOf(false)
 
     Box(
         modifier = modifier
@@ -64,7 +67,9 @@ fun FieldCard(
                 // ovo popraviti da bude jednako zatamnjeno na svakom polju (ne znam zasto ne radi)
                 // svakako treba izrefaktorisati ja se nisam puno bavio UIem pa sam stavio na prvo logicno mesto
                 if(buildingModeOn.value && !openToBuild.value)
-                    Color(0f, 0f, 0f, 0.25f)
+                    Color(0f, 0f, 0f, 0.55f)
+                else if(sellingModeOn.value && !openToSell.value)
+                    Color(0f, 0f, 0f, 0.55f)
                 else Color.Transparent
             )
     ) {
