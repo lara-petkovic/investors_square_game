@@ -45,7 +45,7 @@ fun RedeemButton(
                 shape = CircleShape
             )
     ) {
-        val buildIcon: Painter = painterResource(id = R.drawable.icon_build)
+        val buildIcon: Painter = painterResource(id = R.drawable.icon_redeem)
         Image(
             painter = buildIcon,
             contentDescription = "Build",
