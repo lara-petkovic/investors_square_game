@@ -87,7 +87,7 @@ object TransactionService {
         val totalPriceForHotels = pricePerHotel * EstateService.getNumberOfHotelsOwned(player)
         player.pay(totalPriceForHouses + totalPriceForHotels)
     }
-    fun buyBuilding(player: PlayerViewModel, price: Int): Boolean{
+    fun payIfAffordable(player: PlayerViewModel, price: Int): Boolean{
         if(player.money.value<price)
             return false
         pay(player, price)

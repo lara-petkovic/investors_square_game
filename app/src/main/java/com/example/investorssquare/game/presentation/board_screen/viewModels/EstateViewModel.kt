@@ -18,6 +18,9 @@ class EstateViewModel @Inject constructor(val estate: Estate) : ViewModel() {
     private val _isHighlighted = MutableStateFlow(false)
     val isHighlighted : StateFlow<Boolean> get() = _isHighlighted
 
+    private val _isMortgaged = MutableStateFlow(false)
+    val isMortgaged : StateFlow<Boolean> get() = _isMortgaged
+
     private val _ownerIndex = MutableStateFlow(0)
     val ownerIndex: StateFlow<Int> get() = _ownerIndex
 
@@ -41,5 +44,11 @@ class EstateViewModel @Inject constructor(val estate: Estate) : ViewModel() {
     }
     fun unhighlight(){
         _isHighlighted.value = false
+    }
+    fun Mortgage(){
+        _isMortgaged.value = true
+    }
+    fun Redeem(){
+        _isMortgaged.value = false
     }
 }

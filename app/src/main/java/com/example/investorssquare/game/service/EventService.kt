@@ -39,11 +39,27 @@ object EventService {
                     is Event.ON_MOVE_PLAYER -> moveActivePlayer()
                     is Event.ON_SWITCH_TO_BUILDING_MODE -> {
                         SellingService.turnOffSellingMode()
+                        MortgageService.turnOffMortgageMode()
+                        RedeemService.turnOffRedeemMode()
                         BuildingService.switchBuildingMode()
                     }
                     is Event.ON_SWITCH_TO_SELLING_MODE -> {
                         BuildingService.turnOffBuildMode()
+                        MortgageService.turnOffMortgageMode()
+                        RedeemService.turnOffRedeemMode()
                         SellingService.switchSellingMode()
+                    }
+                    is Event.ON_SWITCH_TO_MORTGAGE_MODE -> {
+                        BuildingService.turnOffBuildMode()
+                        RedeemService.turnOffRedeemMode()
+                        SellingService.turnOffSellingMode()
+                        MortgageService.switchMortgageMode()
+                    }
+                    is Event.ON_SWITCH_TO_REDEEM_MODE -> {
+                        BuildingService.turnOffBuildMode()
+                        MortgageService.turnOffMortgageMode()
+                        SellingService.turnOffSellingMode()
+                        RedeemService.switchRedeemMode()
                     }
                     is Event.ON_GO_TO_JAIL -> {
                         disableDice()
@@ -59,6 +75,14 @@ object EventService {
                         else if(SellingService.sellingModeOn.value){
                             if(estate !=null && estate.isHighlighted.value)
                                 SellingService.sell(estate)
+                        }
+                        else if(MortgageService.mortgageModeOn.value){
+                            if(estate !=null && estate.isHighlighted.value)
+                                MortgageService.mortgage(estate)
+                        }
+                        else if(RedeemService.redeemModeOn.value){
+                            if(estate !=null && estate.isHighlighted.value)
+                                RedeemService.redeem(estate)
                         }
                         else
                             handleCardInformationClick(event.fieldIndex)
@@ -80,12 +104,6 @@ object EventService {
                             collectGatheredTaxes()
                         else if(Game.ruleBook.playAgainOnFreeParkingEnabled)
                             enableDice()
-                    }
-                    is Event.ON_BUILDING_ON_ESTATE -> {
-                        BuildingService.build(Game.getEstateByFieldIndex(event.fieldIndex)!!)
-                    }
-                    is Event.ON_SELLING_BUILDING_ON_ESTATE -> {
-                        SellingService.sell(Game.getEstateByFieldIndex(event.fieldIndex)!!)
                     }
                     else -> { }
                 }
