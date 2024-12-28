@@ -41,6 +41,7 @@ import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus.postEvent
 import com.example.investorssquare.game.presentation.board_screen.popups.CommunityCardPopup
+import com.example.investorssquare.game.presentation.board_screen.popups.JailPopup
 import com.example.investorssquare.game.presentation.board_screen.popups.PropertyDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.StationDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.UtilityDetails
@@ -187,6 +188,7 @@ fun Board(
     }
 }
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 private fun DisplayPopup(
     field: Field,
@@ -231,6 +233,13 @@ private fun DisplayPopup(
             centerOfTheBoard = centerOfTheBoard,
             popupWidth = (RELATIVE_COMMUNITY_CARD_WIDTH * FIELDS_PER_ROW * fieldWidth.value).dp,
             popupHeight = (RELATIVE_COMMUNITY_CARD_HEIGHT * fieldWidth.value).dp,
+        )
+        FieldType.JAIL-> JailPopup(
+            Game.getActivePlayer()?.numberOfGetOutOfJailFreeCards!!.value>0,
+            if(Game.ruleBook.payToEscapeJailEnabled && Game.getActivePlayer()!!.money.value>=Game.ruleBook.jailEscapePrice) Game.ruleBook.jailEscapePrice else -1,
+            centerOfTheBoard = centerOfTheBoard,
+            popupWidth = (0.8f * FIELDS_PER_ROW * fieldWidth.value).dp,
+            popupHeight = (0.8f * FIELDS_PER_ROW * fieldWidth.value).dp,
         )
         else -> {}
     }

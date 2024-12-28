@@ -113,7 +113,7 @@ object BuildingService {
                 buildingsInCurrentMove[p]==null || buildingsInCurrentMove[p]!!<Game.ruleBook.buildingsPerMovePerProperty
             }
         }
-        return propertiesWherePlayerCanBuild
+        return propertiesWherePlayerCanBuild.filter{p->!p.isMortgaged.value}
     }
 
 }

@@ -94,6 +94,8 @@ object EventService {
                     is Event.ON_MOVE_FINISHED -> {
                         BuildingService.turnOffBuildMode()
                         SellingService.turnOffSellingMode()
+                        MortgageService.turnOffMortgageMode()
+                        RedeemService.turnOffRedeemMode()
                         handleDiceToTheNextPlayer()
                     }
                     is Event.ON_PLAYER_LANDED_ON_BOUGHT_ESTATE -> payRent()
@@ -105,6 +107,9 @@ object EventService {
                         else if(Game.ruleBook.playAgainOnFreeParkingEnabled)
                             enableDice()
                     }
+                    is Event.ON_BAIL_OUT -> JailEscapeService.bailOut()
+                    is Event.ON_ROLL_A_DOUBLE_TO_ESCAPE_JAIL -> JailEscapeService.rollADouble()
+                    is Event.ON_USE_GET_OUT_OF_JAIL_FREE_CARD -> JailEscapeService.useGetOutOfJailFreeCard()
                     else -> { }
                 }
             }

@@ -12,7 +12,10 @@ object MoveService {
         val nextPlayer = Game.players.value[nextPlayersIndex]
         nextPlayer.startMove()
 
-        if(!nextPlayer.isInJail.value || Game.ruleBook.rollADoubleToEscapeJailEnabled){
+        if(nextPlayer.isInJail.value){
+            Game.showPopupForField(nextPlayer.position.value)
+        }
+        else{
             Game.diceViewModel.enableDiceButton()
             Game.hideFinishButton()
         }

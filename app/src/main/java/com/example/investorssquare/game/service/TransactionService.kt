@@ -70,12 +70,12 @@ object TransactionService {
             }
         }
         if(estate.isUtility){
-            val utilitiesOwned = Game.estates.value.filter { e -> e.isUtility && e.ownerIndex.value == estate.ownerIndex.value }.size
+            val utilitiesOwned = Game.estates.value.filter { e -> e.isUtility && e.ownerIndex.value == estate.ownerIndex.value && !e.isMortgaged.value }.size
             val diceMultiplier = Game.diceViewModel.getDiceSum()
             ret = estate.estate.rent[utilitiesOwned - 1] * diceMultiplier
         }
         if(estate.isStation){
-            val stationsOwned = Game.estates.value.filter { e -> e.isStation && e.ownerIndex.value == estate.ownerIndex.value }.size
+            val stationsOwned = Game.estates.value.filter { e -> e.isStation && e.ownerIndex.value == estate.ownerIndex.value && !e.isMortgaged.value }.size
             ret = estate.estate.rent[stationsOwned - 1]
         }
         ret *= priceMultiplier

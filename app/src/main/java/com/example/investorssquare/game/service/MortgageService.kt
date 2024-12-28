@@ -49,7 +49,7 @@ object MortgageService {
         if(!Game.ruleBook.mortgagesEnabled)
             return emptyList()
         val propertiesWhichPlayerCanMortgage = Game.estates.value.filter { e->
-            e.isOwnedByPlayer(player) && !e.isMortgaged.value
+            e.isOwnedByPlayer(player) && !e.isMortgaged.value && e.numberOfBuildings.value==0
         }
         return propertiesWhichPlayerCanMortgage
     }
