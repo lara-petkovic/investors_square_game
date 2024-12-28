@@ -19,6 +19,11 @@ import com.example.investorssquare.game.service.TransactionService.collectSalary
 import com.example.investorssquare.game.service.TransactionService.payPriceForEstate
 import com.example.investorssquare.game.service.TransactionService.payRent
 import com.example.investorssquare.game.service.TransactionService.payTax
+import com.example.investorssquare.game.service.highlighting_services.BuildingService
+import com.example.investorssquare.game.service.highlighting_services.HighlightFieldsService
+import com.example.investorssquare.game.service.highlighting_services.MortgageService
+import com.example.investorssquare.game.service.highlighting_services.RedeemService
+import com.example.investorssquare.game.service.highlighting_services.SellingBuildingsService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -37,30 +42,11 @@ object EventService {
                     is Event.ON_COMMUNITY_CARD_OPENED -> openCardPopup()
                     is Event.ON_DICE_THROWN -> handleDiceThrown(event.firstNumber, event.secondNumber)
                     is Event.ON_MOVE_PLAYER -> moveActivePlayer()
-                    is Event.ON_SWITCH_TO_BUILDING_MODE -> {
-                        SellingService.turnOffSellingMode()
-                        MortgageService.turnOffMortgageMode()
-                        RedeemService.turnOffRedeemMode()
-                        BuildingService.switchBuildingMode()
-                    }
-                    is Event.ON_SWITCH_TO_SELLING_MODE -> {
-                        BuildingService.turnOffBuildMode()
-                        MortgageService.turnOffMortgageMode()
-                        RedeemService.turnOffRedeemMode()
-                        SellingService.switchSellingMode()
-                    }
-                    is Event.ON_SWITCH_TO_MORTGAGE_MODE -> {
-                        BuildingService.turnOffBuildMode()
-                        RedeemService.turnOffRedeemMode()
-                        SellingService.turnOffSellingMode()
-                        MortgageService.switchMortgageMode()
-                    }
-                    is Event.ON_SWITCH_TO_REDEEM_MODE -> {
-                        BuildingService.turnOffBuildMode()
-                        MortgageService.turnOffMortgageMode()
-                        SellingService.turnOffSellingMode()
-                        RedeemService.switchRedeemMode()
-                    }
+                    is Event.ON_SWITCH_TO_BUILDING_MODE -> HighlightFieldsService.switchToBuildingMode()
+                    is Event.ON_SWITCH_TO_SELLING_BUILDING_MODE -> HighlightFieldsService.switchToSellingBuildingMode()
+                    is Event.ON_SWITCH_TO_MORTGAGE_MODE -> HighlightFieldsService.switchToMortgageMode()
+                    is Event.ON_SWITCH_TO_REDEEM_MODE -> HighlightFieldsService.switchToRedeemMode()
+                    is Event.ON_SWITCH_TO_SELLING_PROPERTY_MODE -> HighlightFieldsService.switchToSellingPropertyMode()
                     is Event.ON_GO_TO_JAIL -> {
                         disableDice()
                         goToJail()
@@ -68,23 +54,7 @@ object EventService {
                     is Event.ON_PLAYER_LANDED_ON_FREE_ESTATE -> showPopupForEstate()
                     is Event.ON_FIELD_CLICKED -> {
                         val estate = Game.getEstateByFieldIndex(event.fieldIndex)
-                        if(BuildingService.buildingModeOn.value){
-                            if(estate !=null && estate.isHighlighted.value)
-                                BuildingService.build(estate)
-                        }
-                        else if(SellingService.sellingModeOn.value){
-                            if(estate !=null && estate.isHighlighted.value)
-                                SellingService.sell(estate)
-                        }
-                        else if(MortgageService.mortgageModeOn.value){
-                            if(estate !=null && estate.isHighlighted.value)
-                                MortgageService.mortgage(estate)
-                        }
-                        else if(RedeemService.redeemModeOn.value){
-                            if(estate !=null && estate.isHighlighted.value)
-                                RedeemService.redeem(estate)
-                        }
-                        else
+                        if(!HighlightFieldsService.handleHighlightedFieldClicked(estate))
                             handleCardInformationClick(event.fieldIndex)
                     }
                     is Event.ON_ESTATE_BOUGHT -> {
@@ -92,10 +62,7 @@ object EventService {
                             handleEstateBought(event.fieldIndex)
                     }
                     is Event.ON_MOVE_FINISHED -> {
-                        BuildingService.turnOffBuildMode()
-                        SellingService.turnOffSellingMode()
-                        MortgageService.turnOffMortgageMode()
-                        RedeemService.turnOffRedeemMode()
+                        HighlightFieldsService.turnOff()
                         handleDiceToTheNextPlayer()
                     }
                     is Event.ON_PLAYER_LANDED_ON_BOUGHT_ESTATE -> payRent()

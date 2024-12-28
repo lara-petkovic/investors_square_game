@@ -1,14 +1,15 @@
-package com.example.investorssquare.game.service
+package com.example.investorssquare.game.service.highlighting_services
 
 import androidx.compose.ui.graphics.Color
 import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.game.service.TransactionService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-object SellingService {
+object SellingBuildingsService {
     private var highlightedProperties: List<EstateViewModel> = emptyList()
 
     private val _sellingModeOn = MutableStateFlow<Boolean>(false)
@@ -71,7 +72,7 @@ object SellingService {
         if(estate.numberOfBuildings.value==0)
             return
         val player = Game.getActivePlayer()!!
-        TransactionService.receive(player, property.housePrice/2)
+        TransactionService.receive(player, property.housePrice / 2)
         estate.removeBuilding()
         highlightProperties()
         if(BuildingService.buildingsInCurrentMove[estate]!=null){
