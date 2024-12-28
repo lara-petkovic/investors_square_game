@@ -107,6 +107,9 @@ object EventService {
                         else if(Game.ruleBook.playAgainOnFreeParkingEnabled)
                             enableDice()
                     }
+                    is Event.ON_BAIL_OUT -> JailEscapeService.bailOut()
+                    is Event.ON_ROLL_A_DOUBLE_TO_ESCAPE_JAIL -> JailEscapeService.rollADouble()
+                    is Event.ON_USE_GET_OUT_OF_JAIL_FREE_CARD -> JailEscapeService.useGetOutOfJailFreeCard()
                     else -> { }
                 }
             }

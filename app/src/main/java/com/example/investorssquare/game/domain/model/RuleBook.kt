@@ -28,7 +28,7 @@ class RuleBook(
     //dice rules
     var playAgainIfRolledDouble: Boolean = true,
     var speedDieEnabled: Boolean = false,
-    var doublesRolledLimit: Int = 3,
+    var doublesRolledLimit: Int = 2,
     var playAgainOnFreeParkingEnabled: Boolean = false,
 
     //building rules

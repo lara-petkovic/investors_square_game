@@ -21,7 +21,7 @@ class EstateViewModel @Inject constructor(val estate: Estate) : ViewModel() {
     private val _isMortgaged = MutableStateFlow(false)
     val isMortgaged : StateFlow<Boolean> get() = _isMortgaged
 
-    private val _ownerIndex = MutableStateFlow(0)
+    private val _ownerIndex = MutableStateFlow(-1)
     val ownerIndex: StateFlow<Int> get() = _ownerIndex
 
     fun setOwnerIndex(ownerIndex: Int) {
