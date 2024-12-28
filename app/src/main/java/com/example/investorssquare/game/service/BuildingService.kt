@@ -12,7 +12,7 @@ object BuildingService {
     var buildingsInCurrentMove : MutableMap<EstateViewModel, Int> = mutableMapOf()
     private var highlightedProperties: List<EstateViewModel> = emptyList()
 
-    private val _buildingModeOn = MutableStateFlow<Boolean>(false)
+    private val _buildingModeOn = MutableStateFlow(false)
     val buildingModeOn: StateFlow<Boolean> get() = _buildingModeOn
 
     fun resetBuildingsInCurrentMove(){

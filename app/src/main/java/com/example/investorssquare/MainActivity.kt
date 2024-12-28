@@ -5,8 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
-import com.example.investorssquare.game.data.local.JsonParser
-import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.navigation.Navigation
 import com.example.investorssquare.ui.theme.InvestorsSquareTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,12 +15,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val jsonParser = JsonParser(this)
-        val board: Board = jsonParser.loadBoard("board_default.json")
         setContent {
             InvestorsSquareTheme {
                 Box {
-                    Navigation(board = board)
+                    Navigation()
                 }
             }
         }

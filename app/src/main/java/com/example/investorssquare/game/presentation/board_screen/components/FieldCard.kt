@@ -38,8 +38,6 @@ import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
-import com.example.investorssquare.game.service.BuildingService
-import com.example.investorssquare.game.service.SellingService
 import com.example.investorssquare.util.Constants.FIELD_CARD_STRAP_HEIGHT_PERCENTAGE
 import com.example.investorssquare.util.ResourceMapper
 import kotlinx.coroutines.launch
@@ -132,7 +130,7 @@ private fun PropertyStrap(
             val numberOfHouses = estateVM?.numberOfBuildings?.collectAsState()?.value ?: 0
 
             if(property.rent.size - 1 == numberOfHouses) { // property size - 1 because there can be 0 houses
-                DrawHotel(Modifier.align(Alignment.Center));
+                DrawHotel(Modifier.align(Alignment.Center))
             }
             else {
                 DrawHouses(
