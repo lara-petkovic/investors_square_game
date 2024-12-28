@@ -23,35 +23,32 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.investorssquare.R
+import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.navigation.Screen
 import com.example.investorssquare.game.presentation.board_screen.components.Board
 import com.example.investorssquare.game.presentation.board_screen.components.PlayerCardColumns
-import com.example.investorssquare.game.presentation.board_screen.components.buttons.BuildButton
+import com.example.investorssquare.game.presentation.board_screen.components.buttons.ActionButton
 import com.example.investorssquare.game.presentation.board_screen.components.buttons.DiceButton
 import com.example.investorssquare.game.presentation.board_screen.components.buttons.FinishButton
-import com.example.investorssquare.game.presentation.board_screen.components.buttons.MortgageButton
-import com.example.investorssquare.game.presentation.board_screen.components.buttons.RedeemButton
-import com.example.investorssquare.game.presentation.board_screen.components.buttons.SellButton
 import com.example.investorssquare.game.presentation.board_screen.popups.PaymentPopupCard
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.util.Constants.SIDE_BOARD_MARGIN
 import com.example.investorssquare.util.Constants.TOP_BOARD_MARGIN
 
 @Composable
-fun  BoardScreen(navController: NavController) {
+fun BoardScreen(navController: NavController) {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp.dp
     val sideMargin = (screenWidthDp.value * SIDE_BOARD_MARGIN).dp
     val topMargin = (screenWidthDp.value * TOP_BOARD_MARGIN).dp
 
     val showPaymentPopup by Game.showPaymentPopup.collectAsState()
     val paymentDetails by Game.paymentDetails.collectAsState()
-    var isBuildButtonClicked by remember { mutableStateOf(false) }
-    var isSellButtonClicked by remember { mutableStateOf(false) }
-    var isMortgageButtonClicked by remember { mutableStateOf(false) }
-    var isRedeemButtonClicked by remember { mutableStateOf(false) }
+
+    var activeButtonId by remember { mutableStateOf<Int?>(null) }
     var showExitDialog by remember { mutableStateOf(false) }
 
-    // back press handling
+    // Back press handling
     BackHandler {
         showExitDialog = true
     }
@@ -80,24 +77,39 @@ fun  BoardScreen(navController: NavController) {
             }
 
             Row {
-                BuildButton(
-                    isButtonClicked = isBuildButtonClicked,
-                    onButtonClicked = { isBuildButtonClicked = !isBuildButtonClicked }
+                ActionButton(
+                    iconResourceId = R.drawable.icon_build,
+                    isButtonClicked = activeButtonId == 1,
+                    onButtonClicked = { activeButtonId = if (activeButtonId == 1) null else 1 },
+                    event = Event.ON_SWITCH_TO_BUILDING_MODE
                 )
 
-                SellButton(
-                    isButtonClicked = isSellButtonClicked,
-                    onButtonClicked = { isSellButtonClicked = !isSellButtonClicked }
+                ActionButton(
+                    iconResourceId = R.drawable.icon_sell,
+                    isButtonClicked = activeButtonId == 2,
+                    onButtonClicked = { activeButtonId = if (activeButtonId == 2) null else 2 },
+                    event = Event.ON_SWITCH_TO_SELLING_MODE
                 )
 
-                MortgageButton(
-                    isButtonClicked = isMortgageButtonClicked,
-                    onButtonClicked = { isMortgageButtonClicked = !isMortgageButtonClicked }
+                ActionButton(
+                    iconResourceId = R.drawable.icon_mortgage,
+                    isButtonClicked = activeButtonId == 3,
+                    onButtonClicked = { activeButtonId = if (activeButtonId == 3) null else 3 },
+                    event = Event.ON_SWITCH_TO_MORTGAGE_MODE
                 )
 
-                RedeemButton(
-                    isButtonClicked = isRedeemButtonClicked,
-                    onButtonClicked = { isRedeemButtonClicked = !isRedeemButtonClicked }
+                ActionButton(
+                    iconResourceId = R.drawable.icon_redeem,
+                    isButtonClicked = activeButtonId == 4,
+                    onButtonClicked = { activeButtonId = if (activeButtonId == 4) null else 4 },
+                    event = Event.ON_SWITCH_TO_REDEEM_MODE
+                )
+
+                ActionButton(
+                    iconResourceId = R.drawable.icon_redeem, //TODO LARA: make an image for this
+                    isButtonClicked = activeButtonId == 5,
+                    onButtonClicked = { activeButtonId = if (activeButtonId == 5) null else 5 },
+                    event = Event.ON_SWITCH_TO_REDEEM_MODE //TODO DUSAN: When you make this add the event here
                 )
             }
         }

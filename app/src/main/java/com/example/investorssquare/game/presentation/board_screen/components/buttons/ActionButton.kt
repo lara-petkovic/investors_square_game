@@ -15,22 +15,23 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.investorssquare.R
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import kotlinx.coroutines.launch
 
 @Composable
-fun BuildButton(
+fun ActionButton(
+    iconResourceId: Int,
     isButtonClicked: Boolean,
-    onButtonClicked: () -> Unit
+    onButtonClicked: () -> Unit,
+    event: Event
 ) {
     val coroutineScope = rememberCoroutineScope()
 
     IconButton(
         onClick = {
-            onButtonClicked() // Update state in parent
-            coroutineScope.launch { EventBus.postEvent(Event.ON_SWITCH_TO_BUILDING_MODE) }
+            onButtonClicked()
+            coroutineScope.launch { EventBus.postEvent(event) }
         },
         modifier = Modifier
             .padding(top = 10.dp)
@@ -45,14 +46,12 @@ fun BuildButton(
                 shape = CircleShape
             )
     ) {
-        val buildIcon: Painter = painterResource(id = R.drawable.icon_build)
+        val icon: Painter = painterResource(id = iconResourceId)
         Image(
-            painter = buildIcon,
-            contentDescription = "Build",
+            painter = icon,
+            contentDescription = "Action Button",
             modifier = Modifier.size(49.dp),
-            colorFilter = if (isButtonClicked) ColorFilter.tint(Color.White) else ColorFilter.tint(
-                Color.Black
-            )
+            colorFilter = if (isButtonClicked) ColorFilter.tint(Color.White) else ColorFilter.tint(Color.Black)
         )
     }
 }
