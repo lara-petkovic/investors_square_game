@@ -1,10 +1,11 @@
-package com.example.investorssquare.game.service
+package com.example.investorssquare.game.service.highlighting_services
 
 import androidx.compose.ui.graphics.Color
 import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.game.service.TransactionService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -20,7 +21,7 @@ object BuildingService {
     }
     fun switchBuildingMode(){
         if(buildingModeOn.value)
-            turnOffBuildMode()
+            turnOffBuildingMode()
         else
             turnOnBuildingMode()
     }
@@ -34,7 +35,7 @@ object BuildingService {
         highlightedProperties = getPropertiesWherePlayerCanBuild(Game.getActivePlayer()!!)
         highlightedProperties.forEach { p -> p.highlight() }
     }
-    fun turnOffBuildMode(){
+    fun turnOffBuildingMode(){
         if(_buildingModeOn.value){
             _buildingModeOn.value = false
             Game.turnOffHighlightMode()

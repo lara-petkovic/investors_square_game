@@ -1,6 +1,7 @@
 package com.example.investorssquare.game.service
 
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.service.highlighting_services.BuildingService
 
 object MoveService {
     fun handleDiceToTheNextPlayer() {

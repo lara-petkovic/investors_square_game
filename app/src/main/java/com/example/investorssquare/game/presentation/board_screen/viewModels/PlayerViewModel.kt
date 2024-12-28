@@ -47,6 +47,10 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
         estate.setOwnerIndex(index.value)
         _estates.value += estate
     }
+    fun sellEstate(estate: EstateViewModel) {
+        estate.setOwnerIndex(-1)
+        _estates.value = _estates.value.filter { it != estate }
+    }
 
     fun acquireGetOutOfJailFreeCard(){
         _numberOfGetOutOfJailFreeCards.value++
