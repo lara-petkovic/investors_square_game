@@ -18,12 +18,21 @@ fun Navigation() {
 
     NavHost(navController = navController, startDestination = Screen.MainScreen.route) {
         composable(route = Screen.MainScreen.route) {
+            val temp_players = listOf(
+                "Player 1",
+                "Player 2",
+                "Player 3",
+                "Player 4",
+                "Player 5",
+                "Player 6"
+            )
+
             MainScreen(
                 navController = navController,
                 onGameStart = { players, selectedBoard ->
                     navController.navigate(Screen.BoardScreen.route) {
                         Game.setPlayers(
-                            players,
+                            temp_players, //TODO: players,
                             selectedBoard.playerColors,
                             Game.ruleBook.startingCapital
                         )

@@ -93,7 +93,7 @@ fun MainScreen(
                         )
                     }
                 },
-                enabled = isFormValid
+                enabled = true//TODO: isFormValid
             ) {
                 Text("Start Game")
             }
