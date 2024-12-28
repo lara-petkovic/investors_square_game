@@ -1,5 +1,6 @@
 package com.example.investorssquare.game.presentation.board_screen.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.util.Constants.TOTAL_FIELDS
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun BoughtEstateMarker(
     fieldWidth: Dp,
@@ -21,18 +23,20 @@ fun BoughtEstateMarker(
     modifier: Modifier,
     horizontal: Boolean = true
 ) {
-    val playerVM = Game.getOwnerOfEstate(field.index)
-    val playerColor = playerVM?.color?.collectAsState()?.value ?: Color.Gray
+    val estate = Game.getEstateByFieldIndex(field.index)
+    val ownerIndex = estate?.ownerIndex?.collectAsState()?.value?:-1
 
     val width = if (horizontal) fieldWidth / 2 else fieldWidth / 3.7f
     val height = if (horizontal) fieldWidth / 3.7f else fieldWidth / 2
 
-    Box(
-        modifier = modifier
-            .background(playerColor)
-            .size(width, height)
-            .border(1.dp, color = Color.Black)
-    )
+    if(ownerIndex>-1){
+        Box(
+            modifier = modifier
+                .background(Game.getOwnerOfEstate(estate!!.estate.index)!!.color.value)
+                .size(width, height)
+                .border(1.dp, color = Color.Black)
+        )
+    }
 }
 
 fun calculateXOffsetForBoughtEstateMarker(fieldIndex: Int, fieldHeight: Dp, fieldWidth: Dp, boardSize: Dp): Dp {

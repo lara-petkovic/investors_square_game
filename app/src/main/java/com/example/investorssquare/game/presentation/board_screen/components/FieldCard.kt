@@ -93,10 +93,8 @@ private fun FieldCardContent(
     fieldWidth: Dp,
     fieldHeight: Dp
 ) {
-    val isFieldOwned = Game.getEstateByFieldIndex(field.index)?.ownerIndex?.value != -1
-
     Box(modifier = Modifier.fillMaxSize()) {
-        OwnershipIndicator(isOwned = isFieldOwned, field)
+        OwnershipIndicator(field)
 
         if (field.type == FieldType.PROPERTY) {
             PropertyStrap(
@@ -154,10 +152,11 @@ private fun PropertyStrap(
 }
 
 @Composable
-private fun OwnershipIndicator(isOwned: Boolean, field: Field) {
+private fun OwnershipIndicator(field: Field) {
     val highlightModeOn = Game.highlightMode.collectAsState()
+    val ownerIndex = Game.getEstateByFieldIndex(field.index)?.ownerIndex?.collectAsState()
     var alpha = 0.0f
-    if(Game.getEstateByFieldIndex(field.index)!=null && isOwned && !highlightModeOn.value){
+    if(Game.getEstateByFieldIndex(field.index)!=null && ownerIndex?.value!=-1 && !highlightModeOn.value){
         alpha = 0.5f
     }
     Box(
