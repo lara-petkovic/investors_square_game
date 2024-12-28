@@ -94,6 +94,8 @@ object EventService {
                     is Event.ON_MOVE_FINISHED -> {
                         BuildingService.turnOffBuildMode()
                         SellingService.turnOffSellingMode()
+                        MortgageService.turnOffMortgageMode()
+                        RedeemService.turnOffRedeemMode()
                         handleDiceToTheNextPlayer()
                     }
                     is Event.ON_PLAYER_LANDED_ON_BOUGHT_ESTATE -> payRent()

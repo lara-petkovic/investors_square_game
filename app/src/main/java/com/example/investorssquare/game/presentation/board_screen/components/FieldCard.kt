@@ -32,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.investorssquare.R
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.domain.model.Property
@@ -56,6 +57,7 @@ fun FieldCard(
     val highlightModeOn = Game.highlightMode.collectAsState()
     val estate = Game.getEstateByFieldIndex(field.index)
     val highlighted = estate?.isHighlighted?.collectAsState() ?: mutableStateOf(false)
+    val mortgaged = estate?.isMortgaged?.collectAsState() ?: mutableStateOf(false)
 
     Box(
         modifier = modifier
@@ -73,6 +75,15 @@ fun FieldCard(
             border = BorderStroke(1.dp, Color.Black)
         ) {
             FieldCardContent(field = field, fieldWidth = fieldWidth, fieldHeight = fieldHeight)
+        }
+        if(mortgaged.value){
+            Image(
+                painter = painterResource(id = R.drawable.mortgaged_sticker),
+                contentDescription = "Mortgaged sticker",
+                modifier = Modifier
+                    .size(fieldWidth*0.65f)
+                    .align(Alignment.Center)
+            )
         }
     }
 }
