@@ -21,8 +21,8 @@ class RuleBook(
 
     //property rules
     var auctionsEnabled: Boolean = true,
-    var mortgagesEnabled: Boolean = true,
-    var sellingEstateEnabled: Boolean = false,
+    var mortgagesEnabled: Boolean = false,
+    var sellingEstateEnabled: Boolean = true,
     var doubleRentOnCollectedSetsEnabled: Boolean = true,
 
     //dice rules

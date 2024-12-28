@@ -7,32 +7,32 @@ object HighlightFieldsService {
         if(BuildingService.buildingModeOn.value){
             if(estate !=null && estate.isHighlighted.value){
                 BuildingService.build(estate)
-                return true
             }
+            return true
         }
         else if(SellingBuildingsService.sellingModeOn.value){
             if(estate !=null && estate.isHighlighted.value){
                 SellingBuildingsService.sell(estate)
-                return true
             }
+            return true
         }
         else if(MortgageService.mortgageModeOn.value){
             if(estate !=null && estate.isHighlighted.value){
                 MortgageService.mortgage(estate)
-                return true
             }
+            return true
         }
         else if(RedeemService.redeemModeOn.value){
             if(estate !=null && estate.isHighlighted.value){
                 RedeemService.redeem(estate)
-                return true
             }
+            return true
         }
         else if(SellingPropertiesService.sellingModeOn.value){
             if(estate !=null && estate.isHighlighted.value){
                 SellingPropertiesService.sell(estate)
-                return true
             }
+            return true
         }
         return false
     }

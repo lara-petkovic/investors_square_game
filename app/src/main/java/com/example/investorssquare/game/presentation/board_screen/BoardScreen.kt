@@ -88,7 +88,7 @@ fun BoardScreen(navController: NavController) {
                     iconResourceId = R.drawable.icon_sell,
                     isButtonClicked = activeButtonId == 2,
                     onButtonClicked = { activeButtonId = if (activeButtonId == 2) null else 2 },
-                    event = Event.ON_SWITCH_TO_SELLING_MODE
+                    event = Event.ON_SWITCH_TO_SELLING_BUILDING_MODE
                 )
 
                 ActionButton(
@@ -109,7 +109,7 @@ fun BoardScreen(navController: NavController) {
                     iconResourceId = R.drawable.icon_redeem, //TODO LARA: make an image for this
                     isButtonClicked = activeButtonId == 5,
                     onButtonClicked = { activeButtonId = if (activeButtonId == 5) null else 5 },
-                    event = Event.ON_SWITCH_TO_REDEEM_MODE //TODO DUSAN: When you make this add the event here
+                    event = Event.ON_SWITCH_TO_SELLING_PROPERTY_MODE
                 )
             }
         }
