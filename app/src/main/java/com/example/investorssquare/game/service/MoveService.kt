@@ -9,8 +9,12 @@ object MoveService {
         activePlayer.finishMove()
         BuildingService.resetBuildingsInCurrentMove()
 
-        val nextPlayersIndex = (activePlayer.index.value + 1) % Game.players.value.size
-        val nextPlayer = Game.players.value[nextPlayersIndex]
+        var nextPlayersIndex = (activePlayer.index.value + 1) % Game.players.value.size
+        var nextPlayer = Game.players.value[nextPlayersIndex]
+        while(nextPlayer.isInBankruptcy.value){
+            nextPlayersIndex = (nextPlayersIndex+1) % Game.players.value.size
+            nextPlayer = Game.players.value[nextPlayersIndex]
+        }
         nextPlayer.startMove()
 
         if(nextPlayer.isInJail.value){

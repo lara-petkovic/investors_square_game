@@ -17,7 +17,7 @@ class RuleBook(
     //taxes rules
     var gatheringTaxesEnabled: Boolean = true,
     var collectTaxesOnFreeParkingEnabled: Boolean = true,
-    var payingTaxesViaPercentagesEnabled: Boolean = true,
+    var payingTaxesViaPercentagesEnabled: Boolean = false,
 
     //property rules
     var auctionsEnabled: Boolean = true,
@@ -28,7 +28,7 @@ class RuleBook(
     //dice rules
     var playAgainIfRolledDouble: Boolean = true,
     var speedDieEnabled: Boolean = false,
-    var doublesRolledLimit: Int = 2,
+    var doublesRolledLimit: Int = 3,
     var playAgainOnFreeParkingEnabled: Boolean = false,
 
     //building rules

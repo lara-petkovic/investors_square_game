@@ -45,10 +45,15 @@ class EstateViewModel @Inject constructor(val estate: Estate) : ViewModel() {
     fun unhighlight(){
         _isHighlighted.value = false
     }
-    fun Mortgage(){
+    fun mortgage(){
         _isMortgaged.value = true
     }
-    fun Redeem(){
+    fun redeem(){
+        _isMortgaged.value = false
+    }
+    fun reset(){ //in case of bankruptcy of the owner
+        _numberOfBuildings.value = 0
+        _ownerIndex.value = -1
         _isMortgaged.value = false
     }
 }

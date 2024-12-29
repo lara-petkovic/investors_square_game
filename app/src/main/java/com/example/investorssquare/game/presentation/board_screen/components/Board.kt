@@ -41,11 +41,13 @@ import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus.postEvent
 import com.example.investorssquare.game.presentation.board_screen.popups.CommunityCardPopup
+import com.example.investorssquare.game.presentation.board_screen.popups.DebtPopup
 import com.example.investorssquare.game.presentation.board_screen.popups.JailPopup
 import com.example.investorssquare.game.presentation.board_screen.popups.PropertyDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.StationDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.UtilityDetails
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.service.BankruptcyService
 import com.example.investorssquare.util.Constants.BLACK_OVERLAY
 import com.example.investorssquare.util.Constants.FIELDS_PER_ROW
 import com.example.investorssquare.util.Constants.RELATIVE_COMMUNITY_CARD_HEIGHT
@@ -68,6 +70,7 @@ fun Board(
     val showPopup by Game.showPopup.collectAsState()
     val estates by Game.estates.collectAsState()
     val currentField by Game.currentField.collectAsState()
+    val showDebtPopup by BankruptcyService.debtPopupVisible.collectAsState()
     val boardSize = (screenWidthDp.value - sideMargin.value * 2).dp
     val fieldHeight = (boardSize.value * RELATIVE_FIELD_HEIGHT).dp
     val fieldWidth = ((boardSize.value - 2 * fieldHeight.value) / FIELDS_PER_ROW).dp
@@ -178,6 +181,13 @@ fun Board(
                     }
                 }
             }
+        }
+        if (showDebtPopup) {
+            DebtPopup(
+                centerOfTheBoard = centerOfTheBoard,
+                popupWidth = (0.6f * FIELDS_PER_ROW * fieldWidth.value).dp,
+                popupHeight = (0.6f * FIELDS_PER_ROW * fieldWidth.value).dp,
+            )
         }
 
         currentField?.let { field ->

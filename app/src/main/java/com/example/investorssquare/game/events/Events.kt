@@ -29,6 +29,8 @@ sealed class Event {
     data object ON_PLAYER_LANDED_ON_FREE_ESTATE : Event()
     data object ON_SWITCH_TO_BUILDING_MODE : Event()
     data object ON_SWITCH_TO_SELLING_PROPERTY_MODE : Event()
+    data object ON_DECLARE_BANKRUPTCY : Event()
+    data object ON_REPAY_DEBT : Event()
     data object ON_SWITCH_TO_MORTGAGE_MODE : Event()
     data object ON_SWITCH_TO_REDEEM_MODE : Event()
     data object ON_SWITCH_TO_SELLING_BUILDING_MODE : Event()

@@ -24,7 +24,7 @@ object EstateService {
     fun handleEstateBought(index: Int){
         val player = Game.getActivePlayer()!!
         val estate = Game.getEstateByFieldIndex(index)!!
-        player.buyNewEstate(estate)
+        estate.setOwnerIndex(player.index.value)
         Game.dismissPopup()
     }
     fun getNumberOfHousesOwned(player: PlayerViewModel): Int{

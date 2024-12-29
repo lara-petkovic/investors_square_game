@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.game.domain.model.Field
+import com.example.investorssquare.game.service.BankruptcyService
 import com.example.investorssquare.util.Constants.TOTAL_FIELDS
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,6 +24,12 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     private val _isInJail = MutableStateFlow(false)
     val isInJail: StateFlow<Boolean> get() = _isInJail
 
+    private val _isInDebt = MutableStateFlow(false)
+    val isInDebt: StateFlow<Boolean> get() = _isInDebt
+
+    private val _isInBankruptcy = MutableStateFlow(false)
+    val isInBankruptcy: StateFlow<Boolean> get() = _isInBankruptcy
+
     private val _index = MutableStateFlow(0)
     val index: StateFlow<Int> get() = _index
 
@@ -38,19 +45,7 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     private val _position = MutableStateFlow(0)
     val position: StateFlow<Int> get() = _position
 
-    private val _estates = MutableStateFlow<List<EstateViewModel>>(emptyList())
-    val estates: StateFlow<List<EstateViewModel>> get() = _estates
-
     var doublesRolledCounter: Int = 0
-
-    fun buyNewEstate(estate: EstateViewModel) {
-        estate.setOwnerIndex(index.value)
-        _estates.value += estate
-    }
-    fun sellEstate(estate: EstateViewModel) {
-        estate.setOwnerIndex(-1)
-        _estates.value = _estates.value.filter { it != estate }
-    }
 
     fun acquireGetOutOfJailFreeCard(){
         _numberOfGetOutOfJailFreeCards.value++
@@ -78,16 +73,14 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
         _position.value = (_position.value - steps + TOTAL_FIELDS) % TOTAL_FIELDS
     }
 
-    fun moveToField(field: Int) {
-        if (field < TOTAL_FIELDS) _position.value = field
-    }
-
     fun pay(price: Int) {
         _money.value -= price
+        _isInDebt.value = _money.value<0
     }
 
     fun receive(amount: Int) {
         _money.value += amount
+        _isInDebt.value = _money.value<0
     }
 
     fun finishMove() {
@@ -105,6 +98,7 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
 
     fun setMoney(money: Int) {
         _money.value = money
+        _isInDebt.value = _money.value<0
     }
 
     fun setColor(color: Color) {
@@ -113,10 +107,6 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
 
     fun setIndex(index: Int) {
         _index.value = index
-    }
-
-    fun setPosition(position: Int) {
-        _position.value = position
     }
 
     fun setName(name: String) {
@@ -129,8 +119,15 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
         }
 
         val isOnCorrectField = position.value == currentField.index
-        val alreadyOwnsEstate = _estates.value.any { it.estate.index == currentField.index }
+        val alreadyOwnsEstate = Game.estates.value.any { it.estate.index == currentField.index && it.isOwnedByPlayer(this)}
 
         return isOnCorrectField && !alreadyOwnsEstate
     }
+    fun bankrupt(){
+        _isInBankruptcy.value = true
+        for(estate in Game.estates.value.filter { e->e.isOwnedByPlayer(this) }){
+            estate.reset()
+        }
+    }
+
 }

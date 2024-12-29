@@ -31,8 +31,12 @@ import com.example.investorssquare.game.presentation.board_screen.components.Pla
 import com.example.investorssquare.game.presentation.board_screen.components.buttons.ActionButton
 import com.example.investorssquare.game.presentation.board_screen.components.buttons.DiceButton
 import com.example.investorssquare.game.presentation.board_screen.components.buttons.FinishButton
+import com.example.investorssquare.game.presentation.board_screen.popups.DebtPopup
+import com.example.investorssquare.game.presentation.board_screen.popups.JailPopup
 import com.example.investorssquare.game.presentation.board_screen.popups.PaymentPopupCard
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.service.BankruptcyService
+import com.example.investorssquare.util.Constants.FIELDS_PER_ROW
 import com.example.investorssquare.util.Constants.SIDE_BOARD_MARGIN
 import com.example.investorssquare.util.Constants.TOP_BOARD_MARGIN
 
@@ -127,6 +131,7 @@ fun BoardScreen(navController: NavController) {
                 )
             }
         }
+
     }
 
     if (showExitDialog) {

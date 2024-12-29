@@ -114,7 +114,8 @@ object BuildingService {
                 buildingsInCurrentMove[p]==null || buildingsInCurrentMove[p]!!<Game.ruleBook.buildingsPerMovePerProperty
             }
         }
-        return propertiesWherePlayerCanBuild.filter{p->!p.isMortgaged.value}
+        return propertiesWherePlayerCanBuild.filter{p->
+            !p.isMortgaged.value && (p.estate as Property).housePrice<=player.money.value}
     }
 
 }

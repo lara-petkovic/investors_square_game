@@ -40,7 +40,7 @@ object MortgageService {
     fun mortgage(estate: EstateViewModel) {
         if (estate.isMortgaged.value || !Game.ruleBook.mortgagesEnabled || !estate.isHighlighted.value)
             return
-        estate.Mortgage()
+        estate.mortgage()
         val property = estate.estate
         val player = Game.getActivePlayer()!!
         TransactionService.receive(player, property.mortgagePrice)

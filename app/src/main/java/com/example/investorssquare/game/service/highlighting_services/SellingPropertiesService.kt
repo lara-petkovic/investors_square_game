@@ -53,7 +53,7 @@ object SellingPropertiesService {
             return
         val player = Game.getActivePlayer()!!
         TransactionService.receive(player, estate.estate.sellPrice)
-        player.sellEstate(estate)
+        estate.setOwnerIndex(-1)
         highlightProperties()
     }
 }

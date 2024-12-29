@@ -44,7 +44,7 @@ object RedeemService {
         val property = estate.estate
         val player = Game.getActivePlayer()!!
         if(TransactionService.payIfAffordable(player, property.mortgagePrice)){
-            estate.Redeem()
+            estate.redeem()
             highlightProperties()
         }
     }
@@ -54,6 +54,6 @@ object RedeemService {
         val propertiesWhichPlayerCanRedeem = Game.estates.value.filter { e->
             e.isOwnedByPlayer(player) && e.isMortgaged.value
         }
-        return propertiesWhichPlayerCanRedeem
+        return propertiesWhichPlayerCanRedeem.filter{p-> p.estate.mortgagePrice<=player.money.value}
     }
 }

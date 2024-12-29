@@ -17,6 +17,7 @@ object JailEscapeService {
     fun rollADouble(){
         Game.dismissPopup()
         Game.diceViewModel.enableDiceButton()
+        Game.hideFinishButton()
     }
     fun useGetOutOfJailFreeCard(){
         val player = Game.getActivePlayer()!!
