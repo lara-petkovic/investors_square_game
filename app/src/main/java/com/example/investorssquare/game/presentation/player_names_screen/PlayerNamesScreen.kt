@@ -29,7 +29,7 @@ fun PlayerNamesScreen(
         Color.Red, Color.Blue, Color.Green, Color.Yellow, Color.Cyan, Color.Magenta
     )
     val availableColors = remember { mutableStateOf(boardColors.take(6).toMutableList()) }
-    val players = remember { mutableStateOf(List(playerCount) { "" }) }
+    val players = remember { mutableStateOf(List(playerCount) { "Player ${it + 1}" }) }
     val playerColors = remember { mutableStateOf(MutableList(playerCount) { Color.Gray }) }
 
     var showColorPickerForPlayer by remember { mutableIntStateOf(-1) }
