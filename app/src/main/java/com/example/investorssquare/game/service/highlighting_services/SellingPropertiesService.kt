@@ -5,6 +5,7 @@ import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.service.TransactionService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,7 +44,7 @@ object SellingPropertiesService {
         val estatesWhichPlayerCanSell = Game.estates.value.filter{ p->
             p.isOwnedByPlayer(player) && p.numberOfBuildings.value==0
         }
-        return if(Game.ruleBook.sellingEstateEnabled){
+        return if(RuleBook.sellingEstateEnabled){
             estatesWhichPlayerCanSell
         } else
             emptyList()

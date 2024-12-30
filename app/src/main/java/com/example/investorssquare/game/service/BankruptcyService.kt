@@ -3,6 +3,7 @@ package com.example.investorssquare.game.service
 import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -26,10 +27,10 @@ object BankruptcyService {
             if(property.numberOfBuildings.value>0){
                 netValue += property.numberOfBuildings.value * (property.estate as Property).housePrice/2
             }
-            if(Game.ruleBook.mortgagesEnabled){
+            if(RuleBook.mortgagesEnabled){
                 netValue += property.estate.mortgagePrice
             }
-            if(Game.ruleBook.sellingEstateEnabled){
+            if(RuleBook.sellingEstateEnabled){
                 netValue += property.estate.sellPrice
             }
         }
