@@ -1,5 +1,6 @@
 package com.example.investorssquare.game.service
 
+import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
@@ -102,9 +103,9 @@ object EventService {
                     is Event.ON_PLAYER_CROSSED_START -> collectSalary()
                     is Event.ON_PLAYER_LANDED_ON_TAX -> payTax()
                     is Event.ON_PLAYER_LANDED_ON_FREE_PARKING -> {
-                        if(Game.ruleBook.collectTaxesOnFreeParkingEnabled)
+                        if(RuleBook.collectTaxesOnFreeParkingEnabled)
                             collectGatheredTaxes()
-                        else if(Game.ruleBook.playAgainOnFreeParkingEnabled)
+                        else if(RuleBook.playAgainOnFreeParkingEnabled)
                             enableDice()
                     }
                     is Event.ON_BAIL_OUT -> JailEscapeService.bailOut()

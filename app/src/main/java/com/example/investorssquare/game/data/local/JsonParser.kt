@@ -3,7 +3,6 @@ package com.example.investorssquare.game.data.local
 import android.content.Context
 import androidx.compose.ui.graphics.Color
 import com.example.investorssquare.game.domain.model.*
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.int
@@ -42,7 +41,6 @@ class JsonParser(private val context: Context) {
             loadCommunity(communityChest)
         )
         board.shuffleCommunityCards()
-        Game.ruleBook = RuleBook()
         return board
     }
 

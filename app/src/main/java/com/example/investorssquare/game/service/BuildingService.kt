@@ -2,6 +2,7 @@ package com.example.investorssquare.game.service
 
 import androidx.compose.ui.graphics.Color
 import com.example.investorssquare.game.domain.model.Property
+import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
@@ -64,12 +65,12 @@ object BuildingService {
         var propertiesWherePlayerCanBuild = Game.estates.value.filter { e->
             e.isOwnedByPlayer(player) && e.isProperty && !e.isFullyBuilt()
         }
-        if(Game.ruleBook.isSetNecessaryToBuild){
+        if(RuleBook.isSetNecessaryToBuild){
             propertiesWherePlayerCanBuild = propertiesWherePlayerCanBuild.filter{ p->
                 Game.getPropertiesBySetColor((p.estate as Property).setColor).all { e -> e.isOwnedByPlayer(player) }
             }
-            if(Game.ruleBook.evenlyBuilding){
-                var res: MutableList<EstateViewModel> = mutableListOf()
+            if(RuleBook.evenlyBuilding){
+                val res: MutableList<EstateViewModel> = mutableListOf()
                 var lastColor: Color? = null
                 for(e in propertiesWherePlayerCanBuild){
                     val p = e.estate as Property
@@ -89,14 +90,14 @@ object BuildingService {
                 propertiesWherePlayerCanBuild = res
             }
         }
-        if(Game.ruleBook.isVisitNecessaryToBuild){
+        if(RuleBook.isVisitNecessaryToBuild){
             val currentProperty = propertiesWherePlayerCanBuild.find { p -> p.estate.index == player.position.value }
             if(currentProperty == null){
                 return emptyList()
             }
             else{
                 propertiesWherePlayerCanBuild =
-                    if(!Game.ruleBook.isSetNecessaryToBuild){
+                    if(!RuleBook.isSetNecessaryToBuild){
                         propertiesWherePlayerCanBuild.filter { p-> p==currentProperty }
                     } else{
                         propertiesWherePlayerCanBuild.filter { p->
@@ -104,13 +105,13 @@ object BuildingService {
                         }
                     }
             }
-            if(!Game.ruleBook.buildingOnMultiplePropertiesInOneMoveEnabled){
+            if(!RuleBook.buildingOnMultiplePropertiesInOneMoveEnabled){
                 propertiesWherePlayerCanBuild = propertiesWherePlayerCanBuild.filter{p->p==currentProperty}
             }
         }
-        if(Game.ruleBook.buildingsPerMovePerProperty>0){
+        if(RuleBook.buildingsPerMovePerProperty>0){
             propertiesWherePlayerCanBuild = propertiesWherePlayerCanBuild.filter{p->
-                buildingsInCurrentMove[p]==null || buildingsInCurrentMove[p]!!<Game.ruleBook.buildingsPerMovePerProperty
+                buildingsInCurrentMove[p]==null || buildingsInCurrentMove[p]!!< RuleBook.buildingsPerMovePerProperty
             }
         }
         return propertiesWherePlayerCanBuild.filter{p->!p.isMortgaged.value}

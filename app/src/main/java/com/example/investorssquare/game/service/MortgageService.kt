@@ -1,5 +1,6 @@
 package com.example.investorssquare.game.service
 
+import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
@@ -37,7 +38,7 @@ object MortgageService {
         }
     }
     fun mortgage(estate: EstateViewModel) {
-        if (estate.isMortgaged.value || !Game.ruleBook.mortgagesEnabled || !estate.isHighlighted.value)
+        if (estate.isMortgaged.value || !RuleBook.mortgagesEnabled || !estate.isHighlighted.value)
             return
         estate.Mortgage()
         val property = estate.estate
@@ -46,7 +47,7 @@ object MortgageService {
         highlightProperties()
     }
     private fun getPropertiesWhichPlayerCanMortgage(player: PlayerViewModel): List<EstateViewModel>{
-        if(!Game.ruleBook.mortgagesEnabled)
+        if(!RuleBook.mortgagesEnabled)
             return emptyList()
         val propertiesWhichPlayerCanMortgage = Game.estates.value.filter { e->
             e.isOwnedByPlayer(player) && !e.isMortgaged.value && e.numberOfBuildings.value==0

@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.investorssquare.R
+import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.navigation.Screen
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 
@@ -49,9 +50,7 @@ fun PlayerNamesScreen(
                 TextField(
                     value = player,
                     onValueChange = { newName ->
-                        players.value = players.value.toMutableList().apply {
-                            this[index] = newName
-                        }
+                        players.value = players.value.toMutableList().apply { this[index] = newName }
                     },
                     label = { Text("Player ${index + 1}") },
                     modifier = Modifier
@@ -91,7 +90,7 @@ fun PlayerNamesScreen(
 
         Button(
             onClick = {
-                Game.setPlayers(players.value, playerColors.value, Game.ruleBook.startingCapital)
+                Game.setPlayers(players.value, playerColors.value, RuleBook.startingCapital)
                 navController.navigate(Screen.BoardScreen.route)
             },
             enabled = players.value.all { it.isNotEmpty() } && playerColors.value.all { it != Color.Gray }
@@ -102,7 +101,7 @@ fun PlayerNamesScreen(
         if (showColorPickerForPlayer != -1) {
             ColorPickerPopup(
                 colors = availableColors.value,
-                onColorSelected = { selectedColor -> // Assign the selected color to a player
+                onColorSelected = { selectedColor ->
                     playerColors.value[showColorPickerForPlayer] = selectedColor
                     availableColors.value.remove(selectedColor)
                     showColorPickerForPlayer = -1

@@ -1,5 +1,6 @@
 package com.example.investorssquare.game.service
 
+import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
@@ -18,7 +19,8 @@ object RedeemService {
         else
             turnOnRedeemMode()
     }
-    fun turnOnRedeemMode(){
+
+    private fun turnOnRedeemMode(){
         Game.turnOnHighlightMode()
         _redeemModeOn.value = true
         highlightProperties()
@@ -37,7 +39,7 @@ object RedeemService {
         }
     }
     fun redeem(estate: EstateViewModel){
-        if(!estate.isMortgaged.value || !Game.ruleBook.mortgagesEnabled || !estate.isHighlighted.value)
+        if(!estate.isMortgaged.value || !RuleBook.mortgagesEnabled || !estate.isHighlighted.value)
             return
 
         val property = estate.estate
@@ -48,7 +50,7 @@ object RedeemService {
         }
     }
     private fun getPropertiesWhichPlayerCanRedeem(player: PlayerViewModel): List<EstateViewModel>{
-        if(!Game.ruleBook.mortgagesEnabled)
+        if(!RuleBook.mortgagesEnabled)
             return emptyList()
         val propertiesWhichPlayerCanRedeem = Game.estates.value.filter { e->
             e.isOwnedByPlayer(player) && e.isMortgaged.value

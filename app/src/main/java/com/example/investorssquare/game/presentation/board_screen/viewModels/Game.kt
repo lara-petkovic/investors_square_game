@@ -5,7 +5,6 @@ import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.Property
-import com.example.investorssquare.game.domain.model.RuleBook
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,8 +20,6 @@ import kotlinx.coroutines.launch
 
 object Game {
     private val gameScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-
-    var ruleBook: RuleBook = RuleBook()
 
     private val _board = MutableStateFlow<Board?>(null)
     val board: StateFlow<Board?> get() = _board

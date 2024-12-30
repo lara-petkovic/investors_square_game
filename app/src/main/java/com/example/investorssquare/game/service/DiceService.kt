@@ -1,5 +1,6 @@
 package com.example.investorssquare.game.service
 
+import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
@@ -23,14 +24,14 @@ object DiceService {
             disableDice()
             return
         }
-        if (player.isInJail.value && Game.ruleBook.rollADoubleToEscapeJailEnabled) {
+        if (player.isInJail.value && RuleBook.rollADoubleToEscapeJailEnabled) {
             player.escapeJail()
             disableDice()
             serviceScope.launch { EventBus.postEvent(Event.ON_MOVE_PLAYER) }
             return
         }
         player.doublesRolledCounter++
-        if (!Game.ruleBook.playAgainIfRolledDouble) {
+        if (!RuleBook.playAgainIfRolledDouble) {
             disableDice()
         }
         serviceScope.launch { EventBus.postEvent(Event.ON_MOVE_PLAYER) }
