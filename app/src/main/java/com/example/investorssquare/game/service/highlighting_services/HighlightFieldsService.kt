@@ -1,82 +1,103 @@
 package com.example.investorssquare.game.service.highlighting_services
 
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
+import com.example.investorssquare.game.service.highlighting_services.BuildingService.build
+import com.example.investorssquare.game.service.highlighting_services.BuildingService.buildingModeOn
+import com.example.investorssquare.game.service.highlighting_services.BuildingService.resetBuildingsInCurrentMove
+import com.example.investorssquare.game.service.highlighting_services.BuildingService.switchBuildingMode
+import com.example.investorssquare.game.service.highlighting_services.BuildingService.turnOffBuildingMode
+import com.example.investorssquare.game.service.highlighting_services.MortgageService.mortgage
+import com.example.investorssquare.game.service.highlighting_services.MortgageService.mortgageModeOn
+import com.example.investorssquare.game.service.highlighting_services.MortgageService.switchMortgageMode
+import com.example.investorssquare.game.service.highlighting_services.MortgageService.turnOffMortgageMode
+import com.example.investorssquare.game.service.highlighting_services.RedeemService.redeem
+import com.example.investorssquare.game.service.highlighting_services.RedeemService.redeemModeOn
+import com.example.investorssquare.game.service.highlighting_services.RedeemService.switchRedeemMode
+import com.example.investorssquare.game.service.highlighting_services.RedeemService.turnOffRedeemMode
+import com.example.investorssquare.game.service.highlighting_services.SellingBuildingsService.sellBuilding
+import com.example.investorssquare.game.service.highlighting_services.SellingBuildingsService.sellingBuildingsModeOn
+import com.example.investorssquare.game.service.highlighting_services.SellingBuildingsService.switchSellingBuildingsMode
+import com.example.investorssquare.game.service.highlighting_services.SellingBuildingsService.turnOffSellingBuildingsMode
+import com.example.investorssquare.game.service.highlighting_services.SellingPropertiesService.sellProperty
+import com.example.investorssquare.game.service.highlighting_services.SellingPropertiesService.sellingPropertiesModeOn
+import com.example.investorssquare.game.service.highlighting_services.SellingPropertiesService.switchSellingPropertiesMode
+import com.example.investorssquare.game.service.highlighting_services.SellingPropertiesService.turnOffSellingPropertiesMode
 
 object HighlightFieldsService {
     fun handleHighlightedFieldClicked(estate: EstateViewModel?): Boolean {
-        if(BuildingService.buildingModeOn.value){
+        if(buildingModeOn.value){
             if(estate !=null && estate.isHighlighted.value){
-                BuildingService.build(estate)
+                build(estate)
             }
             return true
         }
-        else if(SellingBuildingsService.sellingModeOn.value){
+        else if(sellingBuildingsModeOn.value){
             if(estate !=null && estate.isHighlighted.value){
-                SellingBuildingsService.sell(estate)
+                sellBuilding(estate)
             }
             return true
         }
-        else if(MortgageService.mortgageModeOn.value){
+        else if(mortgageModeOn.value){
             if(estate !=null && estate.isHighlighted.value){
-                MortgageService.mortgage(estate)
+                mortgage(estate)
             }
             return true
         }
-        else if(RedeemService.redeemModeOn.value){
+        else if(redeemModeOn.value){
             if(estate !=null && estate.isHighlighted.value){
-                RedeemService.redeem(estate)
+                redeem(estate)
             }
             return true
         }
-        else if(SellingPropertiesService.sellingModeOn.value){
+        else if(sellingPropertiesModeOn.value){
             if(estate !=null && estate.isHighlighted.value){
-                SellingPropertiesService.sell(estate)
+                sellProperty(estate)
             }
             return true
         }
         return false
     }
-    fun turnOff(){
-        RedeemService.turnOffRedeemMode()
-        MortgageService.turnOffMortgageMode()
-        SellingBuildingsService.turnOffSellingMode()
-        SellingPropertiesService.turnOffSellingMode()
-        BuildingService.turnOffBuildingMode()
-        BuildingService.resetBuildingsInCurrentMove()
+    fun turnOffHighlighting(){
+        turnOffRedeemMode()
+        turnOffMortgageMode()
+        turnOffSellingBuildingsMode()
+        turnOffSellingPropertiesMode()
+        turnOffBuildingMode()
+        resetBuildingsInCurrentMove()
     }
     fun switchToBuildingMode(){
-        RedeemService.turnOffRedeemMode()
-        MortgageService.turnOffMortgageMode()
-        SellingBuildingsService.turnOffSellingMode()
-        SellingPropertiesService.turnOffSellingMode()
-        BuildingService.switchBuildingMode()
+        turnOffRedeemMode()
+        turnOffMortgageMode()
+        turnOffSellingBuildingsMode()
+        turnOffSellingPropertiesMode()
+        switchBuildingMode()
     }
     fun switchToSellingPropertyMode(){
-        RedeemService.turnOffRedeemMode()
-        MortgageService.turnOffMortgageMode()
-        SellingBuildingsService.turnOffSellingMode()
-        BuildingService.turnOffBuildingMode()
-        SellingPropertiesService.switchSellingMode()
+        turnOffRedeemMode()
+        turnOffMortgageMode()
+        turnOffSellingBuildingsMode()
+        turnOffBuildingMode()
+        switchSellingPropertiesMode()
     }
     fun switchToSellingBuildingMode(){
-        RedeemService.turnOffRedeemMode()
-        MortgageService.turnOffMortgageMode()
-        SellingPropertiesService.turnOffSellingMode()
-        BuildingService.turnOffBuildingMode()
-        SellingBuildingsService.switchSellingMode()
+        turnOffRedeemMode()
+        turnOffMortgageMode()
+        turnOffSellingPropertiesMode()
+        turnOffBuildingMode()
+        switchSellingBuildingsMode()
     }
     fun switchToRedeemMode(){
-        MortgageService.turnOffMortgageMode()
-        SellingBuildingsService.turnOffSellingMode()
-        SellingPropertiesService.turnOffSellingMode()
-        BuildingService.turnOffBuildingMode()
-        RedeemService.switchRedeemMode()
+        turnOffMortgageMode()
+        turnOffSellingBuildingsMode()
+        turnOffSellingPropertiesMode()
+        turnOffBuildingMode()
+        switchRedeemMode()
     }
     fun switchToMortgageMode(){
-        RedeemService.turnOffRedeemMode()
-        SellingBuildingsService.turnOffSellingMode()
-        SellingPropertiesService.turnOffSellingMode()
-        BuildingService.turnOffBuildingMode()
-        MortgageService.switchMortgageMode()
+        turnOffRedeemMode()
+        turnOffSellingBuildingsMode()
+        turnOffSellingPropertiesMode()
+        turnOffBuildingMode()
+        switchMortgageMode()
     }
 }

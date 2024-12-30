@@ -2,9 +2,13 @@ package com.example.investorssquare.game.service.highlighting_services
 
 import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.game.service.BoardService.turnOffHighlightMode
+import com.example.investorssquare.game.service.BoardService.turnOnHighlightMode
+import com.example.investorssquare.game.service.EstateService.estates
+import com.example.investorssquare.game.service.PlayersService.getActivePlayer
 import com.example.investorssquare.game.service.TransactionService
+import com.example.investorssquare.game.service.TransactionService.receive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -21,19 +25,19 @@ object MortgageService {
             turnOnMortgageMode()
     }
     fun turnOnMortgageMode(){
-        Game.turnOnHighlightMode()
+        turnOnHighlightMode()
         _mortgageModeOn.value = true
         highlightProperties()
     }
     private fun highlightProperties() {
         highlightedProperties.forEach { p -> p.unhighlight() }
-        highlightedProperties = getPropertiesWhichPlayerCanMortgage(Game.getActivePlayer()!!)
+        highlightedProperties = getPropertiesWhichPlayerCanMortgage(getActivePlayer()!!)
         highlightedProperties.forEach { p -> p.highlight() }
     }
     fun turnOffMortgageMode(){
         if(_mortgageModeOn.value){
             _mortgageModeOn.value = false
-            Game.turnOffHighlightMode()
+            turnOffHighlightMode()
             highlightedProperties.forEach { p-> p.unhighlight() }
             highlightedProperties = emptyList()
         }
@@ -43,14 +47,14 @@ object MortgageService {
             return
         estate.mortgage()
         val property = estate.estate
-        val player = Game.getActivePlayer()!!
-        TransactionService.receive(player, property.mortgagePrice)
+        val player = getActivePlayer()!!
+        receive(player, property.mortgagePrice)
         highlightProperties()
     }
     private fun getPropertiesWhichPlayerCanMortgage(player: PlayerViewModel): List<EstateViewModel>{
         if(!RuleBook.mortgagesEnabled)
             return emptyList()
-        val propertiesWhichPlayerCanMortgage = Game.estates.value.filter { e->
+        val propertiesWhichPlayerCanMortgage = estates.value.filter { e->
             e.isOwnedByPlayer(player) && !e.isMortgaged.value && e.numberOfBuildings.value==0
         }
         return propertiesWhichPlayerCanMortgage

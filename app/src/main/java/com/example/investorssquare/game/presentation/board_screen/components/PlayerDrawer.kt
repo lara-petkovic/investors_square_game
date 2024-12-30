@@ -21,8 +21,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.example.investorssquare.R
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.game.service.PlayerMovementService.playersPositions
+import com.example.investorssquare.game.service.PlayersService.players
 import com.example.investorssquare.util.Constants.FORTH_ROW_INTERVAL
 import com.example.investorssquare.util.Constants.SECOND_ROW_INTERVAL
 import com.example.investorssquare.util.Constants.THIRD_ROW_INTERVAL
@@ -36,8 +37,8 @@ fun PlayerDrawer(
     imageSize: Dp = 16.dp,
     spacing: Dp = (-5).dp
 ) {
-    val players = Game.players.collectAsState().value
-    val playerPositions = Game.playersPositions.collectAsState().value
+    val players = players.collectAsState().value
+    val playerPositions = playersPositions.collectAsState().value
 
     val indexesOfPlayersOnTheField = players.filterIndexed { playerIndex, _ ->
         playerIndex < playerPositions.size && playerPositions[playerIndex] == fieldIndex

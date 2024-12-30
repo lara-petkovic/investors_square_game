@@ -4,9 +4,14 @@ import androidx.compose.ui.graphics.Color
 import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.game.service.BoardService.turnOffHighlightMode
+import com.example.investorssquare.game.service.BoardService.turnOnHighlightMode
+import com.example.investorssquare.game.service.EstateService.estates
+import com.example.investorssquare.game.service.EstateService.getAllPropertiesBySet
+import com.example.investorssquare.game.service.PlayersService.getActivePlayer
 import com.example.investorssquare.game.service.TransactionService
+import com.example.investorssquare.game.service.TransactionService.payIfAffordable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -27,19 +32,19 @@ object BuildingService {
             turnOnBuildingMode()
     }
     fun turnOnBuildingMode(){
-        Game.turnOnHighlightMode()
+        turnOnHighlightMode()
         _buildingModeOn.value = true
         highlightProperties()
     }
     private fun highlightProperties() {
         highlightedProperties.forEach { p -> p.unhighlight() }
-        highlightedProperties = getPropertiesWherePlayerCanBuild(Game.getActivePlayer()!!)
+        highlightedProperties = getPropertiesWherePlayerCanBuild(getActivePlayer()!!)
         highlightedProperties.forEach { p -> p.highlight() }
     }
     fun turnOffBuildingMode(){
         if(_buildingModeOn.value){
             _buildingModeOn.value = false
-            Game.turnOffHighlightMode()
+            turnOffHighlightMode()
             highlightedProperties.forEach { p-> p.unhighlight() }
             highlightedProperties = emptyList()
         }
@@ -50,8 +55,8 @@ object BuildingService {
         val property = estate.estate as Property
         if(estate.numberOfBuildings.value==property.rent.size-1)
             return
-        val player = Game.getActivePlayer()!!
-        if(TransactionService.payIfAffordable(player, property.housePrice)){
+        val player = getActivePlayer()!!
+        if(payIfAffordable(player, property.housePrice)){
             estate.addBuilding()
             if(buildingsInCurrentMove.containsKey(estate)){
                 buildingsInCurrentMove[estate] = buildingsInCurrentMove[estate]?.plus(1)!!
@@ -63,12 +68,12 @@ object BuildingService {
         }
     }
     private fun getPropertiesWherePlayerCanBuild(player: PlayerViewModel): List<EstateViewModel>{
-        var propertiesWherePlayerCanBuild = Game.estates.value.filter { e->
+        var propertiesWherePlayerCanBuild = estates.value.filter { e->
             e.isOwnedByPlayer(player) && e.isProperty && !e.isFullyBuilt()
         }
         if(RuleBook.isSetNecessaryToBuild){
             propertiesWherePlayerCanBuild = propertiesWherePlayerCanBuild.filter{ p->
-                Game.getPropertiesBySetColor((p.estate as Property).setColor).all { e -> e.isOwnedByPlayer(player) }
+                getAllPropertiesBySet((p.estate as Property).setColor).all { e -> e.isOwnedByPlayer(player) }
             }
             if(RuleBook.evenlyBuilding){
                 val res: MutableList<EstateViewModel> = mutableListOf()

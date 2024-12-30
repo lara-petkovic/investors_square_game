@@ -10,11 +10,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.service.PlayersService.players
 
 @Composable
 fun PlayerCardColumns() {
-    val players by Game.players.collectAsState()
+    val players by players.collectAsState()
 
     val columnsCount = 2
     val rowsCount = (players.size + columnsCount - 1) / columnsCount

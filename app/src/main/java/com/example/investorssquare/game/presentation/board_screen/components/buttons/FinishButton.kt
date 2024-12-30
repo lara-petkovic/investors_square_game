@@ -11,13 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.service.MoveService.isFinishButtonVisible
 import kotlinx.coroutines.launch
 
 @Composable
 fun FinishButton() {
     val coroutineScope = rememberCoroutineScope()
-    val isFinishButtonVisible by Game.isFinishButtonVisible.collectAsState()
+    val isFinishButtonVisible by isFinishButtonVisible.collectAsState()
 
     if (isFinishButtonVisible) {
         Button(

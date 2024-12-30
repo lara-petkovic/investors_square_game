@@ -4,9 +4,14 @@ import androidx.compose.ui.graphics.Color
 import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.game.service.BoardService.turnOffHighlightMode
+import com.example.investorssquare.game.service.BoardService.turnOnHighlightMode
+import com.example.investorssquare.game.service.EstateService.estates
+import com.example.investorssquare.game.service.PlayersService.getActivePlayer
 import com.example.investorssquare.game.service.TransactionService
+import com.example.investorssquare.game.service.TransactionService.receive
+import com.example.investorssquare.game.service.highlighting_services.BuildingService.buildingsInCurrentMove
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -14,34 +19,34 @@ object SellingBuildingsService {
     private var highlightedProperties: List<EstateViewModel> = emptyList()
 
     private val _sellingModeOn = MutableStateFlow<Boolean>(false)
-    val sellingModeOn: StateFlow<Boolean> get() = _sellingModeOn
+    val sellingBuildingsModeOn: StateFlow<Boolean> get() = _sellingModeOn
 
-    fun switchSellingMode(){
-        if(sellingModeOn.value)
-            turnOffSellingMode()
+    fun switchSellingBuildingsMode(){
+        if(sellingBuildingsModeOn.value)
+            turnOffSellingBuildingsMode()
         else
-            turnOnSellingMode()
+            turnOnSellingBuildingsMode()
     }
-    fun turnOnSellingMode(){
+    fun turnOnSellingBuildingsMode(){
         _sellingModeOn.value = true
-        Game.turnOnHighlightMode()
+        turnOnHighlightMode()
         highlightProperties()
     }
     private fun highlightProperties() {
         highlightedProperties.forEach { p -> p.unhighlight() }
-        highlightedProperties = getPropertiesWherePlayerCanSell(Game.getActivePlayer()!!)
+        highlightedProperties = getPropertiesWherePlayerCanSell(getActivePlayer()!!)
         highlightedProperties.forEach { p -> p.highlight() }
     }
-    fun turnOffSellingMode(){
+    fun turnOffSellingBuildingsMode(){
         if(_sellingModeOn.value){
             _sellingModeOn.value = false
-            Game.turnOffHighlightMode()
+            turnOffHighlightMode()
             highlightedProperties.forEach { p-> p.unhighlight() }
             highlightedProperties = emptyList()
         }
     }
     private fun getPropertiesWherePlayerCanSell(player: PlayerViewModel): List<EstateViewModel>{
-        var propertiesWherePlayerCanSell = Game.estates.value.filter{ p->
+        var propertiesWherePlayerCanSell = estates.value.filter{ p->
             p.isProperty && p.isOwnedByPlayer(player) && p.numberOfBuildings.value>0
         }
         if(RuleBook.evenlyBuilding){
@@ -66,18 +71,18 @@ object SellingBuildingsService {
         }
         return propertiesWherePlayerCanSell;
     }
-    fun sell(estate: EstateViewModel){
+    fun sellBuilding(estate: EstateViewModel){
         if(!estate.isProperty)
             return
         val property = estate.estate as Property
         if(estate.numberOfBuildings.value==0)
             return
-        val player = Game.getActivePlayer()!!
-        TransactionService.receive(player, property.housePrice / 2)
+        val player = getActivePlayer()!!
+        receive(player, property.housePrice / 2)
         estate.removeBuilding()
         highlightProperties()
-        if(BuildingService.buildingsInCurrentMove[estate]!=null){
-            BuildingService.buildingsInCurrentMove[estate] = BuildingService.buildingsInCurrentMove[estate]!! - 1;
+        if(buildingsInCurrentMove[estate]!=null){
+           buildingsInCurrentMove[estate] = buildingsInCurrentMove[estate]!! - 1;
         }
     }
 }

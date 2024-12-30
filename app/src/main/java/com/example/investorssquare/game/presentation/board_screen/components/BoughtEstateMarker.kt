@@ -12,7 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.investorssquare.game.domain.model.Field
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.service.EstateService.getEstateByFieldIndex
+import com.example.investorssquare.game.service.EstateService.getOwnerOfEstate
 import com.example.investorssquare.util.Constants.TOTAL_FIELDS
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -23,7 +24,7 @@ fun BoughtEstateMarker(
     modifier: Modifier,
     horizontal: Boolean = true
 ) {
-    val estate = Game.getEstateByFieldIndex(field.index)
+    val estate = getEstateByFieldIndex(field.index)
     val ownerIndex = estate?.ownerIndex?.collectAsState()?.value?:-1
 
     val width = if (horizontal) fieldWidth / 2 else fieldWidth / 3.7f
@@ -32,7 +33,7 @@ fun BoughtEstateMarker(
     if(ownerIndex>-1){
         Box(
             modifier = modifier
-                .background(Game.getOwnerOfEstate(estate!!.estate.index)!!.color.value)
+                .background(getOwnerOfEstate(estate!!.estate.index)!!.color.value)
                 .size(width, height)
                 .border(1.dp, color = Color.Black)
         )

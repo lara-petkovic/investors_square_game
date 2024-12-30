@@ -4,21 +4,38 @@ import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.domain.model.Tax
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
+import com.example.investorssquare.game.service.BoardService.board
+import com.example.investorssquare.game.service.DiceService.getDiceSum
+import com.example.investorssquare.game.service.EstateService.doesPlayerOwnASet
+import com.example.investorssquare.game.service.EstateService.estates
+import com.example.investorssquare.game.service.EstateService.getEstateByFieldIndex
+import com.example.investorssquare.game.service.EstateService.getNumberOfHotelsOwned
+import com.example.investorssquare.game.service.EstateService.getNumberOfHousesOwned
+import com.example.investorssquare.game.service.EstateService.getOwnerOfEstate
+import com.example.investorssquare.game.service.PlayersService.getActivePlayer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 object TransactionService {
+    private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     var priceMultiplier = 1
+
     fun collectSalary() {
-        val player = Game.getActivePlayer()!!
-        player.receive(RuleBook.salary)
+        val player = getActivePlayer()!!
+        receive(player, RuleBook.salary)
     }
     fun receive(player: PlayerViewModel, money: Int){
         player.receive(money)
     }
     fun payPriceForEstate(index: Int) : Boolean{
-        val player = Game.getActivePlayer()!!
-        val estate = Game.getEstateByFieldIndex(index)!!
+        val player = getActivePlayer()!!
+        val estate = getEstateByFieldIndex(index)!!
         if(player.money.value>=estate.estate.price){
             player.pay(estate.estate.price)
             return true
@@ -26,33 +43,26 @@ object TransactionService {
         return false
     }
     fun payRent() {
-        val payer = Game.getActivePlayer()!!
-        val estate = Game.getEstateByFieldIndex(payer.position.value)!!
-        val receiver = Game.getOwnerOfEstate(estate.estate.index)!!
+        val payer = getActivePlayer()!!
+        val estate = getEstateByFieldIndex(payer.position.value)!!
+        val receiver = getOwnerOfEstate(estate.estate.index)!!
         if((receiver.isInJail.value && !RuleBook.collectRentsWhileInJail)
             || estate.isMortgaged.value) return //don't pay if the estate is mortgaged or the owner is in jail
         if(payer!=receiver){
             val moneyToTransfer = calculateRentPrice(estate)
-            Game.showPaymentPopup(payer, receiver, moneyToTransfer) {
+            showPaymentPopup(payer, receiver, moneyToTransfer) {
                 payer.pay(moneyToTransfer)
                 receiver.receive(moneyToTransfer)
             }
         }
     }
-    fun collectGatheredTaxes(){
-        if(Game.gatheredTaxes.value>0){
-            val player = Game.getActivePlayer()!!
-            player.receive(Game.gatheredTaxes.value)
-            Game.resetGatheredTaxes()
-        }
-    }
     fun payTax(){
-        val player = Game.getActivePlayer()!!
-        val field : Tax = Game.board.value?.fields?.get(player.position.value)!! as Tax
+        val player = getActivePlayer()!!
+        val field : Tax = board.value?.fields?.get(player.position.value)!! as Tax
         val tax = if(RuleBook.payingTaxesViaPercentagesEnabled && field.taxPercentage>0) minOf(field.tax, player.money.value * field.taxPercentage / 100) else field.tax
         player.pay(tax)
         if(RuleBook.gatheringTaxesEnabled)
-            Game.addToGatheredTaxes(tax)
+            addToGatheredTaxes(tax)
     }
     fun pay(player: PlayerViewModel, money: Int){
         player.pay(money)
@@ -62,7 +72,7 @@ object TransactionService {
         if(estate.isProperty){
             ret = if(RuleBook.doubleRentOnCollectedSetsEnabled
                 && estate.numberOfBuildings.value==0
-                && Game.doesPlayerOwnASet(estate.ownerIndex.value,(estate.estate as Property).setColor)
+                && doesPlayerOwnASet(estate.ownerIndex.value,(estate.estate as Property).setColor)
             ){
                 estate.estate.rent[0] * 2
             } else {
@@ -70,12 +80,12 @@ object TransactionService {
             }
         }
         if(estate.isUtility){
-            val utilitiesOwned = Game.estates.value.filter { e -> e.isUtility && e.ownerIndex.value == estate.ownerIndex.value && !e.isMortgaged.value }.size
-            val diceMultiplier = Game.diceViewModel.getDiceSum()
+            val utilitiesOwned = estates.value.filter { e -> e.isUtility && e.ownerIndex.value == estate.ownerIndex.value && !e.isMortgaged.value }.size
+            val diceMultiplier = getDiceSum()
             ret = estate.estate.rent[utilitiesOwned - 1] * diceMultiplier
         }
         if(estate.isStation){
-            val stationsOwned = Game.estates.value.filter { e -> e.isStation && e.ownerIndex.value == estate.ownerIndex.value && !e.isMortgaged.value }.size
+            val stationsOwned = estates.value.filter { e -> e.isStation && e.ownerIndex.value == estate.ownerIndex.value && !e.isMortgaged.value }.size
             ret = estate.estate.rent[stationsOwned - 1]
         }
         ret *= priceMultiplier
@@ -83,9 +93,9 @@ object TransactionService {
         return ret
     }
     fun payGeneralRepairsOnBuildings(pricePerHouse: Int, pricePerHotel: Int){
-        val player = Game.getActivePlayer()!!
-        val totalPriceForHouses = pricePerHouse * EstateService.getNumberOfHousesOwned(player)
-        val totalPriceForHotels = pricePerHotel * EstateService.getNumberOfHotelsOwned(player)
+        val player = getActivePlayer()!!
+        val totalPriceForHouses = pricePerHouse * getNumberOfHousesOwned(player)
+        val totalPriceForHotels = pricePerHotel * getNumberOfHotelsOwned(player)
         player.pay(totalPriceForHouses + totalPriceForHotels)
     }
     fun payIfAffordable(player: PlayerViewModel, price: Int): Boolean{
@@ -94,4 +104,49 @@ object TransactionService {
         pay(player, price)
         return true
     }
+
+    //gathering taxes in the center of the board
+    private val _gatheredTaxes = MutableStateFlow(0)
+    val gatheredTaxes: StateFlow<Int> get() = _gatheredTaxes
+    fun resetGatheredTaxes(){
+        _gatheredTaxes.value = 0
+    }
+    fun addToGatheredTaxes(amount: Int){
+        _gatheredTaxes.value += amount
+    }
+    fun collectGatheredTaxes(){
+        if(gatheredTaxes.value>0){
+            val player = getActivePlayer()!!
+            player.receive(gatheredTaxes.value)
+            resetGatheredTaxes()
+        }
+    }
+
+    //payment popup
+    private val _showPaymentPopup = MutableStateFlow(false)
+    val showPaymentPopup: StateFlow<Boolean> = _showPaymentPopup
+    private val _paymentDetails = MutableStateFlow<PaymentDetails?>(null)
+    val paymentDetails: StateFlow<PaymentDetails?> = _paymentDetails
+    fun dismissPaymentPopup() {
+        _showPaymentPopup.value = false
+    }
+    fun showPaymentPopup(
+        payer: PlayerViewModel,
+        receiver: PlayerViewModel,
+        amount: Int,
+        onDismissAction: () -> Unit
+    ) {
+        _paymentDetails.value = PaymentDetails(payer, receiver, amount)
+        _showPaymentPopup.value = true
+        serviceScope.launch {
+            delay(1500)
+            dismissPaymentPopup()
+            onDismissAction()
+        }
+    }
 }
+data class PaymentDetails(
+    val payer: PlayerViewModel,
+    val receiver: PlayerViewModel,
+    val amount: Int
+)

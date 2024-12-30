@@ -34,7 +34,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import kotlinx.coroutines.delay
 import com.example.investorssquare.R
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.service.BoardService.board
 import com.example.investorssquare.game.service.CommunityCardService
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -90,15 +90,15 @@ fun CommunityCardPopup(
                 .clip(RoundedCornerShape(5.dp))
                 .border(
                     width = 3.dp,
-                    color = (if (isChance) Game.board.value?.chance?.primaryColor
-                            else Game.board.value?.communityChest?.primaryColor)!!,
+                    color = (if (isChance) board.value?.chance?.primaryColor
+                            else board.value?.communityChest?.primaryColor)!!,
                     shape = RoundedCornerShape(5.dp)
                 )
                 .background(
                     color = (if (isChance)
-                        Game.board.value?.chance?.primaryColor?.copy(alpha = 0.1f)
+                        board.value?.chance?.primaryColor?.copy(alpha = 0.1f)
                     else
-                        Game.board.value?.communityChest?.primaryColor?.copy(alpha = 0.1f))!!
+                        board.value?.communityChest?.primaryColor?.copy(alpha = 0.1f))!!
                 )
         ) {
             if (rotation <= 90f) {
@@ -118,12 +118,12 @@ fun CommunityCardPopup(
                 ) {
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = (if (isChance) Game.board.value?.chance?.commonName?.uppercase()
-                                else Game.board.value?.communityChest?.commonName?.uppercase())!!,
+                        text = (if (isChance) board.value?.chance?.commonName?.uppercase()
+                                else board.value?.communityChest?.commonName?.uppercase())!!,
                         style = MaterialTheme.typography.titleLarge,
                         fontSize = 18.sp,
-                        color = (if (isChance) Game.board.value?.chance?.primaryColor
-                                else Game.board.value?.communityChest?.primaryColor)!!,
+                        color = (if (isChance) board.value?.chance?.primaryColor
+                                else board.value?.communityChest?.primaryColor)!!,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(6.dp))

@@ -26,15 +26,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.investorssquare.R
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.service.DiceService
+import com.example.investorssquare.game.service.DiceService.diceViewModel
 import kotlinx.coroutines.delay
 
 @Composable
 fun DiceButton() {
-    val number1 by Game.diceViewModel.diceNumber1.collectAsState()
-    val number2 by Game.diceViewModel.diceNumber2.collectAsState()
-    val isDiceButtonEnabled by Game.diceViewModel.isDiceButtonEnabled.collectAsState()
+    val number1 by diceViewModel.diceNumber1.collectAsState()
+    val number2 by diceViewModel.diceNumber2.collectAsState()
+    val isDiceButtonEnabled by diceViewModel.isDiceButtonEnabled.collectAsState()
 
     var currentDice1 by remember { mutableIntStateOf(number1) }
     var currentDice2 by remember { mutableIntStateOf(number2) }
@@ -75,8 +75,8 @@ fun DiceButton() {
                 delay(20)
             }
             DiceService.rollDice()
-            currentDice1 = Game.diceViewModel.diceNumber1.value
-            currentDice2 = Game.diceViewModel.diceNumber2.value
+            currentDice1 = diceViewModel.diceNumber1.value
+            currentDice2 = diceViewModel.diceNumber2.value
             isRolling = false
         }
     }
@@ -85,7 +85,7 @@ fun DiceButton() {
 @Composable
 fun DiceImage(diceNumber: Int) {
     val painterResourceId = getDiceImage(diceNumber)
-    val isDiceButtonEnabled by Game.diceViewModel.isDiceButtonEnabled.collectAsState()
+    val isDiceButtonEnabled by diceViewModel.isDiceButtonEnabled.collectAsState()
     Box(
         modifier = Modifier.size(40.dp)
     ) {

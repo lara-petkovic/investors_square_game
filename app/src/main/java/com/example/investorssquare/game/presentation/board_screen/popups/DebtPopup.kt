@@ -41,7 +41,6 @@ import com.example.investorssquare.R
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.components.CoinIcon
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.service.CommunityCardService
 import kotlinx.coroutines.launch
 

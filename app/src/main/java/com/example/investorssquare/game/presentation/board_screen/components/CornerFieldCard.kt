@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.service.BoardService.highlightMode
 
 @Composable
 fun CornerFieldCard(
@@ -21,7 +21,7 @@ fun CornerFieldCard(
     modifier: Modifier = Modifier,
     index: Int,
 ) {
-    val highlightModeOn = Game.highlightMode.collectAsState()
+    val highlightModeOn = highlightMode.collectAsState()
     Card(
         modifier = modifier
             .size(fieldSize),

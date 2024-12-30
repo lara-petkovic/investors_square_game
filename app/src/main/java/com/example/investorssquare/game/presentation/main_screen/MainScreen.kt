@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.investorssquare.game.data.local.JsonParser
 import com.example.investorssquare.game.navigation.Screen
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.service.BoardService.setBoard
 
 @Composable
 fun MainScreen(
@@ -38,7 +38,7 @@ fun MainScreen(
 
     val navigateToNext: () -> Unit = {
         val selectedBoard = jsonParser.loadBoard("board_default.json")
-        Game.setBoard(selectedBoard)
+        setBoard(selectedBoard)
         navController.navigate("${Screen.PlayerNamesScreen.route}/${allowedPlayerCounts[sliderPosition.toInt()]}")
     }
 

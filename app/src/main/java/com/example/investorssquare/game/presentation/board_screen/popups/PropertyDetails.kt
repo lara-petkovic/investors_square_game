@@ -48,7 +48,7 @@ import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.components.buttons.BuyButton
 import com.example.investorssquare.game.presentation.board_screen.components.CoinIcon
 import com.example.investorssquare.game.presentation.board_screen.components.HouseIcon
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.service.BoardService.board
 import com.example.investorssquare.util.ResourceMapper
 import kotlinx.coroutines.launch
 
@@ -223,7 +223,7 @@ private fun RentWithHousesRow(index: Int, rent: Int) {
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 private fun RentWithHotelRow(rent: Int) {
-    val boardName = Game.board.value?.name ?: "default"
+    val boardName = board.value?.name ?: "default"
     val hotelImageResource = ResourceMapper.getImageResource("${boardName}_hotel")
 
     Row(

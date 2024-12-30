@@ -38,7 +38,9 @@ import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.service.BoardService.board
+import com.example.investorssquare.game.service.BoardService.highlightMode
+import com.example.investorssquare.game.service.EstateService.getEstateByFieldIndex
 import com.example.investorssquare.util.Constants.FIELD_CARD_STRAP_HEIGHT_PERCENTAGE
 import com.example.investorssquare.util.ResourceMapper
 import kotlinx.coroutines.launch
@@ -52,8 +54,8 @@ fun FieldCard(
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val highlightModeOn = Game.highlightMode.collectAsState()
-    val estate = Game.getEstateByFieldIndex(field.index)
+    val highlightModeOn = highlightMode.collectAsState()
+    val estate = getEstateByFieldIndex(field.index)
     val highlighted = estate?.isHighlighted?.collectAsState() ?: mutableStateOf(false)
     val mortgaged = estate?.isMortgaged?.collectAsState() ?: mutableStateOf(false)
 
@@ -135,7 +137,7 @@ private fun PropertyStrap(
             }
     ) {
         property?.let {
-            val estateVM = Game.getEstateByFieldIndex(it.index)
+            val estateVM = getEstateByFieldIndex(it.index)
             val numberOfHouses = estateVM?.numberOfBuildings?.collectAsState()?.value ?: 0
 
             if(property.rent.size - 1 == numberOfHouses) { // property size - 1 because there can be 0 houses
@@ -153,10 +155,10 @@ private fun PropertyStrap(
 
 @Composable
 private fun OwnershipIndicator(field: Field) {
-    val highlightModeOn = Game.highlightMode.collectAsState()
-    val ownerIndex = Game.getEstateByFieldIndex(field.index)?.ownerIndex?.collectAsState()
+    val highlightModeOn = highlightMode.collectAsState()
+    val ownerIndex = getEstateByFieldIndex(field.index)?.ownerIndex?.collectAsState()
     var alpha = 0.0f
-    if(Game.getEstateByFieldIndex(field.index)!=null && ownerIndex?.value!=-1 && !highlightModeOn.value){
+    if(getEstateByFieldIndex(field.index)!=null && ownerIndex?.value!=-1 && !highlightModeOn.value){
         alpha = 0.5f
     }
     Box(
@@ -170,7 +172,7 @@ private fun OwnershipIndicator(field: Field) {
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun DrawHotel(modifier: Modifier = Modifier) {
-    val boardName = Game.board.value?.name ?: "default"
+    val boardName = board.value?.name ?: "default"
     val hotelImageResource = ResourceMapper.getImageResource("${boardName}_hotel")
 
     if (hotelImageResource != null) {
@@ -247,7 +249,7 @@ fun DrawHouses(
 fun HouseIcon(
     modifier: Modifier = Modifier
 ) {
-    val boardName = Game.board.value?.name ?: "default"
+    val boardName = board.value?.name ?: "default"
     val houseImageResource = ResourceMapper.getImageResource("${boardName}_house")
 
     if (houseImageResource != null) {

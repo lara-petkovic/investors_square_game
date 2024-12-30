@@ -18,7 +18,8 @@ import androidx.navigation.NavController
 import com.example.investorssquare.R
 import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.navigation.Screen
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.service.BoardService.board
+import com.example.investorssquare.game.service.PlayersService.setPlayers
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
@@ -26,7 +27,7 @@ fun PlayerNamesScreen(
     navController: NavController,
     playerCount: Int
 ) {
-    val boardColors = Game.board.value?.playerColors ?: listOf(
+    val boardColors = board.value?.playerColors ?: listOf(
         Color.Red, Color.Blue, Color.Green, Color.Yellow, Color.Cyan, Color.Magenta
     )
     val availableColors = remember { mutableStateOf(boardColors.take(6).toMutableList()) }
@@ -90,7 +91,7 @@ fun PlayerNamesScreen(
 
         Button(
             onClick = {
-                Game.setPlayers(players.value, playerColors.value, RuleBook.startingCapital)
+                setPlayers(players.value, playerColors.value, RuleBook.startingCapital)
                 navController.navigate(Screen.BoardScreen.route)
             },
             enabled = players.value.all { it.isNotEmpty() } && playerColors.value.all { it != Color.Gray }

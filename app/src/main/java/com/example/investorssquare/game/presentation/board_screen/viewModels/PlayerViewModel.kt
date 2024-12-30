@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.service.BankruptcyService
+import com.example.investorssquare.game.service.EstateService.estates
 import com.example.investorssquare.util.Constants.TOTAL_FIELDS
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -119,13 +120,13 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
         }
 
         val isOnCorrectField = position.value == currentField.index
-        val alreadyOwnsEstate = Game.estates.value.any { it.estate.index == currentField.index && it.isOwnedByPlayer(this)}
+        val alreadyOwnsEstate = estates.value.any { it.estate.index == currentField.index && it.isOwnedByPlayer(this)}
 
         return isOnCorrectField && !alreadyOwnsEstate
     }
     fun bankrupt(){
         _isInBankruptcy.value = true
-        for(estate in Game.estates.value.filter { e->e.isOwnedByPlayer(this) }){
+        for(estate in estates.value.filter { e->e.isOwnedByPlayer(this) }){
             estate.reset()
         }
     }

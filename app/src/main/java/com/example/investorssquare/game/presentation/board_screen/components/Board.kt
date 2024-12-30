@@ -46,8 +46,13 @@ import com.example.investorssquare.game.presentation.board_screen.popups.JailPop
 import com.example.investorssquare.game.presentation.board_screen.popups.PropertyDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.StationDetails
 import com.example.investorssquare.game.presentation.board_screen.popups.UtilityDetails
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.service.BankruptcyService
+import com.example.investorssquare.game.service.BoardService.board
+import com.example.investorssquare.game.service.BoardService.currentField
+import com.example.investorssquare.game.service.BoardService.dismissPopupForField
+import com.example.investorssquare.game.service.BoardService.showPopup
+import com.example.investorssquare.game.service.EstateService.estates
+import com.example.investorssquare.game.service.PlayersService.getActivePlayer
 import com.example.investorssquare.util.Constants.BLACK_OVERLAY
 import com.example.investorssquare.util.Constants.FIELDS_PER_ROW
 import com.example.investorssquare.util.Constants.RELATIVE_COMMUNITY_CARD_HEIGHT
@@ -67,15 +72,15 @@ fun Board(
     screenWidthDp: Dp,
     sideMargin: Dp,
 ) {
-    val showPopup by Game.showPopup.collectAsState()
-    val estates by Game.estates.collectAsState()
-    val currentField by Game.currentField.collectAsState()
+    val showPopup by showPopup.collectAsState()
+    val estates by estates.collectAsState()
+    val currentField by currentField.collectAsState()
     val showDebtPopup by BankruptcyService.debtPopupVisible.collectAsState()
     val boardSize = (screenWidthDp.value - sideMargin.value * 2).dp
     val fieldHeight = (boardSize.value * RELATIVE_FIELD_HEIGHT).dp
     val fieldWidth = ((boardSize.value - 2 * fieldHeight.value) / FIELDS_PER_ROW).dp
     var centerOfTheBoard by remember { mutableStateOf(IntOffset.Zero) }
-    val board = Game.board.value!!
+    val board = board.value!!
     val coroutineScope = rememberCoroutineScope()
 
     BoxWithConstraints(
@@ -206,13 +211,13 @@ private fun DisplayPopup(
     centerOfTheBoard: IntOffset,
     coroutineScope: CoroutineScope
 ) {
-    val activePlayer = Game.getActivePlayer()
+    val activePlayer = getActivePlayer()
     val buyButtonVisibility = activePlayer?.canBuyEstate(field) ?: false
 
     when (field.type) {
         FieldType.PROPERTY -> PropertyDetails(
             field = field,
-            onDismissRequest = { Game.dismissPopup() },
+            onDismissRequest = { dismissPopupForField() },
             popupWidth = (RELATIVE_POPUP_WIDTH * fieldWidth.value).dp,
             popupHeight = (RELATIVE_POPUP_HEIGHT * FIELDS_PER_ROW * fieldWidth.value).dp,
             centerOfTheBoard = centerOfTheBoard,
@@ -220,7 +225,7 @@ private fun DisplayPopup(
         )
         FieldType.STATION -> StationDetails(
             field = field,
-            onDismissRequest = { Game.dismissPopup() },
+            onDismissRequest = { dismissPopupForField() },
             popupWidth = (RELATIVE_POPUP_WIDTH * fieldWidth.value).dp,
             popupHeight = (RELATIVE_POPUP_HEIGHT * FIELDS_PER_ROW * fieldWidth.value).dp,
             centerOfTheBoard = centerOfTheBoard,
@@ -228,7 +233,7 @@ private fun DisplayPopup(
         )
         FieldType.UTILITY -> UtilityDetails(
             field = field,
-            onDismissRequest = { Game.dismissPopup() },
+            onDismissRequest = { dismissPopupForField() },
             popupWidth = (RELATIVE_POPUP_WIDTH * fieldWidth.value).dp,
             popupHeight = (RELATIVE_POPUP_HEIGHT * FIELDS_PER_ROW * fieldWidth.value).dp,
             centerOfTheBoard = centerOfTheBoard,
@@ -237,7 +242,7 @@ private fun DisplayPopup(
         FieldType.CHANCE, FieldType.COMMUNITY_CHEST -> CommunityCardPopup(
             isChance = field.type == FieldType.CHANCE,
             onDismissRequest = {
-                Game.dismissPopup()
+                dismissPopupForField()
                 coroutineScope.launch { postEvent(Event.ON_COMMUNITY_CARD_CLOSED) }
             },
             centerOfTheBoard = centerOfTheBoard,
@@ -245,8 +250,8 @@ private fun DisplayPopup(
             popupHeight = (RELATIVE_COMMUNITY_CARD_HEIGHT * fieldWidth.value).dp,
         )
         FieldType.JAIL-> JailPopup(
-            Game.getActivePlayer()?.numberOfGetOutOfJailFreeCards!!.value>0,
-            if(RuleBook.payToEscapeJailEnabled && Game.getActivePlayer()!!.money.value >= RuleBook.jailEscapePrice)
+            getActivePlayer()?.numberOfGetOutOfJailFreeCards!!.value>0,
+            if(RuleBook.payToEscapeJailEnabled && getActivePlayer()!!.money.value >= RuleBook.jailEscapePrice)
                 RuleBook.jailEscapePrice else -1,
             centerOfTheBoard = centerOfTheBoard,
             popupWidth = (0.8f * FIELDS_PER_ROW * fieldWidth.value).dp,

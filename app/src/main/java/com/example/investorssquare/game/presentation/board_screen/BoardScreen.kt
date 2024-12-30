@@ -34,8 +34,10 @@ import com.example.investorssquare.game.presentation.board_screen.components.but
 import com.example.investorssquare.game.presentation.board_screen.popups.DebtPopup
 import com.example.investorssquare.game.presentation.board_screen.popups.JailPopup
 import com.example.investorssquare.game.presentation.board_screen.popups.PaymentPopupCard
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.service.BankruptcyService
+import com.example.investorssquare.game.service.TransactionService.dismissPaymentPopup
+import com.example.investorssquare.game.service.TransactionService.paymentDetails
+import com.example.investorssquare.game.service.TransactionService.showPaymentPopup
 import com.example.investorssquare.util.Constants.FIELDS_PER_ROW
 import com.example.investorssquare.util.Constants.SIDE_BOARD_MARGIN
 import com.example.investorssquare.util.Constants.TOP_BOARD_MARGIN
@@ -46,8 +48,8 @@ fun BoardScreen(navController: NavController) {
     val sideMargin = (screenWidthDp.value * SIDE_BOARD_MARGIN).dp
     val topMargin = (screenWidthDp.value * TOP_BOARD_MARGIN).dp
 
-    val showPaymentPopup by Game.showPaymentPopup.collectAsState()
-    val paymentDetails by Game.paymentDetails.collectAsState()
+    val showPaymentPopup by showPaymentPopup.collectAsState()
+    val paymentDetails by paymentDetails.collectAsState()
 
     var activeButtonId by remember { mutableStateOf<Int?>(null) }
     var showExitDialog by remember { mutableStateOf(false) }
@@ -127,7 +129,7 @@ fun BoardScreen(navController: NavController) {
             ) {
                 PaymentPopupCard(
                     paymentDetails = paymentDetails,
-                    onDismiss = { Game.dismissPaymentPopup() }
+                    onDismiss = { dismissPaymentPopup() }
                 )
             }
         }

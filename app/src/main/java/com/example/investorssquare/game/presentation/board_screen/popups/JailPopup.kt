@@ -26,7 +26,8 @@ import com.example.investorssquare.game.presentation.board_screen.viewModels.Rul
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.components.CoinIcon
-import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
+import com.example.investorssquare.game.service.BoardService.dismissPopupForField
+import com.example.investorssquare.game.service.PlayersService.getActivePlayer
 import kotlinx.coroutines.launch
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -66,8 +67,8 @@ fun JailPopup(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 modifier = Modifier.fillMaxSize().align(Alignment.Center).padding(10.dp)
             ){
-                Text("You have to wait "+Game.getActivePlayer()?.jailSentence!!.value+" more " +
-                    if(Game.getActivePlayer()?.jailSentence!!.value==1) "move" else "moves",
+                Text("You have to wait "+getActivePlayer()?.jailSentence!!.value+" more " +
+                    if(getActivePlayer()?.jailSentence!!.value==1) "move" else "moves",
                     style = MaterialTheme.typography.bodyMedium,
                     fontSize = 12.sp,
                     color = Color.Black
@@ -119,7 +120,7 @@ fun JailPopup(
                             color = Color.Black)
                     }
                 }
-                Button(onClick = {Game.dismissPopup()}, modifier = Modifier.height(30.dp).padding(0.dp)) {
+                Button(onClick = {dismissPopupForField()}, modifier = Modifier.height(30.dp).padding(0.dp)) {
                     Text("Dismiss",
                         style = MaterialTheme.typography.bodyMedium,
                         fontSize = 12.sp,
