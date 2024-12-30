@@ -1,32 +1,46 @@
 package com.example.investorssquare.game.presentation.main_screen
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.investorssquare.game.data.local.JsonParser
-import com.example.investorssquare.game.domain.model.Board
+import com.example.investorssquare.game.navigation.Screen
+import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 
 @Composable
 fun MainScreen(
     navController: NavController,
-    onGameStart: (List<String>, Board) -> Unit
 ) {
-    val jsonParser = JsonParser(context = navController.context)
+    val allowedPlayerCounts = listOf(2, 3, 4, 5, 6)
+    var sliderPosition by remember { mutableFloatStateOf(0f) }
 
-    var player1 by remember { mutableStateOf("") }
-    var player2 by remember { mutableStateOf("") }
-    var player3 by remember { mutableStateOf("") }
-    var player4 by remember { mutableStateOf("") }
-    var player5 by remember { mutableStateOf("") }
-    var player6 by remember { mutableStateOf("") }
+    val jsonParser = remember { JsonParser(context = navController.context) }
 
-    var selectedBoard: Board? by remember { mutableStateOf(null) }
+    val navigateToRulebook: () -> Unit = {
+        navController.navigate(Screen.RulebookScreen.route)
+    }
+
+    val navigateToNext: () -> Unit = {
+        val selectedBoard = jsonParser.loadBoard("board_default.json")
+        Game.setBoard(selectedBoard)
+        navController.navigate("${Screen.PlayerNamesScreen.route}/${allowedPlayerCounts[sliderPosition.toInt()]}")
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -36,66 +50,26 @@ fun MainScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextField(
-                value = player1,
-                onValueChange = { player1 = it },
-                label = { Text("Player 1") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+            Text("Number of players: ${allowedPlayerCounts[sliderPosition.toInt()]}")
 
-            TextField(
-                value = player2,
-                onValueChange = { player2 = it },
-                label = { Text("Player 2") }
+            Slider(
+                value = sliderPosition,
+                onValueChange = { newValue -> sliderPosition = newValue },
+                valueRange = 0f..(allowedPlayerCounts.size - 1).toFloat(),
+                steps = allowedPlayerCounts.size - 2,
+                modifier = Modifier.padding(16.dp)
             )
-            Spacer(modifier = Modifier.height(8.dp))
 
-            TextField(
-                value = player3,
-                onValueChange = { player3 = it },
-                label = { Text("Player 3") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            TextField(
-                value = player4,
-                onValueChange = { player4 = it },
-                label = { Text("Player 4") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            TextField(
-                value = player5,
-                onValueChange = { player5 = it },
-                label = { Text("Player 5") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            TextField(
-                value = player6,
-                onValueChange = { player6 = it },
-                label = { Text("Player 6") }
-            )
             Spacer(modifier = Modifier.height(16.dp))
 
-            val isFormValid = player1.isNotEmpty() && player2.isNotEmpty() && player3.isNotEmpty() &&
-                    player4.isNotEmpty() && player5.isNotEmpty() && player6.isNotEmpty()
+            Button(onClick = navigateToRulebook) {
+                Text("Rulebook")
+            }
 
-            Button(
-                onClick = {
-                    // Load the selected board
-                    selectedBoard = jsonParser.loadBoard("board_default.json")
+            Spacer(modifier = Modifier.height(16.dp))
 
-                    selectedBoard?.let {
-                        onGameStart(
-                            listOf(player1, player2, player3, player4, player5, player6),
-                            it
-                        )
-                    }
-                },
-                enabled = true//TODO: isFormValid
-            ) {
-                Text("Start Game")
+            Button(onClick = navigateToNext) {
+                Text("Next")
             }
         }
     }

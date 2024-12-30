@@ -1,6 +1,7 @@
 package com.example.investorssquare.game.service
 
 import com.example.investorssquare.game.domain.model.Property
+import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.domain.model.Tax
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
@@ -10,7 +11,7 @@ object TransactionService {
     var priceMultiplier = 1
     fun collectSalary() {
         val player = Game.getActivePlayer()!!
-        player.receive(Game.ruleBook.salary)
+        player.receive(RuleBook.salary)
     }
     fun receive(player: PlayerViewModel, money: Int){
         player.receive(money)
@@ -28,8 +29,8 @@ object TransactionService {
         val payer = Game.getActivePlayer()!!
         val estate = Game.getEstateByFieldIndex(payer.position.value)!!
         val receiver = Game.getOwnerOfEstate(estate.estate.index)!!
-        if((receiver.isInJail.value && !Game.ruleBook.collectRentsWhileInJail)
-            || estate.isMortgaged.value) return //dont pay if the estate is mortgaged or the owner is in jail
+        if((receiver.isInJail.value && !RuleBook.collectRentsWhileInJail)
+            || estate.isMortgaged.value) return //don't pay if the estate is mortgaged or the owner is in jail
         if(payer!=receiver){
             val moneyToTransfer = calculateRentPrice(estate)
             Game.showPaymentPopup(payer, receiver, moneyToTransfer) {
@@ -48,9 +49,9 @@ object TransactionService {
     fun payTax(){
         val player = Game.getActivePlayer()!!
         val field : Tax = Game.board.value?.fields?.get(player.position.value)!! as Tax
-        val tax = if(Game.ruleBook.payingTaxesViaPercentagesEnabled && field.taxPercentage>0) minOf(field.tax, player.money.value * field.taxPercentage / 100) else field.tax
+        val tax = if(RuleBook.payingTaxesViaPercentagesEnabled && field.taxPercentage>0) minOf(field.tax, player.money.value * field.taxPercentage / 100) else field.tax
         player.pay(tax)
-        if(Game.ruleBook.gatheringTaxesEnabled)
+        if(RuleBook.gatheringTaxesEnabled)
             Game.addToGatheredTaxes(tax)
     }
     fun pay(player: PlayerViewModel, money: Int){
@@ -59,14 +60,13 @@ object TransactionService {
     private fun calculateRentPrice(estate: EstateViewModel): Int{
         var ret = 0
         if(estate.isProperty){
-            if(Game.ruleBook.doubleRentOnCollectedSetsEnabled
+            ret = if(RuleBook.doubleRentOnCollectedSetsEnabled
                 && estate.numberOfBuildings.value==0
                 && Game.doesPlayerOwnASet(estate.ownerIndex.value,(estate.estate as Property).setColor)
-                ){
-                ret = estate.estate.rent[0] * 2
-            }
-            else {
-                ret = estate.estate.rent[estate.numberOfBuildings.value]
+            ){
+                estate.estate.rent[0] * 2
+            } else {
+                estate.estate.rent[estate.numberOfBuildings.value]
             }
         }
         if(estate.isUtility){

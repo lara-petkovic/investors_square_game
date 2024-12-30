@@ -2,6 +2,7 @@ package com.example.investorssquare.game.service.highlighting_services
 
 import androidx.compose.ui.graphics.Color
 import com.example.investorssquare.game.domain.model.Property
+import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
@@ -43,8 +44,8 @@ object SellingBuildingsService {
         var propertiesWherePlayerCanSell = Game.estates.value.filter{ p->
             p.isProperty && p.isOwnedByPlayer(player) && p.numberOfBuildings.value>0
         }
-        if(Game.ruleBook.evenlyBuilding){
-            var res: MutableList<EstateViewModel> = mutableListOf()
+        if(RuleBook.evenlyBuilding){
+            val res: MutableList<EstateViewModel> = mutableListOf()
             var lastColor: Color? = null
             for(e in propertiesWherePlayerCanSell){
                 val p = e.estate as Property

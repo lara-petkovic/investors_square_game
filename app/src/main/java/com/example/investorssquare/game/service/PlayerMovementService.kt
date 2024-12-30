@@ -2,6 +2,7 @@ package com.example.investorssquare.game.service
 
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
+import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.Game
@@ -18,7 +19,7 @@ object PlayerMovementService {
 
     fun moveActivePlayer() {
         Game.getActivePlayer()?.let { player ->
-            if(player.doublesRolledCounter==Game.ruleBook.doublesRolledLimit){
+            if(player.doublesRolledCounter ==  RuleBook.doublesRolledLimit){
                 serviceScope.launch { EventBus.postEvent(Event.ON_GO_TO_JAIL) }
                 return
             }
@@ -54,7 +55,7 @@ object PlayerMovementService {
 
     fun goToJail(){
         val player = Game.getActivePlayer()!!
-        player.goToJail(Game.ruleBook.jailSentenceInMoves)
+        player.goToJail(RuleBook.jailSentenceInMoves)
         val jailPosition = Game.board.value?.fields?.find { field-> field.type==FieldType.JAIL }?.index!!
         serviceScope.launch {
             while (player.position.value!=jailPosition) {

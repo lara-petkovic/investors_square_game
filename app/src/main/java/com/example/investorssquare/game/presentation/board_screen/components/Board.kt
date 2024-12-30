@@ -34,10 +34,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.example.investorssquare.game.domain.model.Board
 import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.FieldType
+import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus.postEvent
 import com.example.investorssquare.game.presentation.board_screen.popups.CommunityCardPopup
@@ -246,7 +246,8 @@ private fun DisplayPopup(
         )
         FieldType.JAIL-> JailPopup(
             Game.getActivePlayer()?.numberOfGetOutOfJailFreeCards!!.value>0,
-            if(Game.ruleBook.payToEscapeJailEnabled && Game.getActivePlayer()!!.money.value>=Game.ruleBook.jailEscapePrice) Game.ruleBook.jailEscapePrice else -1,
+            if(RuleBook.payToEscapeJailEnabled && Game.getActivePlayer()!!.money.value >= RuleBook.jailEscapePrice)
+                RuleBook.jailEscapePrice else -1,
             centerOfTheBoard = centerOfTheBoard,
             popupWidth = (0.8f * FIELDS_PER_ROW * fieldWidth.value).dp,
             popupHeight = (0.8f * FIELDS_PER_ROW * fieldWidth.value).dp,
