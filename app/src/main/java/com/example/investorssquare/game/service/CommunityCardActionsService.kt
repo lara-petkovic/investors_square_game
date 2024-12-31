@@ -60,7 +60,7 @@ object CommunityCardActionsService {
         var steps = 0
         while(true){
             if(board.value?.fields?.get(position)?.type==FieldType.UTILITY){
-                var utility = getEstateByFieldIndex(position)!!
+                val utility = getEstateByFieldIndex(position)!!
                 val utilityOwner = utility.ownerIndex.value
                 if(utilityOwner != -1 && utilityOwner != player.index.value){
                     val utilitiesOwned = estates.value.filter { e -> e.isUtility && e.ownerIndex.value == utilityOwner }.size

@@ -21,12 +21,15 @@ object DiceService {
         diceViewModel.rollDice()
         serviceScope.launch { EventBus.postEvent(Event.ON_DICE_THROWN(diceViewModel.diceNumber1.value, diceViewModel.diceNumber2.value)) }
     }
+
     fun getDiceSum(): Int{
         return diceViewModel.getDiceSum()
     }
+
     fun isRolledDouble(): Boolean{
         return diceViewModel.isRolledDouble()
     }
+
     fun handleDiceThrown(firstNumber: Int, secondNumber: Int) {
         val player = getActivePlayer() ?: return
         if (firstNumber != secondNumber) {
@@ -47,10 +50,12 @@ object DiceService {
         }
         serviceScope.launch { EventBus.postEvent(Event.ON_MOVE_PLAYER) }
     }
+
     fun disableDice(){
         diceViewModel.disableDiceButton()
         showFinishButton()
     }
+
     fun enableDice(){
         diceViewModel.enableDiceButton()
         hideFinishButton()

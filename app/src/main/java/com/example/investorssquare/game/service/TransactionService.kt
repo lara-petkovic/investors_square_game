@@ -26,13 +26,24 @@ object TransactionService {
     private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     var priceMultiplier = 1
 
+    private val _gatheredTaxes = MutableStateFlow(0) //gathering taxes in the center of the board
+    val gatheredTaxes: StateFlow<Int> get() = _gatheredTaxes
+
+    private val _showPaymentPopup = MutableStateFlow(false) //payment popup
+    val showPaymentPopup: StateFlow<Boolean> = _showPaymentPopup
+
+    private val _paymentDetails = MutableStateFlow<PaymentDetails?>(null)
+    val paymentDetails: StateFlow<PaymentDetails?> = _paymentDetails
+
     fun collectSalary() {
         val player = getActivePlayer()!!
         receive(player, RuleBook.salary)
     }
+
     fun receive(player: PlayerViewModel, money: Int){
         player.receive(money)
     }
+
     fun payPriceForEstate(index: Int) : Boolean{
         val player = getActivePlayer()!!
         val estate = getEstateByFieldIndex(index)!!
@@ -42,6 +53,7 @@ object TransactionService {
         }
         return false
     }
+
     fun payRent() {
         val payer = getActivePlayer()!!
         val estate = getEstateByFieldIndex(payer.position.value)!!
@@ -56,6 +68,7 @@ object TransactionService {
             }
         }
     }
+
     fun payTax(){
         val player = getActivePlayer()!!
         val field : Tax = board.value?.fields?.get(player.position.value)!! as Tax
@@ -64,9 +77,60 @@ object TransactionService {
         if(RuleBook.gatheringTaxesEnabled)
             addToGatheredTaxes(tax)
     }
+
     fun pay(player: PlayerViewModel, money: Int){
         player.pay(money)
     }
+
+    fun payGeneralRepairsOnBuildings(pricePerHouse: Int, pricePerHotel: Int){
+        val player = getActivePlayer()!!
+        val totalPriceForHouses = pricePerHouse * getNumberOfHousesOwned(player)
+        val totalPriceForHotels = pricePerHotel * getNumberOfHotelsOwned(player)
+        player.pay(totalPriceForHouses + totalPriceForHotels)
+    }
+
+    fun payIfAffordable(player: PlayerViewModel, price: Int): Boolean{
+        if(player.money.value<price)
+            return false
+        pay(player, price)
+        return true
+    }
+
+    fun addToGatheredTaxes(amount: Int){
+        _gatheredTaxes.value += amount
+    }
+
+    fun collectGatheredTaxes(){
+        if(gatheredTaxes.value>0){
+            val player = getActivePlayer()!!
+            player.receive(gatheredTaxes.value)
+            resetGatheredTaxes()
+        }
+    }
+
+    fun dismissPaymentPopup() {
+        _showPaymentPopup.value = false
+    }
+
+    fun showPaymentPopup(
+        payer: PlayerViewModel,
+        receiver: PlayerViewModel,
+        amount: Int,
+        onDismissAction: () -> Unit
+    ) {
+        _paymentDetails.value = PaymentDetails(payer, receiver, amount)
+        _showPaymentPopup.value = true
+        serviceScope.launch {
+            delay(1500)
+            dismissPaymentPopup()
+            onDismissAction()
+        }
+    }
+
+    private fun resetGatheredTaxes() {
+        _gatheredTaxes.value = 0
+    }
+
     private fun calculateRentPrice(estate: EstateViewModel): Int{
         var ret = 0
         if(estate.isProperty){
@@ -92,59 +156,8 @@ object TransactionService {
         priceMultiplier = 1
         return ret
     }
-    fun payGeneralRepairsOnBuildings(pricePerHouse: Int, pricePerHotel: Int){
-        val player = getActivePlayer()!!
-        val totalPriceForHouses = pricePerHouse * getNumberOfHousesOwned(player)
-        val totalPriceForHotels = pricePerHotel * getNumberOfHotelsOwned(player)
-        player.pay(totalPriceForHouses + totalPriceForHotels)
-    }
-    fun payIfAffordable(player: PlayerViewModel, price: Int): Boolean{
-        if(player.money.value<price)
-            return false
-        pay(player, price)
-        return true
-    }
-
-    //gathering taxes in the center of the board
-    private val _gatheredTaxes = MutableStateFlow(0)
-    val gatheredTaxes: StateFlow<Int> get() = _gatheredTaxes
-    fun resetGatheredTaxes(){
-        _gatheredTaxes.value = 0
-    }
-    fun addToGatheredTaxes(amount: Int){
-        _gatheredTaxes.value += amount
-    }
-    fun collectGatheredTaxes(){
-        if(gatheredTaxes.value>0){
-            val player = getActivePlayer()!!
-            player.receive(gatheredTaxes.value)
-            resetGatheredTaxes()
-        }
-    }
-
-    //payment popup
-    private val _showPaymentPopup = MutableStateFlow(false)
-    val showPaymentPopup: StateFlow<Boolean> = _showPaymentPopup
-    private val _paymentDetails = MutableStateFlow<PaymentDetails?>(null)
-    val paymentDetails: StateFlow<PaymentDetails?> = _paymentDetails
-    fun dismissPaymentPopup() {
-        _showPaymentPopup.value = false
-    }
-    fun showPaymentPopup(
-        payer: PlayerViewModel,
-        receiver: PlayerViewModel,
-        amount: Int,
-        onDismissAction: () -> Unit
-    ) {
-        _paymentDetails.value = PaymentDetails(payer, receiver, amount)
-        _showPaymentPopup.value = true
-        serviceScope.launch {
-            delay(1500)
-            dismissPaymentPopup()
-            onDismissAction()
-        }
-    }
 }
+
 data class PaymentDetails(
     val payer: PlayerViewModel,
     val receiver: PlayerViewModel,

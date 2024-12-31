@@ -196,7 +196,7 @@ private suspend fun handleMoneyChange(
     }
 
     showPaymentGif.value = true
-    delay(1800)
+    delay(2200)
     targetBackgroundColor.value = Color.White
     showPaymentGif.value = false
 }

@@ -14,39 +14,47 @@ import kotlinx.coroutines.flow.StateFlow
 object EstateService {
     private val _estates = MutableStateFlow<List<EstateViewModel>>(emptyList())
     val estates: StateFlow<List<EstateViewModel>> get() = _estates
-    fun setEstates(est: List<EstateViewModel>){
+
+    fun setEstates(est: List<EstateViewModel>) {
         _estates.value = est
     }
 
     fun getAllPropertiesBySet(set: Color): List<EstateViewModel> {
         return estates.value.filter{e -> e.isProperty && (e.estate as Property).setColor == set }
     }
+
     fun doesPlayerOwnASet(ownerIndex: Int, set: Color): Boolean {
         return getAllPropertiesBySet(set).all{e -> e.ownerIndex.value == ownerIndex}
     }
+
     fun getOwnerOfEstate(fieldIndex: Int): PlayerViewModel? {
         val ownerIndex = getEstateByFieldIndex(fieldIndex)?.ownerIndex?.value
         return players.value.getOrNull(ownerIndex ?: -1).takeIf { ownerIndex != -1 }
     }
+
     fun getEstateByFieldIndex(index: Int): EstateViewModel? {
         return _estates.value.firstOrNull { it.estate.index == index }
     }
+
     fun showPopupForEstate(){
         showPopupForField(getActivePlayer()?.position?.value!!)
     }
+
     fun handleCardInformationClick(fieldIndex: Int) {
         val field = getEstateByFieldIndex(fieldIndex)
         if (field != null) {
             showPopupForField(fieldIndex)
         }
     }
-    fun handleEstateBought(index: Int){
+
+    fun handleEstateBought(index: Int) {
         val player = getActivePlayer()!!
         val estate = getEstateByFieldIndex(index)!!
         estate.setOwnerIndex(player.index.value)
         dismissPopupForField()
     }
-    fun getNumberOfHousesOwned(player: PlayerViewModel): Int{
+
+    fun getNumberOfHousesOwned(player: PlayerViewModel): Int {
         val ownedEstates = estates.value.filter { e-> e.ownerIndex.value==player.index.value }
         var ret = 0
         for(estate in ownedEstates){
@@ -56,7 +64,8 @@ object EstateService {
         }
         return ret
     }
-    fun getNumberOfHotelsOwned(player: PlayerViewModel): Int{
+
+    fun getNumberOfHotelsOwned(player: PlayerViewModel): Int {
         val ownedEstates = estates.value.filter { e-> e.ownerIndex.value==player.index.value }
         var ret = 0
         for(estate in ownedEstates){
@@ -66,5 +75,4 @@ object EstateService {
         }
         return ret
     }
-
 }

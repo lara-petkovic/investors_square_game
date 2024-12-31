@@ -124,11 +124,11 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
 
         return isOnCorrectField && !alreadyOwnsEstate
     }
+
     fun bankrupt(){
         _isInBankruptcy.value = true
         for(estate in estates.value.filter { e->e.isOwnedByPlayer(this) }){
             estate.reset()
         }
     }
-
 }

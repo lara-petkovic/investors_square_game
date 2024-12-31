@@ -8,10 +8,10 @@ import com.example.investorssquare.game.service.PlayersService.getActivePlayer
 object CommunityCardService {
     private var card: CommunityCard? = null
     fun drawCard(isChance:Boolean) : CommunityCard{
-        if (isChance)
-            card = board.value?.chance?.drawCard()!!
+        card = if (isChance)
+            board.value?.chance?.drawCard()!!
         else
-            card = board.value?.communityChest?.drawCard()!!
+            board.value?.communityChest?.drawCard()!!
         return card as CommunityCard
     }
     fun openCardPopup(){

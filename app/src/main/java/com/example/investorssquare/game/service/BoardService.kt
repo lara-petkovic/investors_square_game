@@ -11,30 +11,33 @@ import kotlinx.coroutines.flow.StateFlow
 object BoardService {
     private val _board = MutableStateFlow<Board?>(null)
     val board: StateFlow<Board?> get() = _board
+
+    private val _currentField = MutableStateFlow<Field?>(null)
+    val currentField: StateFlow<Field?> get() = _currentField
+
+    private val _showPopup = MutableStateFlow(false) //popup on the board
+    val showPopup: StateFlow<Boolean> get() = _showPopup
+
+    private val _highlightMode = MutableStateFlow(false) //highlighting board
+    val highlightMode: StateFlow<Boolean> = _highlightMode
+
     fun setBoard(board: Board) {
         _board.value = board
         setEstates(board.fields.filterIsInstance<Estate>().map { EstateViewModel(it) })
     }
 
-    private val _currentField = MutableStateFlow<Field?>(null)
-    val currentField: StateFlow<Field?> get() = _currentField
-
-    //highlighting board
-    private val _highlightMode = MutableStateFlow<Boolean>(false)
-    val highlightMode: StateFlow<Boolean> = _highlightMode
-    fun turnOnHighlightMode(){
+    fun turnOnHighlightMode() {
         _highlightMode.value = true
     }
-    fun turnOffHighlightMode(){
+
+    fun turnOffHighlightMode() {
         _highlightMode.value = false
     }
 
-    //popup on the board
-    private val _showPopup = MutableStateFlow(false)
-    val showPopup: StateFlow<Boolean> get() = _showPopup
     fun dismissPopupForField() {
         _showPopup.value = false
     }
+
     fun showPopupForField(fieldIndex: Int) {
         _currentField.value = _board.value?.fields?.get(fieldIndex)
         _showPopup.value = true

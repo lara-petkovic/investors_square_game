@@ -99,7 +99,6 @@ object EventService {
                         turnOffHighlighting()
                         handleDiceToTheNextPlayer()
                     }
-                    else -> { }
                 }
             }
         }

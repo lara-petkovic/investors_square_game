@@ -59,6 +59,7 @@ object PlayerMovementService {
         }
         handlePlayerLanding()
     }
+
     fun moveStepByStepBackwards(steps: Int, player: PlayerViewModel) = serviceScope.launch {
         for (i in 1..steps) {
             player.moveByStepsBackwards(1)
@@ -88,6 +89,7 @@ object PlayerMovementService {
             }
         }
     }
+
     private fun handlePlayerLanding() {
         val position = getActivePlayer()?.position?.value!!
         val field: Field = board.value?.fields?.get(position)!!

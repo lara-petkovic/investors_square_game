@@ -7,7 +7,7 @@ import com.example.investorssquare.game.service.PlayersService.getActivePlayer
 import com.example.investorssquare.game.service.TransactionService.addToGatheredTaxes
 
 object JailEscapeService {
-    fun bailOut(){
+    fun bailOut() {
         val price = RuleBook.jailEscapePrice
         val player = getActivePlayer()!!
         if(TransactionService.payIfAffordable(player, price)){
@@ -17,11 +17,13 @@ object JailEscapeService {
             dismissPopupForField()
         }
     }
-    fun rollADoubleToEscape(){
+
+    fun rollADoubleToEscape() {
         dismissPopupForField()
         enableDice()
     }
-    fun useGetOutOfJailFreeCard(){
+
+    fun useGetOutOfJailFreeCard() {
         val player = getActivePlayer()!!
         if(player.numberOfGetOutOfJailFreeCards.value>0){
             player.useGetOutOfJailFreeCard()

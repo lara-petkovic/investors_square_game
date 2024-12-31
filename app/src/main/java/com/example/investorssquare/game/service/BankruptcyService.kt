@@ -11,17 +11,20 @@ object BankruptcyService {
     private val _debtPopupVisible = MutableStateFlow(false)
     val debtPopupVisible: StateFlow<Boolean> get() = _debtPopupVisible
 
-    fun dismissDebtPopup(){
+    fun dismissDebtPopup() {
         _debtPopupVisible.value = false
     }
-    fun declareBankruptcy(player: PlayerViewModel){
+
+    fun declareBankruptcy(player: PlayerViewModel) {
         player.bankrupt()
         dismissDebtPopup()
     }
-    fun openDebtPopup(){
+
+    fun openDebtPopup() {
         _debtPopupVisible.value= true
     }
-    fun calculateNetValue(pVM: PlayerViewModel): Int{
+
+    fun calculateNetValue(pVM: PlayerViewModel): Int {
         var netValue = 0
         for(property in estates.value.filter { e->e.isOwnedByPlayer(pVM) }){
             if(property.numberOfBuildings.value>0){

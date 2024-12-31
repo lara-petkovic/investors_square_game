@@ -71,7 +71,6 @@ fun RulebookScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Iterate over rulesState to create UI elements
         rulesState.forEach { (ruleName, ruleValue) ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
