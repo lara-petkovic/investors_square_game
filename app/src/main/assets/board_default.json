@@ -10,7 +10,7 @@
   "default-rules": {},
   "chance": {
     "image-url": "chance_card",
-    "primary-color": "#ff9900",
+    "primary-color": "#d332ad",
     "common-name": "Chance",
     "cards": [
       {
@@ -81,7 +81,7 @@
   },
   "community-chest": {
     "image-url": "community_chest_card",
-    "primary-color": "#6666ff",
+    "primary-color": "#b37d20",
     "common-name": "Community Chest",
     "cards": [
       {

@@ -9,13 +9,15 @@ class Community(
     val cards: MutableList<CommunityCard>,
     val primaryColor: Color
 ){
-    fun shuffleCards(){
+    fun shuffleCards() {
         cards.shuffle(Random.Default)
     }
-    fun drawCard(): CommunityCard{
+
+    fun drawCard(): CommunityCard {
         cards.moveFirstToEnd()
         return cards[cards.size-1]
     }
+
     private fun <T> MutableList<T>.moveFirstToEnd() {
         if (this.isNotEmpty()) {
             val firstElement = this.removeAt(0)

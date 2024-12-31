@@ -7,18 +7,21 @@ import com.example.investorssquare.game.service.PlayersService.getActivePlayer
 
 object CommunityCardService {
     private var card: CommunityCard? = null
-    fun drawCard(isChance:Boolean) : CommunityCard{
+
+    fun drawCard(isChance:Boolean) : CommunityCard {
         card = if (isChance)
             board.value?.chance?.drawCard()!!
         else
             board.value?.communityChest?.drawCard()!!
         return card as CommunityCard
     }
-    fun openCardPopup(){
+
+    fun openCardPopup() {
         val player = getActivePlayer()!!
         showPopupForField(player.position.value)
     }
-    fun executeCardAction(){
+
+    fun executeCardAction() {
         when(card?.actionCode){
             1 -> CommunityCardActionsService.action1()
             2 -> CommunityCardActionsService.action2()
