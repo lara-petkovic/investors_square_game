@@ -1,4 +1,4 @@
-package com.example.investorssquare.game.service
+package com.example.investorssquare.game.service.community_cards_services
 
 import com.example.investorssquare.game.domain.model.FieldType
 import com.example.investorssquare.game.events.Event

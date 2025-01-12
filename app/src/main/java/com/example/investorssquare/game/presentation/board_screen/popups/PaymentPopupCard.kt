@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getDrawable
 import com.example.investorssquare.R
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
-import com.example.investorssquare.game.service.PaymentDetails
+import com.example.investorssquare.game.service.dto.PaymentDetails
 import com.example.investorssquare.util.Constants.BLACK_OVERLAY
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 

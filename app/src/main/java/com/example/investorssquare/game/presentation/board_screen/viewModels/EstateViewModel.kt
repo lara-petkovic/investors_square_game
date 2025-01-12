@@ -18,6 +18,9 @@ class EstateViewModel @Inject constructor(val estate: Estate) : ViewModel() {
     private val _isHighlighted = MutableStateFlow(false)
     val isHighlighted : StateFlow<Boolean> get() = _isHighlighted
 
+    private val _isIncludedInTrade = MutableStateFlow(false)
+    val isIncludedInTrade : StateFlow<Boolean> get() = _isIncludedInTrade
+
     private val _isMortgaged = MutableStateFlow(false)
     val isMortgaged : StateFlow<Boolean> get() = _isMortgaged
 
@@ -38,6 +41,12 @@ class EstateViewModel @Inject constructor(val estate: Estate) : ViewModel() {
     }
     fun removeBuilding(){
         _numberOfBuildings.value--
+    }
+    fun includeInTrade(){
+        _isIncludedInTrade.value = true
+    }
+    fun excludeFromTrade(){
+        _isIncludedInTrade.value = false
     }
     fun highlight(){
         _isHighlighted.value = true

@@ -35,7 +35,7 @@ import androidx.compose.ui.window.PopupProperties
 import kotlinx.coroutines.delay
 import com.example.investorssquare.R
 import com.example.investorssquare.game.service.BoardService.board
-import com.example.investorssquare.game.service.CommunityCardService
+import com.example.investorssquare.game.service.community_cards_services.CommunityCardService
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable

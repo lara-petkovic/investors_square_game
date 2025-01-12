@@ -14,6 +14,7 @@ import com.example.investorssquare.game.service.EstateService.getNumberOfHotelsO
 import com.example.investorssquare.game.service.EstateService.getNumberOfHousesOwned
 import com.example.investorssquare.game.service.EstateService.getOwnerOfEstate
 import com.example.investorssquare.game.service.PlayersService.getActivePlayer
+import com.example.investorssquare.game.service.dto.PaymentDetails
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -157,9 +158,3 @@ object TransactionService {
         return ret
     }
 }
-
-data class PaymentDetails(
-    val payer: PlayerViewModel,
-    val receiver: PlayerViewModel,
-    val amount: Int
-)
