@@ -34,13 +34,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import com.example.investorssquare.R
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.Property
 import com.example.investorssquare.game.events.Event
@@ -48,6 +51,7 @@ import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.components.buttons.BuyButton
 import com.example.investorssquare.game.presentation.board_screen.components.CoinIcon
 import com.example.investorssquare.game.presentation.board_screen.components.HouseIcon
+import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.service.BoardService.board
 import com.example.investorssquare.util.ResourceMapper
 import kotlinx.coroutines.launch
@@ -102,7 +106,7 @@ fun PropertyDetails(
                             .fillMaxHeight(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        PropertyHeader(property)
+                        PropertyHeader(property, popupWidth)
                         PropertyDetailsContent(property, scrollState)
                     }
                 }
@@ -122,7 +126,7 @@ fun PropertyDetails(
 }
 
 @Composable
-private fun PropertyHeader(property: Property) {
+private fun PropertyHeader(property: Property, popupWidth: Dp) {
     val backgroundColor = property.setColor
     val textColor = if (backgroundColor.luminance() > 0.4f) Color.Black else Color.White
 
@@ -137,8 +141,25 @@ private fun PropertyHeader(property: Property) {
             text = property.name,
             style = MaterialTheme.typography.labelMedium,
             color = textColor,
-            textAlign = TextAlign.Justify
+            textAlign = TextAlign.Justify,
+            modifier = Modifier.padding(bottom = 5.dp)
         )
+        Row(
+            modifier = Modifier.align(Alignment.BottomEnd).background(color = Color.Green).width((popupWidth.value/3.5).dp),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Row{
+                Text(
+                    text = "${property.price}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontSize = 11.sp,
+                    lineHeight = 13.sp,
+                    color = Color.Black
+                )
+                CoinIcon(size = 12.dp)
+            }
+        }
     }
 }
 
@@ -258,16 +279,22 @@ private fun RentWithHotelRow(rent: Int) {
 
 @Composable
 private fun PropertyCostRows(property: Property) {
-    Column(modifier=Modifier.padding(vertical = 5.dp, horizontal = 5.dp)
-        .border(1.dp, property.setColor)
-        .fillMaxWidth()
-    ){
-        Column(Modifier.padding(vertical = 3.dp)){
-            PropertyCostRow("Building Cost", property.housePrice)
-            PropertyCostRow("Mortgage Value", property.mortgagePrice)
-            PropertyCostRow("Sell Value", property.sellPrice)
+    Column{
+        Text(text = "* Rent is doubled on properties without buildings if player owns a set",
+            modifier=Modifier.padding(horizontal = 5.dp),style = TextStyle(fontSize = 8.sp, lineHeight = 10.sp)
+            )
+        Column(modifier=Modifier.padding(vertical = 5.dp, horizontal = 5.dp)
+            .border(1.dp, property.setColor)
+            .fillMaxWidth()
+        ){
+            Column(Modifier.padding(vertical = 3.dp)){
+                PropertyCostRow("Building Cost", property.housePrice)
+                if(RuleBook.mortgagesEnabled) PropertyCostRow("Mortgage Value", property.mortgagePrice)
+                if(RuleBook.sellingEstateEnabled) PropertyCostRow("Sell Value", property.sellPrice)
+            }
         }
     }
+
 }
 
 @Composable
