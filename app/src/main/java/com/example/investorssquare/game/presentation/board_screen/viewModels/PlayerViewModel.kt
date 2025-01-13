@@ -4,7 +4,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import com.example.investorssquare.game.domain.model.Estate
 import com.example.investorssquare.game.domain.model.Field
-import com.example.investorssquare.game.service.BankruptcyService
 import com.example.investorssquare.game.service.EstateService.estates
 import com.example.investorssquare.util.Constants.TOTAL_FIELDS
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,11 +47,11 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
 
     var doublesRolledCounter: Int = 0
 
-    fun acquireGetOutOfJailFreeCard(){
+    fun acquireGetOutOfJailFreeCard() {
         _numberOfGetOutOfJailFreeCards.value++
     }
 
-    fun useGetOutOfJailFreeCard(){
+    fun useGetOutOfJailFreeCard() {
         _numberOfGetOutOfJailFreeCards.value--
     }
 
@@ -127,7 +126,7 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
 
     fun bankrupt(){
         _isInBankruptcy.value = true
-        for(estate in estates.value.filter { e->e.isOwnedByPlayer(this) }){
+        for(estate in estates.value.filter { e -> e.isOwnedByPlayer(this) }){
             estate.reset()
         }
     }
