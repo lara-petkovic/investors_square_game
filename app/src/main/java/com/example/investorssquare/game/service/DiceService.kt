@@ -1,9 +1,9 @@
 package com.example.investorssquare.game.service
 
-import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.viewModels.DiceViewModel
+import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.service.MoveService.hideFinishButton
 import com.example.investorssquare.game.service.MoveService.showFinishButton
 import com.example.investorssquare.game.service.PlayersService.getActivePlayer
@@ -11,7 +11,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 object DiceService {
     private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
@@ -22,11 +21,11 @@ object DiceService {
         serviceScope.launch { EventBus.postEvent(Event.ON_DICE_THROWN(diceViewModel.diceNumber1.value, diceViewModel.diceNumber2.value)) }
     }
 
-    fun getDiceSum(): Int{
+    fun getDiceSum(): Int {
         return diceViewModel.getDiceSum()
     }
 
-    fun isRolledDouble(): Boolean{
+    fun isRolledDouble(): Boolean {
         return diceViewModel.isRolledDouble()
     }
 
@@ -51,12 +50,12 @@ object DiceService {
         serviceScope.launch { EventBus.postEvent(Event.ON_MOVE_PLAYER) }
     }
 
-    fun disableDice(){
+    fun disableDice() {
         diceViewModel.disableDiceButton()
         showFinishButton()
     }
 
-    fun enableDice(){
+    fun enableDice() {
         diceViewModel.enableDiceButton()
         hideFinishButton()
     }

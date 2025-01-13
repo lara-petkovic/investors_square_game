@@ -23,19 +23,19 @@ class DiceViewModel @Inject constructor() : ViewModel() {
         _diceNumber2.value = Random.nextInt(1, 7)
     }
 
-    fun getDiceSum(): Int{
+    fun getDiceSum(): Int {
         return _diceNumber1.value + _diceNumber2.value
     }
 
-    fun isRolledDouble(): Boolean{
-        return _diceNumber1.value==_diceNumber2.value
+    fun isRolledDouble(): Boolean {
+        return _diceNumber1.value == _diceNumber2.value
     }
 
-    fun disableDiceButton(){
+    fun disableDiceButton() {
         _isDiceButtonEnabled.value = false
     }
 
-    fun enableDiceButton(){
+    fun enableDiceButton() {
         _isDiceButtonEnabled.value = true
     }
 }

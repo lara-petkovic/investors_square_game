@@ -64,9 +64,10 @@ fun PlayerNamesScreen(
                         painter = painterResource(id = R.drawable.icon_color_picker),
                         contentDescription = "Pick Color",
                         modifier = Modifier
-                            .size(40.dp)
+                            .size(55.dp)
                             .clickable { showColorPickerForPlayer = index }
-                            .padding(8.dp)
+                            .padding(8.dp),
+                        tint = Color.Unspecified
                     )
                 } else {
                     Box(

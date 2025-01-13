@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
 import com.example.investorssquare.game.navigation.Navigation
 import com.example.investorssquare.ui.theme.InvestorsSquareTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,9 +16,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             InvestorsSquareTheme {
-                Box {
-                    Navigation()
-                }
+                Navigation()
             }
         }
     }

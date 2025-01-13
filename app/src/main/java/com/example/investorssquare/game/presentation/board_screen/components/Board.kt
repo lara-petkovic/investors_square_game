@@ -254,8 +254,8 @@ private fun DisplayPopup(
             if(RuleBook.payToEscapeJailEnabled && getActivePlayer()!!.money.value >= RuleBook.jailEscapePrice)
                 RuleBook.jailEscapePrice else -1,
             centerOfTheBoard = centerOfTheBoard,
-            popupWidth = (0.8f * FIELDS_PER_ROW * fieldWidth.value).dp,
-            popupHeight = (0.8f * FIELDS_PER_ROW * fieldWidth.value).dp,
+            popupWidth = (0.97 * FIELDS_PER_ROW * fieldWidth.value).dp,
+            popupHeight = (0.85f * FIELDS_PER_ROW * fieldWidth.value).dp,
         )
         else -> {}
     }
