@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -34,7 +36,11 @@ import com.example.investorssquare.game.presentation.board_screen.components.but
 import com.example.investorssquare.game.presentation.board_screen.popups.DebtPopup
 import com.example.investorssquare.game.presentation.board_screen.popups.JailPopup
 import com.example.investorssquare.game.presentation.board_screen.popups.PaymentPopupCard
+import com.example.investorssquare.game.presentation.board_screen.popups.TradePopup
 import com.example.investorssquare.game.service.BankruptcyService
+import com.example.investorssquare.game.service.TradeService.counterTradeOffer
+import com.example.investorssquare.game.service.TradeService.creatingTradeOffer
+import com.example.investorssquare.game.service.TradeService.reviewingTradeOffer
 import com.example.investorssquare.game.service.TransactionService.dismissPaymentPopup
 import com.example.investorssquare.game.service.TransactionService.paymentDetails
 import com.example.investorssquare.game.service.TransactionService.showPaymentPopup
@@ -50,9 +56,13 @@ fun BoardScreen(navController: NavController) {
 
     val showPaymentPopup by showPaymentPopup.collectAsState()
     val paymentDetails by paymentDetails.collectAsState()
+    val creatingTrade by creatingTradeOffer.collectAsState()
+    val reviewingTrade by reviewingTradeOffer.collectAsState()
+    val counterTrade by counterTradeOffer.collectAsState()
 
     var activeButtonId by remember { mutableStateOf<Int?>(null) }
     var showExitDialog by remember { mutableStateOf(false) }
+
 
     // Back press handling
     BackHandler {
@@ -60,6 +70,7 @@ fun BoardScreen(navController: NavController) {
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -117,6 +128,13 @@ fun BoardScreen(navController: NavController) {
                     onButtonClicked = { activeButtonId = if (activeButtonId == 5) null else 5 },
                     event = Event.ON_SWITCH_TO_SELLING_PROPERTY_MODE
                 )
+
+                ActionButton(
+                    iconResourceId = R.drawable.icon_redeem, //TODO LARA: make an image for this
+                    isButtonClicked = activeButtonId == 6,
+                    onButtonClicked = { activeButtonId = if (activeButtonId == 6) null else 6 },
+                    event = Event.ON_OFFER_A_TRADE
+                )
             }
         }
 
@@ -133,7 +151,20 @@ fun BoardScreen(navController: NavController) {
                 )
             }
         }
-
+         if(creatingTrade || reviewingTrade || counterTrade){
+             Box(
+                 modifier = Modifier
+                     .fillMaxSize()
+                     .background(Color.Black.copy(alpha = 0.5f))
+                     .align(Alignment.Center),
+             ) {
+                TradePopup(
+                    modifier=Modifier
+                        .align(Alignment.Center)
+                        .width((screenWidthDp.value-2*sideMargin.value).dp)
+                        .height(630.dp))
+             }
+         }
     }
 
     if (showExitDialog) {

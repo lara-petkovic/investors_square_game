@@ -47,6 +47,10 @@ object TradeService {
         _targetedPlayersEstates.value = estates.value.filter{e->e.ownerIndex.value== _targetedPlayer.value!!.index.value && e.numberOfBuildings.value==0}
     }
 
+    fun closeTradeWindow(){
+        reset()
+    }
+
     fun estateClicked(index: Int){
         if(creatingTradeOffer.value || counterTradeOffer.value){
             val e = getEstateByFieldIndex(index)!!
@@ -57,6 +61,13 @@ object TradeService {
         }
     }
 
+    fun setMoney(money:Int, sending: Boolean){
+        if(sending)
+            _moneyToSend.value = money
+        else
+            _moneyToReceive.value = money
+    }
+
     fun changeTargetedPlayer(next: Boolean){
         _targetedPlayersEstates.value.forEach { e-> e.excludeFromTrade() }
         var nextPlayerIndex = (_targetedPlayer.value!!.index.value + (if(next) 1 else -1)) % players.value.size
@@ -65,6 +76,7 @@ object TradeService {
         }
         _targetedPlayer.value = players.value.filter{ p-> p.index.value == nextPlayerIndex}[0]
         _targetedPlayersEstates.value = estates.value.filter{e->e.ownerIndex.value== _targetedPlayer.value!!.index.value && e.numberOfBuildings.value==0}
+        _moneyToReceive.value = 0
     }
 
     fun createTradeOffer(){
@@ -111,8 +123,8 @@ object TradeService {
         val t = _targetedPlayer.value!!.index.value
         _initiatorPlayer.value = players.value.filter{p->p.index.value == t}[0]
         _targetedPlayer.value = players.value.filter{p->p.index.value == i}[0]
-        _initiatorPlayersEstates.value = estates.value.filter{e->e.ownerIndex.value== _initiatorPlayer.value!!.index.value && e.numberOfBuildings.value==0}
-        _targetedPlayersEstates.value = estates.value.filter{e->e.ownerIndex.value== _targetedPlayer.value!!.index.value && e.numberOfBuildings.value==0}
+        _initiatorPlayersEstates.value = estates.value.filter{e->e.ownerIndex.value== _initiatorPlayer.value!!.index.value && e.isIncludedInTrade.value}
+        _targetedPlayersEstates.value = estates.value.filter{e->e.ownerIndex.value== _targetedPlayer.value!!.index.value && e.isIncludedInTrade.value}
         val sendingMoney = moneyToSend.value
         _moneyToSend.value = moneyToReceive.value
         _moneyToReceive.value = sendingMoney
@@ -125,5 +137,7 @@ object TradeService {
         _reviewingTradeOffer.value = false
         _creatingTradeOffer.value = false
         _counterTradeOffer.value = false
+        _moneyToReceive.value = 0
+        _moneyToSend.value = 0
     }
 }
