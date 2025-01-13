@@ -36,6 +36,10 @@ object EstateService {
         return _estates.value.firstOrNull { it.estate.index == index }
     }
 
+    fun getPropertyByFieldIndex(index: Int): Property {
+        return _estates.value.firstOrNull { it.estate.index == index }!!.estate as Property
+    }
+
     fun showPopupForEstate(){
         showPopupForField(getActivePlayer()?.position?.value!!)
     }

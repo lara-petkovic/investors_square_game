@@ -9,10 +9,10 @@ import androidx.compose.ui.unit.Dp
 import com.example.investorssquare.R
 
 @Composable
-fun CoinIcon(size: Dp) {
+fun CoinIcon(size: Dp, modifier: Modifier = Modifier) {
     Image(
         painter = painterResource(R.drawable.coin),
         contentDescription = null,
-        modifier = Modifier.size(size)
+        modifier = modifier.size(size)
     )
 }

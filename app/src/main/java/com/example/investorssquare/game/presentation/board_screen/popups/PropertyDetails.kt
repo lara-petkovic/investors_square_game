@@ -4,13 +4,17 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,9 +23,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,6 +60,8 @@ import com.example.investorssquare.game.presentation.board_screen.components.Coi
 import com.example.investorssquare.game.presentation.board_screen.components.HouseIcon
 import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.service.BoardService.board
+import com.example.investorssquare.game.service.BoardService.showPopup
+import com.example.investorssquare.game.service.EstateService.getEstateByFieldIndex
 import com.example.investorssquare.util.ResourceMapper
 import kotlinx.coroutines.launch
 
@@ -69,7 +78,7 @@ fun PropertyDetails(
     buyButtonVisibility: Boolean
 ) {
     val property = field as? Property ?: return
-    val scrollState = rememberScrollState()
+
     val coroutineScope = rememberCoroutineScope()
 
     BoxWithConstraints {
@@ -93,24 +102,7 @@ fun PropertyDetails(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(popupWidth, popupHeight)
-                        .background(Color.White, shape = RoundedCornerShape(8.dp))
-                        .clip(RoundedCornerShape(8.dp))
-                        .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp))
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        PropertyHeader(property, popupWidth)
-                        PropertyDetailsContent(property, scrollState)
-                    }
-                }
-
+                PropertyCard(popupWidth, popupHeight, property)
                 if (buyButtonVisibility) {
                     Spacer(modifier = Modifier.width(16.dp))
 
@@ -120,6 +112,50 @@ fun PropertyDetails(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+@Composable
+fun PropertyCard(popupWidth:Dp, popupHeight: Dp, property: Property, left: Boolean = true){
+    val scrollState = rememberScrollState()
+    val coroutineScope = rememberCoroutineScope()
+    val estateVM = getEstateByFieldIndex(property.index)!!
+    val includedInTrade by estateVM.isIncludedInTrade.collectAsState()
+    Box(
+        modifier = Modifier
+            .size(popupWidth, popupHeight)
+            .background(Color.White, shape = RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(8.dp))
+            .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp))
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) {
+                coroutineScope.launch {
+                    EventBus.postEvent(Event.ON_CARD_CLICKED(property.index))
+                }
+            },
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            PropertyHeader(property, popupWidth)
+            PropertyDetailsContent(property, scrollState)
+        }
+        if(includedInTrade){
+            Box(Modifier
+                .fillMaxSize()
+                .background(Color(0f,0f,0f,0.3f), shape = RoundedCornerShape(8.dp))
+
+            ){
+                Image(painterResource(if(left) R.drawable.right_arrow else R.drawable.left_arrow),
+                    contentDescription = null,
+                    modifier = Modifier.size(70.dp).align(Alignment.Center)
+                )
             }
         }
     }
