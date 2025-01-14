@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 object TradeService {
+    private var savedTrade: TradeOffer? = null
     private val _creatingTradeOffer = MutableStateFlow(false)
     val creatingTradeOffer: StateFlow<Boolean> get() = _creatingTradeOffer
 
@@ -92,6 +93,7 @@ object TradeService {
         _counterTradeOffer.value = false
         _reviewingTradeOffer.value = true
         rotateSides()
+        saveTrade()
     }
 
     fun acceptTradeOffer(){
@@ -112,10 +114,21 @@ object TradeService {
 
     fun counterOffer(){
         _counterTradeOffer.value = true
+        _reviewingTradeOffer.value = false
+        for(e in estates.value){
+            if(e.isOwnedByPlayer(initiatorPlayer.value!!) && !e.isIncludedInTrade.value){
+                _initiatorPlayersEstates.value += e
+            }
+            if(e.isOwnedByPlayer(targetedPlayer.value!!) && !e.isIncludedInTrade.value){
+                _targetedPlayersEstates.value += e
+            }
+        }
     }
 
     fun cancelCounterOffer(){
-        _counterTradeOffer.value = true
+        _counterTradeOffer.value = false
+        _reviewingTradeOffer.value = true
+        restoreSavedTrade()
     }
 
     private fun rotateSides(){
@@ -139,5 +152,35 @@ object TradeService {
         _counterTradeOffer.value = false
         _moneyToReceive.value = 0
         _moneyToSend.value = 0
+        savedTrade = null
     }
+
+    private fun saveTrade(){
+        savedTrade = TradeOffer(
+            initiatorPlayer.value!!,
+            targetedPlayer.value!!,
+            initiatorPlayersEstates.value,
+            targetedPlayersEstates.value,
+            moneyToSend.value,
+            moneyToReceive.value
+        )
+    }
+
+    private fun restoreSavedTrade(){
+        _initiatorPlayer.value = savedTrade!!.initiatorPlayer
+        _targetedPlayer.value = savedTrade!!.targetedPlayer
+        _initiatorPlayersEstates.value = savedTrade!!.propertiesToSend
+        _targetedPlayersEstates.value = savedTrade!!.propertiesToReceive
+        _moneyToSend.value = savedTrade!!.moneyToSend
+        _moneyToReceive.value = savedTrade!!.moneyToReceive
+    }
+
+    private data class TradeOffer(
+        val initiatorPlayer: PlayerViewModel,
+        val targetedPlayer: PlayerViewModel,
+        val propertiesToSend: List<EstateViewModel>,
+        val propertiesToReceive: List<EstateViewModel>,
+        val moneyToSend: Int,
+        val moneyToReceive: Int,
+    )
 }

@@ -125,9 +125,12 @@ fun TradePopup(
                     if(creatingTradeOffer.value || counterTradeOffer.value)
                         Button(onClick = {coroutineScope.launch { EventBus.postEvent(Event.ON_CREATING_A_TRADE) }}){ Text("Offer a trade") }
                     if(reviewingTradeOffer.value){
+                        Button(onClick = {coroutineScope.launch { EventBus.postEvent(Event.ON_COUNTER_TRADE_OFFER) }}){ Text("Counter offer") }
                         Button(onClick = {coroutineScope.launch { EventBus.postEvent(Event.ON_ACCEPTING_A_TRADE) }}){ Text("Accept") }
                         Button(onClick = {coroutineScope.launch { EventBus.postEvent(Event.ON_DECLINING_A_TRADE) }}){ Text("Decline") }
                     }
+                    if(counterTradeOffer.value)
+                        Button(onClick = {coroutineScope.launch { EventBus.postEvent(Event.ON_CANCEL_COUNTER_TRADE_OFFER) }}){ Text("Cancel counter offer") }
                 }
             }
         }
@@ -150,9 +153,9 @@ private fun TradeColumn(left:Boolean){
         sliderPosition = money.value.toFloat()
     }
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
-        if(!left && !reviewingTradeOffer.value) Button(onClick = {coroutineScope.launch { EventBus.postEvent(Event.ON_CHANGE_TARGET_PLAYER(false)) }}, modifier = Modifier.height(22.dp)) { Text("p") }
+        if(!left && creatingTradeOffer.value) Button(onClick = {coroutineScope.launch { EventBus.postEvent(Event.ON_CHANGE_TARGET_PLAYER(false)) }}, modifier = Modifier.height(22.dp)) { Text("p") }
         Text(player.value!!.name.value)
-        if(!left && !reviewingTradeOffer.value) Button(onClick = {coroutineScope.launch { EventBus.postEvent(Event.ON_CHANGE_TARGET_PLAYER(true)) }}, modifier = Modifier.height(22.dp)) { Text("n") }
+        if(!left && creatingTradeOffer.value) Button(onClick = {coroutineScope.launch { EventBus.postEvent(Event.ON_CHANGE_TARGET_PLAYER(true)) }}, modifier = Modifier.height(22.dp)) { Text("n") }
     }
     Box(Modifier.height(3.dp).fillMaxWidth().background(playerColor.value).padding(vertical = 2.dp))
     Text(text = (if(!reviewingTradeOffer.value) "Choose properties" else "Properties") + " to "+ if(left) "send" else "receive", fontSize = 13.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
