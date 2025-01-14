@@ -18,6 +18,17 @@ class DiceViewModel @Inject constructor() : ViewModel() {
     private val _isDiceButtonEnabled = MutableStateFlow(true)
     val isDiceButtonEnabled: StateFlow<Boolean> get() = _isDiceButtonEnabled
 
+    private val _isDiceRolling = MutableStateFlow(false)
+    val isDiceRolling: StateFlow<Boolean> get() = _isDiceRolling
+
+    fun turnOnRolling(){
+        _isDiceRolling.value = true
+    }
+
+    fun turnOffRolling(){
+        _isDiceRolling.value = false
+    }
+
     fun rollDice() {
         _diceNumber1.value = Random.nextInt(1, 7)
         _diceNumber2.value = Random.nextInt(1, 7)
