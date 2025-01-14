@@ -103,6 +103,7 @@ fun StationCard(cardWidth: Dp, cardHeight: Dp, station: Station, left: Boolean =
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val estateVM = getEstateByFieldIndex(station.index)!!
+    val mortgaged = estateVM.isMortgaged.collectAsState()
     val includedInTrade by estateVM.isIncludedInTrade.collectAsState()
     Box(
         modifier = Modifier
@@ -126,6 +127,16 @@ fun StationCard(cardWidth: Dp, cardHeight: Dp, station: Station, left: Boolean =
             StationImage(station.imageUrl, context, cardHeight)
             StationInfo(station)
             StationDetailsContent(station, scrollState)
+        }
+        if(mortgaged.value){
+            Box(Modifier
+                .fillMaxSize()
+                .background(Color(0f,0f,0f,0.0f), shape = RoundedCornerShape(8.dp))
+                .padding(top = 40.dp, start= 30.dp)
+            ){
+                Image(painterResource(R.drawable.mortgaged_sticker), contentDescription = null,
+                    modifier = Modifier.size(100.dp), alpha = 0.3f)
+            }
         }
         if(includedInTrade){
             Box(Modifier

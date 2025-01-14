@@ -116,11 +116,13 @@ fun PropertyDetails(
         }
     }
 }
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun PropertyCard(popupWidth:Dp, popupHeight: Dp, property: Property, left: Boolean = true){
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     val estateVM = getEstateByFieldIndex(property.index)!!
+    val mortgaged = estateVM.isMortgaged.collectAsState()
     val includedInTrade by estateVM.isIncludedInTrade.collectAsState()
     Box(
         modifier = Modifier
@@ -145,6 +147,16 @@ fun PropertyCard(popupWidth:Dp, popupHeight: Dp, property: Property, left: Boole
         ) {
             PropertyHeader(property, popupWidth)
             PropertyDetailsContent(property, scrollState)
+        }
+        if(mortgaged.value){
+            Box(Modifier
+                .fillMaxSize()
+                .background(Color(0f,0f,0f,0.0f), shape = RoundedCornerShape(8.dp))
+                .padding(top = 61.dp, start= 30.dp)
+            ){
+                Image(painterResource(R.drawable.mortgaged_sticker), contentDescription = null,
+                    modifier = Modifier.size(100.dp), alpha = 0.3f)
+            }
         }
         if(includedInTrade){
             Box(Modifier
