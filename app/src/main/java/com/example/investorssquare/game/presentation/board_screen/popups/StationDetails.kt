@@ -5,6 +5,8 @@ import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +25,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,12 +44,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import com.example.investorssquare.R
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.Station
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.components.buttons.BuyButton
 import com.example.investorssquare.game.presentation.board_screen.components.CoinIcon
+import com.example.investorssquare.game.service.EstateService.getEstateByFieldIndex
 import kotlinx.coroutines.launch
 
 @Composable
@@ -57,8 +64,7 @@ fun StationDetails(
     buyButtonVisibility: Boolean
 ) {
     val station = field as? Station ?: return
-    val scrollState = rememberScrollState()
-    val context = LocalContext.current
+
     val coroutineScope = rememberCoroutineScope()
 
     val density = LocalDensity.current
@@ -78,22 +84,7 @@ fun StationDetails(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Box(
-                modifier = Modifier
-                    .size(popupWidth, popupHeight)
-                    .background(Color.White, shape = RoundedCornerShape(8.dp))
-                    .clip(RoundedCornerShape(8.dp))
-                    .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp))
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    StationImage(station.imageUrl, context, popupHeight)
-                    StationInfo(station)
-                    StationDetailsContent(station, scrollState)
-                }
-            }
+            StationCard(popupWidth, popupHeight, station)
             if (buyButtonVisibility) {
                 Spacer(modifier = Modifier.width(16.dp))
 
@@ -106,7 +97,50 @@ fun StationDetails(
         }
     }
 }
+@Composable
+fun StationCard(cardWidth: Dp, cardHeight: Dp, station: Station, left: Boolean = true){
+    val scrollState = rememberScrollState()
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val estateVM = getEstateByFieldIndex(station.index)!!
+    val includedInTrade by estateVM.isIncludedInTrade.collectAsState()
+    Box(
+        modifier = Modifier
+            .size(cardWidth, cardHeight)
+            .background(Color.White, shape = RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(8.dp))
+            .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp))
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) {
+                coroutineScope.launch {
+                    EventBus.postEvent(Event.ON_CARD_CLICKED(station.index))
+                }
+            },
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            StationImage(station.imageUrl, context, cardHeight)
+            StationInfo(station)
+            StationDetailsContent(station, scrollState)
+        }
+        if(includedInTrade){
+            Box(Modifier
+                .fillMaxSize()
+                .background(Color(0f,0f,0f,0.3f), shape = RoundedCornerShape(8.dp))
 
+            ){
+                Image(painterResource(if(left) R.drawable.right_arrow else R.drawable.left_arrow),
+                    contentDescription = null,
+                    modifier = Modifier.size(70.dp).align(Alignment.Center)
+                )
+            }
+        }
+    }
+}
 @SuppressLint("DiscouragedApi")
 @Composable
 fun StationImage(imageUrl: String, context: Context, popupHeight: Dp) {

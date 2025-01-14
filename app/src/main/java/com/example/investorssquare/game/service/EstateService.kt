@@ -2,6 +2,8 @@ package com.example.investorssquare.game.service
 
 import androidx.compose.ui.graphics.Color
 import com.example.investorssquare.game.domain.model.Property
+import com.example.investorssquare.game.domain.model.Station
+import com.example.investorssquare.game.domain.model.Utility
 import com.example.investorssquare.game.presentation.board_screen.viewModels.EstateViewModel
 import com.example.investorssquare.game.presentation.board_screen.viewModels.PlayerViewModel
 import com.example.investorssquare.game.service.BoardService.dismissPopupForField
@@ -38,6 +40,12 @@ object EstateService {
 
     fun getPropertyByFieldIndex(index: Int): Property {
         return _estates.value.firstOrNull { it.estate.index == index }!!.estate as Property
+    }
+    fun getStationByFieldIndex(index: Int): Station {
+        return _estates.value.firstOrNull { it.estate.index == index }!!.estate as Station
+    }
+    fun getUtilityByFieldIndex(index: Int): Utility {
+        return _estates.value.firstOrNull { it.estate.index == index }!!.estate as Utility
     }
 
     fun showPopupForEstate(){

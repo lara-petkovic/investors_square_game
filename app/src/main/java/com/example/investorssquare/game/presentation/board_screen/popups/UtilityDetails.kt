@@ -5,12 +5,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,12 +32,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import com.example.investorssquare.R
 import com.example.investorssquare.game.domain.model.Field
 import com.example.investorssquare.game.domain.model.Utility
 import com.example.investorssquare.game.events.Event
 import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.components.buttons.BuyButton
 import com.example.investorssquare.game.presentation.board_screen.components.CoinIcon
+import com.example.investorssquare.game.service.EstateService.getEstateByFieldIndex
 import kotlinx.coroutines.launch
 
 @Composable
@@ -64,12 +71,7 @@ fun UtilityDetails(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            UtilityPopupContent(
-                utility = utility,
-                popupWidth = popupWidth,
-                popupHeight = popupHeight
-            )
-
+            UtilityCard(popupWidth, popupHeight, utility)
             if (buyButtonVisibility) {
                 Spacer(modifier = Modifier.width(16.dp))
                 BuyButton(popupWidth, popupHeight) {
@@ -82,45 +84,69 @@ fun UtilityDetails(
         }
     }
 }
+@Composable
+fun UtilityCard(cardWidth: Dp, cardHeight: Dp, utility: Utility, left: Boolean = true){
+    val coroutineScope = rememberCoroutineScope()
+    val estateVM = getEstateByFieldIndex(utility.index)!!
+    val includedInTrade by estateVM.isIncludedInTrade.collectAsState()
+    Box(
+        modifier = Modifier
+            .size(cardWidth, cardHeight)
+            .background(Color.White, shape = RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(8.dp))
+            .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp))
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) {
+                coroutineScope.launch {
+                    EventBus.postEvent(Event.ON_CARD_CLICKED(utility.index))
+                }
+            },
+    ) {
+        UtilityPopupContent(utility, cardHeight)
+        if(includedInTrade){
+            Box(Modifier
+                .fillMaxSize()
+                .background(Color(0f,0f,0f,0.3f), shape = RoundedCornerShape(8.dp))
+            ){
+                Image(painterResource(if(left) R.drawable.right_arrow else R.drawable.left_arrow),
+                    contentDescription = null,
+                    modifier = Modifier.size(70.dp).align(Alignment.Center)
+                )
+            }
+        }
+    }
+}
 
 @SuppressLint("DiscouragedApi")
 @Composable
 private fun UtilityPopupContent(
     utility: Utility,
-    popupWidth: Dp,
     popupHeight: Dp
 ) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
-
-    Box(
-        modifier = Modifier
-            .size(popupWidth, popupHeight)
-            .background(Color.White, shape = RoundedCornerShape(8.dp))
-            .clip(RoundedCornerShape(8.dp))
-            .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp))
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            UtilityHeader(utility)
-            Spacer(modifier = Modifier.height(8.dp))
+        UtilityHeader(utility)
+        Spacer(modifier = Modifier.height(8.dp))
 
-            if (utility.imageUrl.isNotEmpty()) {
-                Image(
-                    painter = painterResource(context.resources.getIdentifier(utility.imageUrl, "drawable", context.packageName)),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(popupHeight * 0.26f),
-                    contentScale = ContentScale.Fit
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-            UtilityDetailsContent(utility, scrollState)
+        if (utility.imageUrl.isNotEmpty()) {
+            Image(
+                painter = painterResource(context.resources.getIdentifier(utility.imageUrl, "drawable", context.packageName)),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(popupHeight * 0.26f),
+                contentScale = ContentScale.Fit
+            )
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
+        UtilityDetailsContent(utility, scrollState)
     }
 }
 

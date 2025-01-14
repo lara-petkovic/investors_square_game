@@ -48,6 +48,8 @@ import com.example.investorssquare.game.events.EventBus
 import com.example.investorssquare.game.presentation.board_screen.components.CoinIcon
 import com.example.investorssquare.game.presentation.board_screen.components.buttons.BuyButton
 import com.example.investorssquare.game.service.EstateService.getPropertyByFieldIndex
+import com.example.investorssquare.game.service.EstateService.getStationByFieldIndex
+import com.example.investorssquare.game.service.EstateService.getUtilityByFieldIndex
 import com.example.investorssquare.game.service.TradeService.closeTradeWindow
 import com.example.investorssquare.game.service.TradeService.counterTradeOffer
 import com.example.investorssquare.game.service.TradeService.creatingTradeOffer
@@ -158,8 +160,14 @@ private fun TradeColumn(left:Boolean){
             for(e in estates.value){
                 if(e.isProperty){
                     PropertyCard(160.dp, 180.dp, getPropertyByFieldIndex(e.estate.index), left)
-                    Spacer(modifier = Modifier.height(10.dp))
                 }
+                else if(e.isStation){
+                    StationCard(160.dp, 180.dp, getStationByFieldIndex(e.estate.index), left)
+                }
+                else if(e.isUtility){
+                    UtilityCard(160.dp, 180.dp, getUtilityByFieldIndex(e.estate.index), left)
+                }
+                Spacer(modifier = Modifier.height(10.dp))
             }
         }
     }
