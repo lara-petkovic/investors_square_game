@@ -142,6 +142,7 @@ private fun TradeColumn(left:Boolean){
     val reviewingTradeOffer = reviewingTradeOffer.collectAsState()
     val counterTradeOffer = counterTradeOffer.collectAsState()
     val player = if(left) initiatorPlayer.collectAsState() else targetedPlayer.collectAsState()
+    val playerColor = player.value!!.color.collectAsState()
     val estates = if(left) initiatorPlayersEstates.collectAsState() else targetedPlayersEstates.collectAsState()
     val money = if(left) moneyToSend.collectAsState() else moneyToReceive.collectAsState()
     var sliderPosition by remember { mutableFloatStateOf(money.value.toFloat()) }
@@ -153,8 +154,8 @@ private fun TradeColumn(left:Boolean){
         Text(player.value!!.name.value)
         if(!left && !reviewingTradeOffer.value) Button(onClick = {coroutineScope.launch { EventBus.postEvent(Event.ON_CHANGE_TARGET_PLAYER(true)) }}, modifier = Modifier.height(22.dp)) { Text("n") }
     }
-    Box(Modifier.height(1.dp).fillMaxWidth().background(Color.Gray).padding(vertical = 2.dp))
-    Text(text = "Choose properties to "+ if(left) "send" else "receive", fontSize = 13.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+    Box(Modifier.height(3.dp).fillMaxWidth().background(playerColor.value).padding(vertical = 2.dp))
+    Text(text = (if(!reviewingTradeOffer.value) "Choose properties" else "Properties") + " to "+ if(left) "send" else "receive", fontSize = 13.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
     Box(Modifier.height(300.dp).fillMaxWidth()){
         Column(modifier = Modifier.verticalScroll(state = scrollState).align(Alignment.Center)){
             for(e in estates.value){
