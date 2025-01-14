@@ -59,12 +59,12 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
         _position.value = (_position.value + steps) % TOTAL_FIELDS
     }
 
-    fun goToJail(sentence: Int){
+    fun goToJail(sentence: Int) {
         _isInJail.value = true
         _jailSentence.value = sentence + 1
     }
 
-    fun escapeJail(){
+    fun escapeJail() {
         _isInJail.value = false
         _jailSentence.value = 0
     }
@@ -75,7 +75,7 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
 
     fun pay(price: Int) {
         _money.value -= price
-        _isInDebt.value = _money.value<0
+        _isInDebt.value = _money.value < 0
     }
 
     fun receive(amount: Int) {
@@ -98,7 +98,7 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
 
     fun setMoney(money: Int) {
         _money.value = money
-        _isInDebt.value = _money.value<0
+        _isInDebt.value = _money.value < 0
     }
 
     fun setColor(color: Color) {
@@ -124,7 +124,7 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
         return isOnCorrectField && !alreadyOwnsEstate
     }
 
-    fun bankrupt(){
+    fun bankrupt() {
         _isInBankruptcy.value = true
         for(estate in estates.value.filter { e -> e.isOwnedByPlayer(this) }){
             estate.reset()

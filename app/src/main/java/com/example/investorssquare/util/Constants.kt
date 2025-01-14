@@ -14,6 +14,9 @@ object Constants {
     const val RELATIVE_POPUP_HEIGHT = 0.96
     const val RELATIVE_COMMUNITY_CARD_WIDTH = 0.9
     const val RELATIVE_COMMUNITY_CARD_HEIGHT = 6
+    const val BUTTON_BORDER_WIDTH = 3
+    const val JAIL_POPUP_BUTTON_TEXT_SIZE = 12
+    const val PROPERTY_DETAILS_TEXT_SIZE = 14
 
     val SECOND_ROW_INTERVAL = 11..19
     val THIRD_ROW_INTERVAL = 21..29

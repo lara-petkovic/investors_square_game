@@ -190,8 +190,8 @@ fun Board(
         if (showDebtPopup) {
             DebtPopup(
                 centerOfTheBoard = centerOfTheBoard,
-                popupWidth = (0.6f * FIELDS_PER_ROW * fieldWidth.value).dp,
-                popupHeight = (0.6f * FIELDS_PER_ROW * fieldWidth.value).dp,
+                popupWidth = (0.85f * FIELDS_PER_ROW * fieldWidth.value).dp,
+                popupHeight = (0.85f * FIELDS_PER_ROW * fieldWidth.value).dp,
             )
         }
 

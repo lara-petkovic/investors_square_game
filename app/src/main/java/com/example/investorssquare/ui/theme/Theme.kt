@@ -11,8 +11,9 @@ private val DarkColorScheme = darkColorScheme(
     primary = LightGreen,
     onPrimary = Color.Black, // Text color
     onSecondary = Color.White,
+    onTertiary = PopupBorderDarkGreen,
     secondary = LightGreen,
-    surface = JailPopupGreenBackgroundLight // Jail popup background
+    surface = JailPopupGreenBackgroundDark // Jail popup background,
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -20,7 +21,8 @@ private val LightColorScheme = lightColorScheme(
     onPrimary = Color.White,
     onSecondary = Color.Black,
     secondary = DarkGreen,
-    surface = JailPopupGreenBackgroundDark
+    onTertiary = PopupBorderLightGreen,
+    surface = JailPopupGreenBackgroundLight
 )
 
 @Composable
