@@ -46,6 +46,8 @@ import com.example.investorssquare.game.presentation.board_screen.components.Coi
 import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.service.BoardService.dismissPopupForField
 import com.example.investorssquare.game.service.PlayersService.getActivePlayer
+import com.example.investorssquare.util.Constants.BUTTON_BORDER_WIDTH
+import com.example.investorssquare.util.Constants.JAIL_POPUP_BUTTON_TEXT_SIZE
 import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
@@ -95,7 +97,7 @@ fun JailPopup(
                 .clip(RoundedCornerShape(5.dp))
                 .border(
                     width = 3.dp,
-                    color = Color.LightGray,
+                    color = MaterialTheme.colorScheme.onTertiary,
                     shape = RoundedCornerShape(5.dp)
                 )
         ) {
@@ -141,7 +143,7 @@ fun JailPopup(
                                 },
                                 modifier = Modifier.weight(1f),
                                 shape = RoundedCornerShape(4.dp),
-                                border = BorderStroke(1.dp, Color.Gray),
+                                border = BorderStroke(BUTTON_BORDER_WIDTH.dp, color = MaterialTheme.colorScheme.onTertiary),
                                 contentPadding = PaddingValues(0.dp)
                             ) {
                                 Row(
@@ -159,7 +161,7 @@ fun JailPopup(
                                     Text(
                                         text = "Use card",
                                         style = MaterialTheme.typography.bodyMedium,
-                                        fontSize = 12.sp,
+                                        fontSize = JAIL_POPUP_BUTTON_TEXT_SIZE.sp,
                                         color = Color.Black
                                     )
                                 }
@@ -176,7 +178,7 @@ fun JailPopup(
                                 },
                                 modifier = Modifier.weight(1f),
                                 shape = RoundedCornerShape(4.dp),
-                                border = BorderStroke(1.dp, Color.Gray),
+                                border = BorderStroke(BUTTON_BORDER_WIDTH.dp, color = MaterialTheme.colorScheme.onTertiary),
                                 contentPadding = PaddingValues(0.dp)
                             ) {
                                 Row(
@@ -194,7 +196,7 @@ fun JailPopup(
                                     Text(
                                         text = "Roll double",
                                         style = MaterialTheme.typography.bodyMedium.copy(lineHeight = 12.sp),
-                                        fontSize = 12.sp,
+                                        fontSize = JAIL_POPUP_BUTTON_TEXT_SIZE.sp,
                                         color = Color.Black
                                     )
                                 }
@@ -215,7 +217,7 @@ fun JailPopup(
                                 },
                                 modifier = Modifier.weight(1f),
                                 shape = RoundedCornerShape(4.dp),
-                                border = BorderStroke(1.dp, Color.Gray),
+                                border = BorderStroke(BUTTON_BORDER_WIDTH.dp, color = MaterialTheme.colorScheme.onTertiary),
                                 contentPadding = PaddingValues(0.dp)
                             ) {
                                 Row(
@@ -232,7 +234,7 @@ fun JailPopup(
                                     Text(
                                         text = "Pay $bailOutPrice",
                                         style = MaterialTheme.typography.bodyMedium,
-                                        fontSize = 12.sp,
+                                        fontSize = JAIL_POPUP_BUTTON_TEXT_SIZE.sp,
                                         color = Color.Black
                                     )
                                     Spacer(modifier = Modifier.width(1.dp))
@@ -246,13 +248,15 @@ fun JailPopup(
                             onClick = { dismissPopupForField() },
                             modifier = Modifier.weight(1f),
                             shape = RoundedCornerShape(4.dp),
-                            border = BorderStroke(1.dp, Color.Gray),
+                            border = BorderStroke(BUTTON_BORDER_WIDTH.dp, color = MaterialTheme.colorScheme.onTertiary),
                             contentPadding = PaddingValues(0.dp)
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Start,
-                                modifier = Modifier.fillMaxWidth().padding(start = 8.dp)
+                                horizontalArrangement = if (bailOutPrice > 0) Arrangement.Start else Arrangement.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = if (bailOutPrice > 0) 8.dp else 0.dp)
                             ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.dismiss_turn),
@@ -263,15 +267,13 @@ fun JailPopup(
                                 Text(
                                     text = "Wait",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    fontSize = 12.sp,
+                                    fontSize = JAIL_POPUP_BUTTON_TEXT_SIZE.sp,
                                     color = Color.Black
                                 )
                             }
                         }
-
                     }
                 }
-
             }
         }
     }

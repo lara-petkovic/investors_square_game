@@ -62,6 +62,7 @@ import com.example.investorssquare.game.presentation.board_screen.viewModels.Rul
 import com.example.investorssquare.game.service.BoardService.board
 import com.example.investorssquare.game.service.BoardService.showPopup
 import com.example.investorssquare.game.service.EstateService.getEstateByFieldIndex
+import com.example.investorssquare.util.Constants.PROPERTY_DETAILS_TEXT_SIZE
 import com.example.investorssquare.util.ResourceMapper
 import kotlinx.coroutines.launch
 
@@ -220,7 +221,7 @@ private fun PropertyRentRow(rent: Int) {
         Text(
             text = "RENT $rent",
             style = MaterialTheme.typography.bodyMedium,
-            fontSize = 14.sp,
+            fontSize = PROPERTY_DETAILS_TEXT_SIZE.sp,
             color = Color.Black
         )
         CoinIcon(size = 16.dp)
@@ -268,7 +269,7 @@ private fun RentWithHousesRow(index: Int, rent: Int) {
             Text(
                 text = "$index × ",
                 style = MaterialTheme.typography.bodyMedium,
-                fontSize = 14.sp,
+                fontSize = PROPERTY_DETAILS_TEXT_SIZE.sp,
                 color = Color.Black
             )
             HouseIcon(Modifier.size(16.dp))
@@ -281,7 +282,7 @@ private fun RentWithHousesRow(index: Int, rent: Int) {
             Text(
                 text = rent.toString(),
                 style = MaterialTheme.typography.bodyMedium,
-                fontSize = 14.sp,
+                fontSize = PROPERTY_DETAILS_TEXT_SIZE.sp,
                 color = Color.Black
             )
             CoinIcon(size = 16.dp)
@@ -317,7 +318,7 @@ private fun RentWithHotelRow(rent: Int) {
             Text(
                 text = rent.toString(),
                 style = MaterialTheme.typography.bodyMedium,
-                fontSize = 14.sp,
+                fontSize = PROPERTY_DETAILS_TEXT_SIZE.sp,
                 color = Color.Black
             )
             CoinIcon(size = 16.dp)
@@ -394,7 +395,7 @@ private fun DotSeparator(price: Int) {
         Text(
             text = price.toString(),
             style = MaterialTheme.typography.bodyMedium,
-            fontSize = 14.sp,
+            fontSize = PROPERTY_DETAILS_TEXT_SIZE.sp,
             color = Color.Black
         )
         CoinIcon(size = 16.dp)
