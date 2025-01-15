@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import com.example.investorssquare.R
 import com.example.investorssquare.game.service.DiceService
 import com.example.investorssquare.game.service.DiceService.diceViewModel
+import com.example.investorssquare.game.service.DiceService.turnOffDiceRolling
+import com.example.investorssquare.game.service.DiceService.turnOnDiceRolling
 import kotlinx.coroutines.delay
 
 @Composable
@@ -38,15 +40,14 @@ fun DiceButton() {
 
     var currentDice1 by remember { mutableIntStateOf(number1) }
     var currentDice2 by remember { mutableIntStateOf(number2) }
-    var isRolling by remember { mutableStateOf(false) }
+    val isRolling by diceViewModel.isDiceRolling.collectAsState()
 
     val context = LocalContext.current
     val mediaPlayer = remember { MediaPlayer.create(context, R.raw.dice_sound_effect) }
 
     Button(
         onClick = {
-            isRolling = true
-            mediaPlayer.start() // Play sound effect when dice are rolled
+            turnOnDiceRolling()
         },
         enabled = isDiceButtonEnabled && !isRolling,
         colors = ButtonDefaults.buttonColors(containerColor = if (isDiceButtonEnabled) Color.Transparent else Color.Gray),
@@ -62,9 +63,9 @@ fun DiceButton() {
             DiceImage(diceNumber = currentDice2)
         }
     }
-
     LaunchedEffect(isRolling) {
         if (isRolling) {
+            mediaPlayer.start()
             val diceNumbers = (1..6).toList()
             val animationDuration = 1000L
 
@@ -77,7 +78,7 @@ fun DiceButton() {
             DiceService.rollDice()
             currentDice1 = diceViewModel.diceNumber1.value
             currentDice2 = diceViewModel.diceNumber2.value
-            isRolling = false
+            turnOffDiceRolling()
         }
     }
 }

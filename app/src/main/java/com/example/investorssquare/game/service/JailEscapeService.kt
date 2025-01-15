@@ -3,6 +3,7 @@ package com.example.investorssquare.game.service
 import com.example.investorssquare.game.presentation.board_screen.viewModels.RuleBook
 import com.example.investorssquare.game.service.BoardService.dismissPopupForField
 import com.example.investorssquare.game.service.DiceService.enableDice
+import com.example.investorssquare.game.service.DiceService.turnOnDiceRolling
 import com.example.investorssquare.game.service.PlayersService.getActivePlayer
 import com.example.investorssquare.game.service.TransactionService.addToGatheredTaxes
 
@@ -21,6 +22,7 @@ object JailEscapeService {
     fun rollADoubleToEscape() {
         dismissPopupForField()
         enableDice()
+        turnOnDiceRolling()
     }
 
     fun useGetOutOfJailFreeCard() {

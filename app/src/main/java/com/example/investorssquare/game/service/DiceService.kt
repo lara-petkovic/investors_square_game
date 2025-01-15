@@ -21,6 +21,14 @@ object DiceService {
         serviceScope.launch { EventBus.postEvent(Event.ON_DICE_THROWN(diceViewModel.diceNumber1.value, diceViewModel.diceNumber2.value)) }
     }
 
+    fun turnOnDiceRolling(){
+        diceViewModel.turnOnRolling()
+    }
+
+    fun turnOffDiceRolling(){
+        diceViewModel.turnOffRolling()
+    }
+
     fun getDiceSum(): Int {
         return diceViewModel.getDiceSum()
     }
